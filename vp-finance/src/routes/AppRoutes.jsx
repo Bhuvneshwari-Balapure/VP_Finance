@@ -16,6 +16,11 @@ import AddProspectLead from '../Components/Customer/AddProspectLead';
 import AddSuspect from '../Components/Customer/AddSuspect';
 import CustomerDetail from "../Components/Customer/CustomerDetail"
 import ImportLead from "../Components/Customer/ImportLead"
+import EmployeeAddForm from '../Components/Employee/OfficeAdmin/EmployeeAddForm';
+import CareerEnquiry from '../Components/Employee/OfficeAdmin/CareerEnquiry';
+import ResumesShortlist  from "../Components/Employee/OfficeAdmin/ResumesShortlist"
+import SelectedInterviewTable from "../Components/Employee/OfficeAdmin/SelectedInterviewTable"
+import JoiningData from '../Components/Employee/OfficeAdmin/JoiningData';
 const AppRoutes = () => {
   return (
     <Routes>
@@ -33,6 +38,16 @@ const AppRoutes = () => {
         <Route path="/add-suspect-lead" element={<AddSuspect/>} /> 
         <Route path="/customer-detail" element={< CustomerDetail/>} /> 
         <Route path="/import-lead" element={<ImportLead/>} /> 
+        <Route path="/add-employee" element={<EmployeeAddForm />} /> 
+        <Route path="/career-enquiry" element={<CareerEnquiry />} /> 
+        <Route path="/resume-shortlist" element={< ResumesShortlist />} /> 
+         <Route path="/interview-process" element={<SelectedInterviewTable/>} /> 
+          <Route path="/joining-data" element={<JoiningData/>} /> 
+
+
+
+
+
 
 
 

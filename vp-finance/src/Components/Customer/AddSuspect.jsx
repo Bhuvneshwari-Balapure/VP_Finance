@@ -224,8 +224,17 @@ const AddSuspect = () => {
           <input name="city" value={form.city} onChange={handleChange} type="text" className="form-control" />
         </div>
 
-        <div className="form-group col-12 text-center mt-4 mb-3">
-          <button type="submit" className="btn btn-primary px-4 py-2">Submit</button>
+     {/* Submit Button */}
+                <div className="box-footer col-12 text-center mt-3">
+                  <button
+                    style={{ border: '1px solid #636363', backgroundColor:"" }}
+                    name="submit"
+                    className="btn"
+                    type="submit"
+                    
+                  >
+                    Submit
+                  </button>
         </div>
 
       </form>

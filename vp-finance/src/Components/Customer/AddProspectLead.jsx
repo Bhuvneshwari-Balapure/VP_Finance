@@ -692,18 +692,19 @@ const AddProspectLead = () => {
                 {/* Submit Button */}
                 <div className="box-footer col-12 text-center mt-3">
                   <button
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: '1px solid #636363', backgroundColor:"" }}
                     name="submit"
-                    className="btn btn-primary"
+                    className="btn"
                     type="submit"
+                    
                   >
                     Submit
                   </button>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: '1px solid #636363', backgroundColor: "#2B3A4A" }}
                     name="id"
                     type="hidden"
-                    className="btn btn-primary"
+                    className="btn"
                     value=""
                   />
                 </div>
