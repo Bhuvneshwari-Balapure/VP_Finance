@@ -3,6 +3,8 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { FaPlus, FaTrash, FaPaperclip, FaCheck } from 'react-icons/fa';
 
+
+
 const Addtask = () => {
   const [formData, setFormData] = useState({
     cat: '',
@@ -126,8 +128,8 @@ const Addtask = () => {
   return (
     <div className="">
       <div className="card shadow-lg">
-        <div className="card-header bg-primary text-white">
-          <h3 className="card-title">Task Management Form</h3>
+        <div className="card-header  text-black">
+          <h3 className="card-title mt-4">Task Management Form</h3>
           <div className="card-tools">
             <button type="button" className="btn btn-tool" data-card-widget="collapse">
               <i className="fas fa-minus"></i>
@@ -216,14 +218,21 @@ const Addtask = () => {
             <input type="hidden" name="type" value="composite" />
 
             <div className="nav-tabs-custom mt-4">
-              <ul className="nav nav-pills nav-fill mb-4">
+              <ul  className="nav nav-pills nav-fill mb-4">
                 {tabConfig.map(tab => (
                   <li key={tab.id} className="nav-item">
                     <button
                       type="button"
                       className={`nav-link ${activeTab === tab.id ? 'active' : ''}`}
                       onClick={() => setActiveTab(tab.id)}
+                              style={{
+          backgroundColor: activeTab === tab.id ? '#2B3A4A' : '',
+          color: activeTab === tab.id ? '#fff' : 'black',
+          transition: '0.3s ease'
+        }}
+
                     >
+
                       <span className="mr-2">{tab.icon}</span>
                       {tab.label}
                     </button>
@@ -281,8 +290,9 @@ const Addtask = () => {
                       <div className="d-flex justify-content-between align-items-center">
                         <h4 className="card-title">Checklist Items</h4>
                         <button
+                        style={{backgroundColor:"#2B3A4A", color:"white"}}
                           type="button"
-                          className="btn btn-sm btn-primary"
+                          className="btn btn-sm "
                           onClick={addChecklist}
                         >
                           <FaPlus className="mr-1" /> Add Item
@@ -466,8 +476,9 @@ const Addtask = () => {
 
           <div className="card-footer text-center">
             <button
+            style={{backgroundColor:"#2B3A4A" , color:"white"}}
               type="submit"
-              className="btn btn-success btn-lg px-5"
+              className="btn  btn-lg px-5"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -494,4 +505,4 @@ const Addtask = () => {
   );
 };
 
-export default Addtask;
+export default Addtask; 

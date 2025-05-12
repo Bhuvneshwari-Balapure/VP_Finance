@@ -16,7 +16,7 @@ const ServicingAddtask = () => {
     whatsapp_descp: '',
     checklists: [''],
     formChecklists: [{ name: '', file: null }],
-    image: null,aa
+    image: null,
     // old_img: ''
   });
 
@@ -126,7 +126,7 @@ const ServicingAddtask = () => {
   return (
     <div className="">
       <div className="card shadow-lg">
-        <div className="card-header bg-primary text-white">
+        <div className="card-header  text-black ">
           <h3 className="card-title">Task Management Form</h3>
           <div className="card-tools">
             <button type="button" className="btn btn-tool" data-card-widget="collapse">

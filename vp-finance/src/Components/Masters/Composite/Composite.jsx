@@ -3,10 +3,14 @@ import { Tab, Tabs, Modal, Button, Form, Table, Pagination } from 'react-bootstr
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import AddTask from "./Addtask"
+import {useSelector} from "react-redux"
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const Composite = () => {
   // State for active tab
+  const compositeData = useSelector((state)=> state.composite.compositeData);
+  // console.log(compositeData);
+  
   const [activeTab, setActiveTab] = useState('view');
 
   // State for form data
@@ -44,7 +48,7 @@ const Composite = () => {
       companyName: 'LIC OF INDIA',
       employee: 'OE',
       taskName: 'Ankit',
-      description: 'Ankit Testing',
+      description: 'Abhishek ',
       checklist: 'check 2',
       sms: 'sms',
       email: 'email',
@@ -179,12 +183,12 @@ const Composite = () => {
   const totalPages = Math.ceil(tasks.length / entriesPerPage);
 
   return (
-    <div className="container mt-2 mb-4 ">
+    <div className=" mt-2 mb-4 ">
       <h4>Composite Task</h4>
       <div className="row">
         <div className="col-md-12">
-          <div className="card card-primary card-outline">
-            <div style={{ backgroundColor:"black" }} className="card-header">
+          <div className="card  card-outline">
+            <div style={{backgroundColor:"#ECECEC"}}className="card-header">
               <Tabs
                 id="task-tabs"
                 activeKey={activeTab}

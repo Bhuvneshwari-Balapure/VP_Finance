@@ -185,7 +185,7 @@ const ServicingTask = () => {
       <div className="row">
         <div className="col-md-12">
           <div className="card card-primary card-outline">
-            <div style={{ backgroundColor:"black" }} className="card-header">
+            <div style={{backgroundColor:"#ECECEC"}}className="card-header">
               <Tabs
                 id="task-tabs"
                 activeKey={activeTab}

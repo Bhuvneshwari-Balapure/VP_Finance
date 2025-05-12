@@ -184,9 +184,9 @@ const MarketingTask = () => {
       <h4>Marketing task</h4>
       <div className="row">
         <div className="col-md-12">
-          <div className="card card-primary card-outline">
-            <div style={{ backgroundColor:"black" }} className="card-header">
-              <Tabs
+          <div className="card card-primary card-outlin">
+            <div style={{backgroundColor:"#ECECEC"}}className="card-header">
+              <Tabs 
                 id="task-tabs"
                 activeKey={activeTab}
                 onSelect={(k) => setActiveTab(k)}

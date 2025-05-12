@@ -126,7 +126,7 @@ const AddTask = () => {
   return (
     <div className="">
       <div className="card shadow-lg">
-        <div className="card-header bg-primary text-white">
+        <div className="card-header  text-">
           <h3 className="card-title">Task Management Form</h3>
           <div className="card-tools">
             <button type="button" className="btn btn-tool" data-card-widget="collapse">
@@ -223,6 +223,11 @@ const AddTask = () => {
                       type="button"
                       className={`nav-link ${activeTab === tab.id ? 'active' : ''}`}
                       onClick={() => setActiveTab(tab.id)}
+                       style={{
+          backgroundColor: activeTab === tab.id ? '#2B3A4A' : '',
+          color: activeTab === tab.id ? '#fff' : 'black',
+          transition: '0.3s ease'
+        }}
                     >
                       <span className="mr-2">{tab.icon}</span>
                       {tab.label}

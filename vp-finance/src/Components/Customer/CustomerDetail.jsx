@@ -10,15 +10,15 @@ const CustomerDetail = () => {
 
   // Sample user data
   const userData = {
-    name: "Mr. Abdul Amir Khan",
-    groupCode: "1AR001",
+    name: "Mr.Abhishek",
+    groupCode: "464226",
     grade: "Grade A",
-    occupation: "Business (CA)",
-    phone: "8656027931",
-    email: "Operations.acecomm@gmail.com",
+    occupation: "Busines (CA)",
+    phone: "9399092540",
+    email: "abhishekmeena@gmail.com",
     currentAddress: "Sajida Nagar Karbala Road Bhopal 462001",
     permanentAddress: "Sajida Nagar Karbala Road Bhopal 462001",
-    image: "https://randomuser.me/api/portraits/men/32.jpg",
+    image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     joinDate: "15 Jan 2020",
     lastContact: "2 days ago",
     status: "Active",
@@ -64,7 +64,7 @@ const CustomerDetail = () => {
   };
 
   return (
-    <div className="customer-profile-container">
+    <div className=" container customer-profile-container">
       {/* Header Section */}
       <div className="profile-header">
         <h1>Customer Profile</h1>
