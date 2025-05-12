@@ -116,7 +116,7 @@ const SubArea = () => {
 
   return (
     <div className="card shadow-lg rounded">
-      <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <div style={{backgroundColor:"#ECECEC"}} className="card-header  text-black d-flex justify-content-between align-items-center">
         <h5 className="mb-0">Manage Sub Areas</h5>
         <ul className="nav nav-tabs card-header-tabs">
           <li className="nav-item">
