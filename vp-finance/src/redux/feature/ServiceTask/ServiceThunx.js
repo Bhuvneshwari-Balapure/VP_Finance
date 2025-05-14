@@ -1,27 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const API_URL = "/compositeTask";
+const API_URL = "/serviceTask";
 
-// CREATE TASK
-// export const createCompositeTask = createAsyncThunk(
-//   "compositeTask/create",
-//   async (formData, { rejectWithValue }) => {
-//     try {
-//       const response = await axios.post(API_URL, formData, {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//         },
-//       });
-//       return response.data;
-//     } catch (err) {
-//       return rejectWithValue(err.response?.data?.message || err.message);
-//     }
-//   }
-// );
-
-export const createCompositeTask = createAsyncThunk(
-  "compositeTask/create",
+export const createServiceTask = createAsyncThunk(
+  "serviceTask/create",
   async (formData, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${API_URL}/`, formData, {
@@ -54,8 +37,8 @@ export const createCompositeTask = createAsyncThunk(
 );
 
 // GET ALL TASKS
-export const fetchAllCompositeTasks = createAsyncThunk(
-  "compositeTask/fetchAll",
+export const fetchAllServiceTasks = createAsyncThunk(
+  "serviceTask/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}/`);
@@ -68,8 +51,8 @@ export const fetchAllCompositeTasks = createAsyncThunk(
 );
 
 // GET TASK BY ID
-export const fetchCompositeTaskById = createAsyncThunk(
-  "compositeTask/fetchById",
+export const fetchServiceTaskById = createAsyncThunk(
+  "serviceTask/fetchById",
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}/${id}`);
@@ -81,8 +64,8 @@ export const fetchCompositeTaskById = createAsyncThunk(
 );
 
 // UPDATE TASK
-export const updateCompositeTask = createAsyncThunk(
-  "compositeTask/update",
+export const updateServiceTask = createAsyncThunk(
+  "serviceTask/update",
   async ({ id, formData }, { rejectWithValue }) => {
     try {
       const response = await axios.put(`${API_URL}/${id}`, formData, {
@@ -96,8 +79,8 @@ export const updateCompositeTask = createAsyncThunk(
 );
 
 // DELETE TASK
-export const deleteCompositeTask = createAsyncThunk(
-  "compositeTask/delete",
+export const deleteServiceTask = createAsyncThunk(
+  "serviceTask/delete",
   async (id, { rejectWithValue }) => {
     try {
       await axios.delete(`${API_URL}/delete/${id}`);

@@ -1,141 +1,294 @@
-import React, { useState } from 'react';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { FaPlus, FaTrash, FaPaperclip, FaCheck } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { FaPlus, FaTrash, FaPaperclip, FaCheck } from "react-icons/fa";
 
-const AddTask = () => {
+import {
+  createMarketingTask,
+  updateMarketingTask,
+} from "../../../redux/feature/MarketingTask/MarketingThunx";
+import {
+  clearError,
+  clearSuccessMessage,
+} from "../../../redux/feature/MarketingTask/MarketingSlice";
+const Addtask = ({ on, data }) => {
+  const dispatch = useDispatch();
+  const { loading, error, successMessage } = useSelector(
+    (state) => state.compositeTask
+  );
+
   const [formData, setFormData] = useState({
-    cat: '',
-    sub: '',
-    depart: '',
-    name: '',
-    type: 'composite',
-    descp: '',
-    email_descp: '',
-    sms_descp: '',
-    whatsapp_descp: '',
-    checklists: [''],
-    formChecklists: [{ name: '', file: null }],
-    image: null,
-    old_img: ''
+    cat: "",
+    sub: "",
+    depart: "",
+    name: "",
+    type: "composite",
+    descp: { text: "", image: null },
+    email_descp: "",
+    sms_descp: "",
+    whatsapp_descp: "",
+    checklists: [""],
+    formChecklists: [{ name: "", downloadFormUrl: null, sampleFormUrl: null }],
   });
 
-  const [activeTab, setActiveTab] = useState('tab_1');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  useEffect(() => {
+    if (data) {
+      setFormData(data);
+    }
+  }, [data]);
+
+  const [activeTab, setActiveTab] = useState("tab_1");
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Clear messages when component unmounts
+  useEffect(() => {
+    return () => {
+      dispatch(clearError());
+      dispatch(clearSuccessMessage());
+    };
+  }, [dispatch]);
+
+  // Handle success message
+  useEffect(() => {
+    if (successMessage) {
+      setSubmitSuccess(true);
+      const timer = setTimeout(() => {
+        setSubmitSuccess(false);
+        dispatch(clearSuccessMessage());
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage, dispatch]);
+
+  // Handle errors
+  useEffect(() => {
+    if (error) {
+      alert(error);
+      dispatch(clearError());
+    }
+  }, [error, dispatch]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (files) {
-      setFormData(prev => ({ ...prev, [name]: files[0] }));
+      if (name === "descpImage") {
+        setFormData((prev) => ({
+          ...prev,
+          descp: { ...prev.descp, image: files[0] },
+        }));
+      } else {
+        setFormData((prev) => ({ ...prev, [name]: files[0] }));
+      }
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleEditorChange = (editor, data, field) => {
-    setFormData(prev => ({ ...prev, [field]: data }));
+  // For form checklist files
+  const updateFormChecklist = (index, field, value) => {
+    const newFormChecklists = [...formData.formChecklists];
+    if (value instanceof File) {
+      newFormChecklists[index][field] = value;
+    } else {
+      newFormChecklists[index][field] = value;
+    }
+    setFormData((prev) => ({ ...prev, formChecklists: newFormChecklists }));
   };
 
+  const handleEditorChange = (editor, data, field) => {
+    if (field === "descp") {
+      // For description, we need to preserve the image property
+      setFormData((prev) => ({
+        ...prev,
+        descp: { ...prev.descp, text: data },
+      }));
+    } else {
+      // For other editors (email, sms, whatsapp)
+      setFormData((prev) => ({ ...prev, [field]: data }));
+    }
+  };
   const addChecklist = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      checklists: [...prev.checklists, '']
+      checklists: [...prev.checklists, ""],
     }));
   };
 
   const updateChecklist = (index, value) => {
     const newChecklists = [...formData.checklists];
     newChecklists[index] = value;
-    setFormData(prev => ({ ...prev, checklists: newChecklists }));
+    setFormData((prev) => ({ ...prev, checklists: newChecklists }));
   };
 
   const removeChecklist = (index) => {
     const newChecklists = [...formData.checklists];
     newChecklists.splice(index, 1);
-    setFormData(prev => ({ ...prev, checklists: newChecklists }));
+    setFormData((prev) => ({ ...prev, checklists: newChecklists }));
   };
 
   const addFormChecklist = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      formChecklists: [...prev.formChecklists, { name: '', file: null }]
+      formChecklists: [...prev.formChecklists, { name: "", file: null }],
     }));
-  };
-
-  const updateFormChecklist = (index, field, value) => {
-    const newFormChecklists = [...formData.formChecklists];
-    newFormChecklists[index][field] = value;
-    setFormData(prev => ({ ...prev, formChecklists: newFormChecklists }));
   };
 
   const removeFormChecklist = (index) => {
     const newFormChecklists = [...formData.formChecklists];
     newFormChecklists.splice(index, 1);
-    setFormData(prev => ({ ...prev, formChecklists: newFormChecklists }));
+    setFormData((prev) => ({ ...prev, formChecklists: newFormChecklists }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('Form submitted:', formData);
+      // Prepare form data
+      const formDataToSend = new FormData();
+
+      // Add all text fields
+      formDataToSend.append("cat", formData.cat);
+      formDataToSend.append("sub", formData.sub);
+      formDataToSend.append("depart", formData.depart);
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("type", formData.type);
+      // formDataToSend.append("descpText", formData.descp.text);
+      formDataToSend.append("descpText", formData.descp.text || "");
+      formDataToSend.append("email_descp", formData.email_descp);
+      formDataToSend.append("sms_descp", formData.sms_descp);
+      formDataToSend.append("whatsapp_descp", formData.whatsapp_descp);
+
+      // Add checklists as array
+      formData.checklists.forEach((item, index) => {
+        formDataToSend.append(`checklists[${index}]`, item);
+      });
+
+      // Add formChecklists as JSON string
+      formDataToSend.append(
+        "formChecklists",
+        JSON.stringify(formData.formChecklists)
+      );
+
+      // Add files if they exist
+      if (formData.descp.image) {
+        formDataToSend.append("image", formData.descp.image);
+      }
+
+      // Add form files
+      formData.formChecklists.forEach((item, index) => {
+        if (item.downloadFormUrl instanceof File) {
+          formDataToSend.append(`downloadFormUrl`, item.downloadFormUrl);
+        }
+        if (item.sampleFormUrl instanceof File) {
+          formDataToSend.append(`sampleFormUrl`, item.sampleFormUrl);
+        }
+      });
+
+      if (data) {
+        await dispatch(
+          updateMarketingTask({ id: data._id, formData: formDataToSend })
+        );
+      } else {
+        await dispatch(createMarketingTask(formDataToSend));
+      }
+
+      // Reset form
+      setFormData({
+        cat: "",
+        sub: "",
+        depart: "",
+        name: "",
+        type: "composite",
+        descp: { text: "", image: null },
+        email_descp: "",
+        sms_descp: "",
+        whatsapp_descp: "",
+        checklists: [""],
+        formChecklists: [
+          { name: "", downloadFormUrl: null, sampleFormUrl: null },
+        ],
+      });
+
+      // Switch to view mode
+      on("view");
+
       setSubmitSuccess(true);
       setTimeout(() => setSubmitSuccess(false), 3000);
     } catch (error) {
-      console.error('Submission error:', error);
+      console.error("Submission error:", error);
+      alert("Failed to save task: " + error.message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const getCategory = (value) => {
-    console.log('Selected category:', value);
+    console.log("Selected category:", value);
     // Simulate subcategory data based on category
     const subCategories = {
-      '1': ['LIC', 'HDFC Life', 'ICICI Prudential'],
-      '2': ['SBI Mutual Fund', 'HDFC Mutual Fund', 'ICICI Mutual Fund'],
-      '3': ['Star Health', 'HDFC Ergo', 'ICICI Lombard'],
-      '4': ['Bajaj Allianz', 'New India Assurance', 'United India'],
-      '5': ['HDFC Home Loan', 'SBI Home Loan', 'LIC Housing'],
-      '6': ['DLF', 'Godrej Properties', 'Prestige Group'],
-      '7': ['Composite 1', 'Composite 2', 'Composite 3']
+      "Life Insurance": ["LIC", "HDFC Life", "ICICI Prudential"],
+      "Mutual Funds": [
+        "SBI Mutual Fund",
+        "HDFC Mutual Fund",
+        "ICICI Mutual Fund",
+      ],
+      "Health Insurance": ["Star Health", "HDFC Ergo", "ICICI Lombard"],
+      "General Insurance": [
+        "Bajaj Allianz",
+        "New India Assurance",
+        "United India",
+      ],
+      "Home Loan": ["HDFC Home Loan", "SBI Home Loan", "LIC Housing"],
+      "Real Estate": ["DLF", "Godrej Properties", "Prestige Group"],
+      "Composit Documents": ["Composite 1", "Composite 2", "Composite 3"],
     };
 
     if (value && subCategories[value]) {
-      const subSelect = document.getElementById('sub_category');
+      const subSelect = document.getElementById("sub_category");
       if (subSelect) {
-        subSelect.innerHTML = '<option value="">Choose Company Name</option>' +
-          subCategories[value].map(opt => `<option value="${opt}">${opt}</option>`).join('');
+        subSelect.innerHTML =
+          '<option value="">Choose Company Name</option>' +
+          subCategories[value]
+            .map((opt) => `<option value="${opt}">${opt}</option>`)
+            .join("");
       }
     }
   };
 
   const tabConfig = [
-    { id: 'tab_1', label: 'Work Description', icon: '📝' },
-    { id: 'tab_2', label: 'Checklist', icon: '✅' },
-    { id: 'tab_6', label: 'Download Forms', icon: '📄' },
-    { id: 'tab_3', label: 'Email Templates', icon: '✉️' },
-    { id: 'tab_4', label: 'SMS Templates', icon: '📱' },
-    { id: 'tab_5', label: 'WhatsApp Templates', icon: '💬' },
-    { id: 'tab_7', label: 'Sample Form', icon: '📋' }
+    { id: "tab_1", label: "Work Description", icon: "📝" },
+    { id: "tab_2", label: "Checklist", icon: "✅" },
+    { id: "tab_6", label: "Download Forms", icon: "📄" },
+    { id: "tab_3", label: "Email Templates", icon: "✉️" },
+    { id: "tab_4", label: "SMS Templates", icon: "📱" },
+    { id: "tab_5", label: "WhatsApp Templates", icon: "💬" },
   ];
+  // { id: "tab_7", label: "Sample Form", icon: "📋" },
 
   return (
     <div className="">
       <div className="card shadow-lg">
-        <div className="card-header  text-">
-          <h3 className="card-title">Task Management Form</h3>
+        <div className="card-header  text-black">
+          <h3 className="card-title mt-4">Task Management Form</h3>
           <div className="card-tools">
-            <button type="button" className="btn btn-tool" data-card-widget="collapse">
+            <button
+              type="button"
+              className="btn btn-tool"
+              data-card-widget="collapse"
+            >
               <i className="fas fa-minus"></i>
             </button>
           </div>
         </div>
 
-        <form id='forming' onSubmit={handleSubmit} encType="multipart/form-data">
+        <form
+          id="forming"
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+        >
           <div className="card-body">
             <div className="row">
               <div className="col-md-6">
@@ -151,13 +304,15 @@ const AddTask = () => {
                     value={formData.cat}
                   >
                     <option value="">Choose Financial Product</option>
-                    <option value="1">Life Insurance</option>
-                    <option value="2">Mutual Funds</option>
-                    <option value="3">Health Insurance</option>
-                    <option value="4">General Insurance</option>
-                    <option value="5">Home Loan</option>
-                    <option value="6">Real Estate</option>
-                    <option value="7">Composit Documents</option>
+                    <option value="Life Insurance">Life Insurance</option>
+                    <option value="Mutual Funds">Mutual Funds</option>
+                    <option value="Health Insurance">Health Insurance</option>
+                    <option value="General Insurance">General Insurance</option>
+                    <option value="Home Loan">Home Loan</option>
+                    <option value="Real Estate">Real Estate</option>
+                    <option value="Composit Documents">
+                      Composit Documents
+                    </option>
                   </select>
                 </div>
               </div>
@@ -217,17 +372,19 @@ const AddTask = () => {
 
             <div className="nav-tabs-custom mt-4">
               <ul className="nav nav-pills nav-fill mb-4">
-                {tabConfig.map(tab => (
+                {tabConfig.map((tab) => (
                   <li key={tab.id} className="nav-item">
                     <button
                       type="button"
-                      className={`nav-link ${activeTab === tab.id ? 'active' : ''}`}
+                      className={`nav-link ${
+                        activeTab === tab.id ? "active" : ""
+                      }`}
                       onClick={() => setActiveTab(tab.id)}
-                       style={{
-          backgroundColor: activeTab === tab.id ? '#2B3A4A' : '',
-          color: activeTab === tab.id ? '#fff' : 'black',
-          transition: '0.3s ease'
-        }}
+                      style={{
+                        backgroundColor: activeTab === tab.id ? "#2B3A4A" : "",
+                        color: activeTab === tab.id ? "#fff" : "black",
+                        transition: "0.3s ease",
+                      }}
                     >
                       <span className="mr-2">{tab.icon}</span>
                       {tab.label}
@@ -238,7 +395,12 @@ const AddTask = () => {
 
               <div className="tab-content p-3 border border-top-0 rounded-bottom">
                 {/* Work Description Tab */}
-                <div className={`tab-pane fade ${activeTab === 'tab_1' ? 'show active' : ''}`} id="tab_1">
+                <div
+                  className={`tab-pane fade ${
+                    activeTab === "tab_1" ? "show active" : ""
+                  }`}
+                  id="tab_1"
+                >
                   <div className="card">
                     <div className="card-header bg-light">
                       <h4 className="card-title">Work Description</h4>
@@ -248,46 +410,73 @@ const AddTask = () => {
                         <label>Detailed Description</label>
                         <CKEditor
                           editor={ClassicEditor}
-                          data={formData.descp}
-                          onChange={(event, editor) => handleEditorChange(editor, editor.getData(), 'descp')}
+                          data={formData?.descp?.text || ""} // Fallback to empty string
+                          onChange={(event, editor) =>
+                            handleEditorChange(
+                              editor,
+                              editor.getData(),
+                              "descp"
+                            )
+                          }
                           config={{
-                            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'undo', 'redo']
+                            toolbar: [
+                              "heading",
+                              "|",
+                              "bold",
+                              "italic",
+                              "link",
+                              "bulletedList",
+                              "numberedList",
+                              "blockQuote",
+                              "imageUpload", // Add this
+                              "undo",
+                              "redo",
+                            ],
+                            ckfinder: {
+                              uploadUrl: "http://localhost:8080/api/upload",
+                            },
                           }}
                         />
-                      </div>
-                      <div className="form-group mt-4">
-                        <label>Attach File</label>
-                        <div className="custom-file">
-                          <input
-                            type="file"
-                            name="image"
-                            className="custom-file-input"
-                            id="customFile"
-                            onChange={handleChange}
-                          />
-                          <label className="custom-file-label" htmlFor="customFile">
-                            {formData.image ? formData.image.name : 'Choose file'}
-                          </label>
+                        <div className="form-group mt-4">
+                          <label>Attach File</label>
+                          <div className="custom-file">
+                            <input
+                              type="file"
+                              name="descpImage"
+                              className="custom-file-input"
+                              id="customFile"
+                              onChange={handleChange}
+                            />
+                            <label
+                              className="custom-file-label"
+                              htmlFor="customFile"
+                            >
+                              {formData.descp.image
+                                ? formData.descp.image.name
+                                : "Choose file"}
+                            </label>
+                          </div>
                         </div>
-                        <input
-                          type="hidden"
-                          name="old_img"
-                          value={formData.old_img}
-                        />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Checklist Template Tab */}
-                <div className={`tab-pane fade ${activeTab === 'tab_2' ? 'show active' : ''}`} id="tab_2">
+                <div
+                  className={`tab-pane fade ${
+                    activeTab === "tab_2" ? "show active" : ""
+                  }`}
+                  id="tab_2"
+                >
                   <div className="card">
                     <div className="card-header bg-light">
                       <div className="d-flex justify-content-between align-items-center">
                         <h4 className="card-title">Checklist Items</h4>
                         <button
+                          style={{ backgroundColor: "#2B3A4A", color: "white" }}
                           type="button"
-                          className="btn btn-sm btn-primary"
+                          className="btn btn-sm "
                           onClick={addChecklist}
                         >
                           <FaPlus className="mr-1" /> Add Item
@@ -296,18 +485,25 @@ const AddTask = () => {
                     </div>
                     <div className="card-body">
                       {formData.checklists.map((checklist, index) => (
-                        <div key={index} className="form-group row align-items-center mb-3">
+                        <div
+                          key={index}
+                          className="form-group row align-items-center mb-3"
+                        >
                           <div className="col-sm-10">
                             <div className="input-group">
                               <div className="input-group-prepend">
-                                <span className="input-group-text">{index + 1}</span>
+                                <span className="input-group-text">
+                                  {index + 1}
+                                </span>
                               </div>
                               <input
                                 type="text"
                                 className="form-control"
                                 placeholder={`Checklist item ${index + 1}`}
                                 value={checklist}
-                                onChange={(e) => updateChecklist(index, e.target.value)}
+                                onChange={(e) =>
+                                  updateChecklist(index, e.target.value)
+                                }
                               />
                             </div>
                           </div>
@@ -329,7 +525,12 @@ const AddTask = () => {
                 </div>
 
                 {/* Email Templates Tab */}
-                <div className={`tab-pane fade ${activeTab === 'tab_3' ? 'show active' : ''}`} id="tab_3">
+                <div
+                  className={`tab-pane fade ${
+                    activeTab === "tab_3" ? "show active" : ""
+                  }`}
+                  id="tab_3"
+                >
                   <div className="card">
                     <div className="card-header bg-light">
                       <h4 className="card-title">Email Template</h4>
@@ -340,9 +541,26 @@ const AddTask = () => {
                         <CKEditor
                           editor={ClassicEditor}
                           data={formData.email_descp}
-                          onChange={(event, editor) => handleEditorChange(editor, editor.getData(), 'email_descp')}
+                          onChange={(event, editor) =>
+                            handleEditorChange(
+                              editor,
+                              editor.getData(),
+                              "email_descp"
+                            )
+                          }
                           config={{
-                            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'undo', 'redo']
+                            toolbar: [
+                              "heading",
+                              "|",
+                              "bold",
+                              "italic",
+                              "link",
+                              "bulletedList",
+                              "numberedList",
+                              "blockQuote",
+                              "undo",
+                              "redo",
+                            ],
                           }}
                         />
                       </div>
@@ -351,7 +569,12 @@ const AddTask = () => {
                 </div>
 
                 {/* Message Templates Tab */}
-                <div className={`tab-pane fade ${activeTab === 'tab_4' ? 'show active' : ''}`} id="tab_4">
+                <div
+                  className={`tab-pane fade ${
+                    activeTab === "tab_4" ? "show active" : ""
+                  }`}
+                  id="tab_4"
+                >
                   <div className="card">
                     <div className="card-header bg-light">
                       <h4 className="card-title">SMS Template</h4>
@@ -362,9 +585,15 @@ const AddTask = () => {
                         <CKEditor
                           editor={ClassicEditor}
                           data={formData.sms_descp}
-                          onChange={(event, editor) => handleEditorChange(editor, editor.getData(), 'sms_descp')}
+                          onChange={(event, editor) =>
+                            handleEditorChange(
+                              editor,
+                              editor.getData(),
+                              "sms_descp"
+                            )
+                          }
                           config={{
-                            toolbar: ['bold', 'italic', '|', 'undo', 'redo']
+                            toolbar: ["bold", "italic", "|", "undo", "redo"],
                           }}
                         />
                       </div>
@@ -373,7 +602,12 @@ const AddTask = () => {
                 </div>
 
                 {/* Whatsapp Templates Tab */}
-                <div className={`tab-pane fade ${activeTab === 'tab_5' ? 'show active' : ''}`} id="tab_5">
+                <div
+                  className={`tab-pane fade ${
+                    activeTab === "tab_5" ? "show active" : ""
+                  }`}
+                  id="tab_5"
+                >
                   <div className="card">
                     <div className="card-header bg-light">
                       <h4 className="card-title">WhatsApp Template</h4>
@@ -384,9 +618,15 @@ const AddTask = () => {
                         <CKEditor
                           editor={ClassicEditor}
                           data={formData.whatsapp_descp}
-                          onChange={(event, editor) => handleEditorChange(editor, editor.getData(), 'whatsapp_descp')}
+                          onChange={(event, editor) =>
+                            handleEditorChange(
+                              editor,
+                              editor.getData(),
+                              "whatsapp_descp"
+                            )
+                          }
                           config={{
-                            toolbar: ['bold', 'italic', '|', 'undo', 'redo']
+                            toolbar: ["bold", "italic", "|", "undo", "redo"],
                           }}
                         />
                       </div>
@@ -395,7 +635,12 @@ const AddTask = () => {
                 </div>
 
                 {/* Download Form Tab */}
-                <div className={`tab-pane fade ${activeTab === 'tab_6' ? 'show active' : ''}`} id="tab_6">
+                <div
+                  className={`tab-pane fade ${
+                    activeTab === "tab_6" ? "show active" : ""
+                  }`}
+                  id="tab_6"
+                >
                   <div className="card">
                     <div className="card-header bg-light">
                       <div className="d-flex justify-content-between align-items-center">
@@ -411,26 +656,70 @@ const AddTask = () => {
                     </div>
                     <div className="card-body">
                       {formData.formChecklists.map((item, index) => (
-                        <div key={index} className="form-row mb-3 align-items-center">
+                        <div
+                          key={index}
+                          className="form-row mb-3 align-items-center"
+                        >
                           <div className="col-md-5 mb-2">
                             <input
                               type="text"
                               className="form-control"
                               placeholder="Form name"
                               value={item.name}
-                              onChange={(e) => updateFormChecklist(index, 'name', e.target.value)}
+                              onChange={(e) =>
+                                updateFormChecklist(
+                                  index,
+                                  "name",
+                                  e.target.value
+                                )
+                              }
                             />
                           </div>
                           <div className="col-md-5 mb-2">
+                            {/* downloadFormFile */}
                             <div className="custom-file">
                               <input
                                 type="file"
                                 className="custom-file-input"
-                                id={`formFile_${index}`}
-                                onChange={(e) => updateFormChecklist(index, 'file', e.target.files[0])}
+                                id={`downloadForm_${index}`}
+                                onChange={(e) =>
+                                  updateFormChecklist(
+                                    index,
+                                    "downloadFormUrl",
+                                    e.target.files[0]
+                                  )
+                                }
                               />
-                              <label className="custom-file-label" htmlFor={`formFile_${index}`}>
-                                {item.file ? item.file.name : 'Choose file'}
+                              <label
+                                className="custom-file-label"
+                                htmlFor={`downloadForm_${index}`}
+                              >
+                                {item.downloadFormUrl instanceof File
+                                  ? item.downloadFormUrl.name
+                                  : "Choose download form"}
+                              </label>
+                            </div>
+
+                            <div className="custom-file mt-2">
+                              <input
+                                type="file"
+                                className="custom-file-input"
+                                id={`sampleForm_${index}`}
+                                onChange={(e) =>
+                                  updateFormChecklist(
+                                    index,
+                                    "sampleFormUrl",
+                                    e.target.files[0]
+                                  )
+                                }
+                              />
+                              <label
+                                className="custom-file-label"
+                                htmlFor={`sampleForm_${index}`}
+                              >
+                                {item.sampleFormUrl instanceof File
+                                  ? item.sampleFormUrl.name
+                                  : "Choose sample form"}
                               </label>
                             </div>
                           </div>
@@ -450,46 +739,33 @@ const AddTask = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* Sample Form Tab */}
-                <div className={`tab-pane fade ${activeTab === 'tab_7' ? 'show active' : ''}`} id="tab_7">
-                  <div className="card">
-                    <div className="card-header bg-light">
-                      <h4 className="card-title">Sample Form Preview</h4>
-                    </div>
-                    <div className="card-body">
-                      <div className="alert alert-info">
-                        <FaPaperclip className="mr-2" />
-                        This section would display a preview of the sample form when available.
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
 
           <div className="card-footer text-center">
             <button
+              style={{ backgroundColor: "#2B3A4A", color: "white" }}
               type="submit"
-              className="btn btn-success btn-lg px-5"
-              disabled={isSubmitting}
+              className="btn btn-lg px-5"
+              disabled={loading} // from Redux state
             >
-              {isSubmitting ? (
+              {loading ? (
                 <>
-                  <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+                  <span
+                    className="spinner-border spinner-border-sm mr-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
                   Processing...
                 </>
-              ) : (
+              ) : submitSuccess ? (
                 <>
-                  {submitSuccess ? (
-                    <>
-                      <FaCheck className="mr-2" /> Submitted Successfully!
-                    </>
-                  ) : (
-                    'Submit Task'
-                  )}
+                  <FaCheck className="mr-2" />{" "}
+                  {data ? "Updated Successfully!" : "Submitted Successfully!"}
                 </>
+              ) : (
+                <>{data ? "Update Task" : "Submit Task"}</>
               )}
             </button>
           </div>
@@ -499,4 +775,4 @@ const AddTask = () => {
   );
 };
 
-export default AddTask;
+export default Addtask;

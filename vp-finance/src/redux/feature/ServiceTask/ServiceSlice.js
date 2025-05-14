@@ -1,12 +1,12 @@
 // src/redux/slices/compositeTaskSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  createCompositeTask,
-  fetchAllCompositeTasks,
-  fetchCompositeTaskById,
-  updateCompositeTask,
-  deleteCompositeTask,
-} from "./CompositeThunx"; // Adjust path if needed
+  createServiceTask,
+  deleteServiceTask,
+  fetchAllServiceTasks,
+  fetchServiceTaskById,
+  updateServiceTask,
+} from "./ServiceThunx";
 
 const initialState = {
   tasks: [],
@@ -14,15 +14,15 @@ const initialState = {
   loading: false,
   error: null,
   successMessage: null,
-  compositeData: {},
+  serviceData: {},
 };
 
-const compositeTaskSlice = createSlice({
-  name: "compositeTask",
+const serviceTaskSlice = createSlice({
+  name: "ServiceTask",
   initialState,
 
   reducers: {
-    setCompositeData: (state, action) => {
+    setServiceData: (state, action) => {
       state.compositeData = action.payload;
     },
     clearError: (state) => {
@@ -38,55 +38,55 @@ const compositeTaskSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // CREATE
-      .addCase(createCompositeTask.pending, (state) => {
+      .addCase(createServiceTask.pending, (state) => {
         state.loading = true;
         state.error = null;
         state.successMessage = null;
       })
-      .addCase(createCompositeTask.fulfilled, (state, action) => {
+      .addCase(createServiceTask.fulfilled, (state, action) => {
         state.loading = false;
         state.successMessage = action.payload.message;
         // Optionally add the new task to your state if needed
         // state.tasks.push(action.payload.data);
       })
-      .addCase(createCompositeTask.rejected, (state, action) => {
+      .addCase(createServiceTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
       // FETCH ALL
-      .addCase(fetchAllCompositeTasks.pending, (state) => {
+      .addCase(fetchAllServiceTasks.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchAllCompositeTasks.fulfilled, (state, action) => {
+      .addCase(fetchAllServiceTasks.fulfilled, (state, action) => {
         state.loading = false;
         state.tasks = action.payload;
       })
-      .addCase(fetchAllCompositeTasks.rejected, (state, action) => {
+      .addCase(fetchAllServiceTasks.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
       // FETCH BY ID
-      .addCase(fetchCompositeTaskById.pending, (state) => {
+      .addCase(fetchServiceTaskById.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchCompositeTaskById.fulfilled, (state, action) => {
+      .addCase(fetchServiceTaskById.fulfilled, (state, action) => {
         state.loading = false;
         state.currentTask = action.payload;
       })
-      .addCase(fetchCompositeTaskById.rejected, (state, action) => {
+      .addCase(fetchServiceTaskById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
       // UPDATE
-      .addCase(updateCompositeTask.pending, (state) => {
+      .addCase(updateServiceTask.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateCompositeTask.fulfilled, (state, action) => {
+      .addCase(updateServiceTask.fulfilled, (state, action) => {
         state.loading = false;
         const index = state.tasks.findIndex(
           (t) => t._id === action.payload._id
@@ -94,22 +94,22 @@ const compositeTaskSlice = createSlice({
         if (index !== -1) state.tasks[index] = action.payload;
         state.successMessage = "Task updated successfully.";
       })
-      .addCase(updateCompositeTask.rejected, (state, action) => {
+      .addCase(updateServiceTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
       // DELETE
-      .addCase(deleteCompositeTask.pending, (state) => {
+      .addCase(deleteServiceTask.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteCompositeTask.fulfilled, (state, action) => {
+      .addCase(deleteServiceTask.fulfilled, (state, action) => {
         state.loading = false;
         state.tasks = state.tasks.filter((task) => task._id !== action.payload);
         state.successMessage = "Task deleted successfully.";
       })
-      .addCase(deleteCompositeTask.rejected, (state, action) => {
+      .addCase(deleteServiceTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
@@ -117,10 +117,10 @@ const compositeTaskSlice = createSlice({
 });
 
 export const {
-  setCompositeData,
+  setServiceData,
   clearError,
   clearSuccessMessage,
   clearCurrentTask,
-} = compositeTaskSlice.actions;
+} = serviceTaskSlice.actions;
 
-export default compositeTaskSlice.reducer;
+export default serviceTaskSlice.reducer;
