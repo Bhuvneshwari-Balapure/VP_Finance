@@ -11,6 +11,8 @@ import {
   createServiceTask,
   updateServiceTask,
 } from "../../../redux/feature/ServiceTask/ServiceThunx";
+import { fetchFinancialProduct } from "../../../redux/feature/FinancialProduct/FinancialThunx";
+import { fetchCompanyName } from "../../../redux/feature/ComapnyName/CompanyThunx";
 
 const ServicingAddtask = ({ on, data }) => {
   const dispatch = useDispatch();
@@ -32,6 +34,26 @@ const ServicingAddtask = ({ on, data }) => {
     checklists: [""],
     formChecklists: [{ name: "", downloadFormUrl: null, sampleFormUrl: null }],
   });
+
+  // fetch financialProduct
+  useEffect(() => {
+    dispatch(fetchFinancialProduct());
+    dispatch(fetchCompanyName());
+  }, [dispatch]);
+
+  // financial Product
+  const products = useSelector(
+    (state) => state.financialProduct.FinancialProducts || []
+  );
+
+  // company name
+  const company = useSelector((state) => state.CompanyName.CompanyNames || []);
+  // filter company name according to financial productconst filteredCompanies = company.filter(
+  const filteredCompanies = company.filter(
+    (item) => item.financialProduct?._id === formData.cat
+  );
+
+  console.log(filteredCompanies, "Filter Company Name");
 
   useEffect(() => {
     if (data) {
@@ -227,39 +249,6 @@ const ServicingAddtask = ({ on, data }) => {
     }
   };
 
-  const getCategory = (value) => {
-    console.log("Selected category:", value);
-    // Simulate subcategory data based on category
-    const subCategories = {
-      "Life Insurance": ["LIC", "HDFC Life", "ICICI Prudential"],
-      "Mutual Funds": [
-        "SBI Mutual Fund",
-        "HDFC Mutual Fund",
-        "ICICI Mutual Fund",
-      ],
-      "Health Insurance": ["Star Health", "HDFC Ergo", "ICICI Lombard"],
-      "General Insurance": [
-        "Bajaj Allianz",
-        "New India Assurance",
-        "United India",
-      ],
-      "Home Loan": ["HDFC Home Loan", "SBI Home Loan", "LIC Housing"],
-      "Real Estate": ["DLF", "Godrej Properties", "Prestige Group"],
-      "Composit Documents": ["Composite 1", "Composite 2", "Composite 3"],
-    };
-
-    if (value && subCategories[value]) {
-      const subSelect = document.getElementById("sub_category");
-      if (subSelect) {
-        subSelect.innerHTML =
-          '<option value="">Choose Company Name</option>' +
-          subCategories[value]
-            .map((opt) => `<option value="${opt}">${opt}</option>`)
-            .join("");
-      }
-    }
-  };
-
   const tabConfig = [
     { id: "tab_1", label: "Work Description", icon: "📝" },
     { id: "tab_2", label: "Checklist", icon: "✅" },
@@ -299,22 +288,16 @@ const ServicingAddtask = ({ on, data }) => {
                   <select
                     name="cat"
                     className="form-control select2"
-                    onChange={(e) => {
-                      handleChange(e);
-                      getCategory(e.target.value);
-                    }}
+                    onChange={handleChange}
                     value={formData.cat}
                   >
                     <option value="">Choose Financial Product</option>
-                    <option value="Life Insurance">Life Insurance</option>
-                    <option value="Mutual Funds">Mutual Funds</option>
-                    <option value="Health Insurance">Health Insurance</option>
-                    <option value="General Insurance">General Insurance</option>
-                    <option value="Home Loan">Home Loan</option>
-                    <option value="Real Estate">Real Estate</option>
-                    <option value="Composit Documents">
-                      Composit Documents
-                    </option>
+                    {Array.isArray(products) &&
+                      products.map((product) => (
+                        <option key={product._id} value={product._id}>
+                          {product.name}
+                        </option>
+                      ))}
                   </select>
                 </div>
               </div>
@@ -323,13 +306,17 @@ const ServicingAddtask = ({ on, data }) => {
                 <div className="form-group">
                   <label className="font-weight-bold">Company Name</label>
                   <select
-                    id="sub_category"
                     name="sub"
                     className="form-control select2"
                     value={formData.sub}
                     onChange={handleChange}
                   >
                     <option value="">Choose Company Name</option>
+                    {filteredCompanies.map((comp) => (
+                      <option key={comp.id} value={comp.companyName}>
+                        {comp.companyName}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>

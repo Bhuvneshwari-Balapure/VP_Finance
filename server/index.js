@@ -14,6 +14,9 @@ const LeadAreaRoute = require("./Routes/Lead/LeadAreaRoute");
 const LeadSubAreaRoute = require("./Routes/Lead/LeadSubAreaRoute");
 const LeadCityRoute = require("./Routes/Lead/CityRoute");
 const TaskRoute = require("./Routes/TaskRoute");
+const FinancialProductRoute = require("./Routes/FinancialProductRoute");
+const CompanyNameRoute = require("./Routes/CompanyNameRoute");
+
 // ---------------------------------------------------------------------
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -35,6 +38,8 @@ app.use("/api/leadarea", LeadAreaRoute);
 app.use("/api/leadsubarea", LeadSubAreaRoute);
 app.use("/api/leadcity", LeadCityRoute);
 app.use("/api/Task", TaskRoute);
+app.use("/api/FinancialProduct", FinancialProductRoute);
+app.use("/api/CompanyName", CompanyNameRoute);
 
 const port = process.env.PORT;
 app.listen(port, () => {

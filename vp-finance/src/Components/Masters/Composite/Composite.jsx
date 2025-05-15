@@ -17,6 +17,7 @@ const Composite = () => {
   const { tasks, loading, error, successMessage } = useSelector(
     (state) => state.compositeTask
   );
+  console.log(tasks, "hfkdshfkjds");
 
   const [activeTab, setActiveTab] = useState("view");
   const [currentPage, setCurrentPage] = useState(1);
@@ -78,6 +79,7 @@ const Composite = () => {
     indexOfFirstEntry,
     indexOfLastEntry
   );
+  console.log(currentEntries);
   const totalPages = Math.ceil(displayedTasks.length / entriesPerPage);
 
   return (
@@ -161,8 +163,9 @@ const Composite = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {currentEntries.map((task, index) => (
+                          {tasks.map((task, index) => (
                             <tr key={task._id || index}>
+                              {console.log(task, "PP")},
                               <td>{indexOfFirstEntry + index + 1}</td>
                               <td>{task.cat}</td>
                               <td>{task.sub}</td>
@@ -314,32 +317,6 @@ const Composite = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
-      {/* <Modal
-        show={showChecklistModal}
-        onHide={() => setShowChecklistModal(false)}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <b>{currentTask?.name || ""} Checklist</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <center>
-            <h5>
-              {currentTask?.checklists?.join(", ") || "No checklist available"}
-            </h5>
-          </center>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => setShowChecklistModal(false)}
-          >
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
 
       <Modal
         show={showChecklistModal}

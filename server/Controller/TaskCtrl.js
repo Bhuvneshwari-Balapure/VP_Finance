@@ -1,9 +1,11 @@
 const getModelByType = require("../utils/GetModelByType"); // adjust the path if needed
+const Financial = require("../Models/FinancialProductModel");
 
 const path = require("path");
 
 // // Create a new task
 exports.createTask = async (req, res) => {
+  console.log(req.body);
   try {
     const type = req.body.type;
     console.log(type, "type of the model");
@@ -38,10 +40,12 @@ exports.createTask = async (req, res) => {
       }
     }
 
+    const cats = await Financial.findOne({ _id: req.body.cat });
+
     // Create a new task document
     const newTask = new TaskModel({
       type,
-      cat: body.cat,
+      cat: cats.name,
       sub: body.sub,
       depart: body.depart,
       name: body.name,

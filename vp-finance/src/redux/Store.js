@@ -7,6 +7,8 @@ import LeadCityReducer from "./feature/LeadCity/CitySlice";
 import compositeTaskReducer from "./feature/CompositeTask/CompositeSlice";
 import MarketingTaskReducer from "./feature/MarketingTask/MarketingSlice";
 import ServiceTaskReducer from "./feature/ServiceTask/ServiceSlice";
+import FinancialProductReducer from "./feature/FinancialProduct/FinancialSlice";
+import CompanyNameReducer from "./feature/ComapnyName/CompanySlice";
 export const store = configureStore({
   reducer: {
     leadsource: leadSourceReducer,
@@ -17,5 +19,7 @@ export const store = configureStore({
     compositeTask: compositeTaskReducer,
     MarketingTask: MarketingTaskReducer,
     ServiceTask: ServiceTaskReducer,
+    financialProduct: FinancialProductReducer,
+    CompanyName: CompanyNameReducer,
   },
 });
