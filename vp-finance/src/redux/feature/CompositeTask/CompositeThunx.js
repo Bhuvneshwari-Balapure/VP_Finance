@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const API_URL = "/compositeTask";
+const API_URL = "/Task";
 
 // CREATE TASK
 // export const createCompositeTask = createAsyncThunk(
@@ -58,7 +58,7 @@ export const fetchAllCompositeTasks = createAsyncThunk(
   "compositeTask/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/`);
+      const response = await axios.get(`${API_URL}/?type=composite`);
       console.log(response.data);
       return response.data;
     } catch (err) {
@@ -72,7 +72,7 @@ export const fetchCompositeTaskById = createAsyncThunk(
   "compositeTask/fetchById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/${id}`);
+      const response = await axios.get(`${API_URL}/${id}?type=composite`);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
@@ -85,9 +85,13 @@ export const updateCompositeTask = createAsyncThunk(
   "compositeTask/update",
   async ({ id, formData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${API_URL}/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.put(
+        `${API_URL}/${id}?type=composite`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       return response.data.task;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
@@ -100,7 +104,7 @@ export const deleteCompositeTask = createAsyncThunk(
   "compositeTask/delete",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API_URL}/delete/${id}`);
+      await axios.delete(`${API_URL}/delete/${id}?type=composite`);
       return id;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);

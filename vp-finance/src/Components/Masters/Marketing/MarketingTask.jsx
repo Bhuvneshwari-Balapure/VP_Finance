@@ -10,14 +10,17 @@ import {
   fetchAllMarketingTasks,
   fetchMarketingTaskById,
 } from "../../../redux/feature/MarketingTask/MarketingThunx";
+import DOMPurify from "dompurify";
 
 const MarketingTask = () => {
   const dispatch = useDispatch();
 
   // Redux state
   const { tasks, loading, error, successMessage } = useSelector(
-    (state) => state.compositeTask
+    (state) => state.MarketingTask
   );
+  // const hhh = useSelector((state) => state.MarketingTask.tasks);
+  // console.log(hhh, "yyy");
 
   const [activeTab, setActiveTab] = useState("view");
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,7 +39,7 @@ const MarketingTask = () => {
 
   useEffect(() => {
     if (successMessage) {
-      alert(successMessage);
+      // alert(successMessage);
       dispatch(fetchAllMarketingTasks());
     }
   }, [successMessage]);
@@ -302,7 +305,14 @@ const MarketingTask = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {currentTask?.descp?.text || "No description available"}
+          {/* {currentTask?.descp?.text || "No description available"} */}
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(
+                currentTask?.descp?.text || "No description available"
+              ),
+            }}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDetailModal(false)}>
@@ -321,11 +331,15 @@ const MarketingTask = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <center>
-            <h5>
-              {currentTask?.checklists?.join(", ") || "No checklist available"}
-            </h5>
-          </center>
+          {currentTask?.checklists && currentTask.checklists.length > 0 ? (
+            <ul>
+              {currentTask.checklists.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No checklist available</p>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -344,7 +358,14 @@ const MarketingTask = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {currentTask?.sms_descp || "No SMS template available"}
+          {/* {currentTask?.sms_descp || "No SMS template available"} */}
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(
+                currentTask?.sms_descp || "No SMS template available"
+              ),
+            }}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowSmsModal(false)}>

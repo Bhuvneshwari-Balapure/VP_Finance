@@ -11,8 +11,10 @@ import {
   clearError,
   clearSuccessMessage,
 } from "../../../redux/feature/CompositeTask/CompositeSlice";
+
 const Addtask = ({ on, data }) => {
   const dispatch = useDispatch();
+
   const { loading, error, successMessage } = useSelector(
     (state) => state.compositeTask
   );
@@ -146,6 +148,7 @@ const Addtask = ({ on, data }) => {
 
     try {
       // Prepare form data
+      console.log(FormData, "DAS");
       const formDataToSend = new FormData();
 
       // Add all text fields
@@ -186,34 +189,9 @@ const Addtask = ({ on, data }) => {
         }
       });
 
-      //   if (data) {
-      //     dispatch(
-      //       updateCompositeTask({ id: data._id, formData: formDataToSend })
-      //     );
-      //     on("view");
-      //   } else {
-      //     dispatch(createCompositeTask(formDataToSend));
-      //     console.log("Task created successfully:", formDataToSend);
-      //   }
-      //   setSubmitSuccess(true);
-
-      //   setTimeout(() => setSubmitSuccess(false), 3000);
-
-      //   // Reset form after successful submission if needed
-      //   // setFormData({...initialFormState});
-      // } catch (error) {
-      //   console.error("Submission error:", error);
-      //   alert("Failed to save task: " + error.message);
-      // } finally {
-      //   setIsSubmitting(false);
-      // }
-
       if (data) {
         await dispatch(
-          updateCompositeTask({
-            id: data._id,
-            formData: formDataToSend,
-          })
+          updateCompositeTask({ id: data._id, formData: formDataToSend })
         );
       } else {
         await dispatch(createCompositeTask(formDataToSend));

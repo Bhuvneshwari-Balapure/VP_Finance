@@ -15,7 +15,7 @@ import {
 const Addtask = ({ on, data }) => {
   const dispatch = useDispatch();
   const { loading, error, successMessage } = useSelector(
-    (state) => state.compositeTask
+    (state) => state.MarketingTask
   );
 
   const [formData, setFormData] = useState({
@@ -23,7 +23,7 @@ const Addtask = ({ on, data }) => {
     sub: "",
     depart: "",
     name: "",
-    type: "composite",
+    type: "marketing",
     descp: { text: "", image: null },
     email_descp: "",
     sms_descp: "",
@@ -201,7 +201,7 @@ const Addtask = ({ on, data }) => {
         sub: "",
         depart: "",
         name: "",
-        type: "composite",
+        type: "marketing",
         descp: { text: "", image: null },
         email_descp: "",
         sms_descp: "",

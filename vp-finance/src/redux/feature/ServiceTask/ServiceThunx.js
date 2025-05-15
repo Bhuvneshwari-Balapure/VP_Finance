@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const API_URL = "/serviceTask";
+const API_URL = "/Task";
 
 export const createServiceTask = createAsyncThunk(
   "serviceTask/create",
@@ -41,7 +41,7 @@ export const fetchAllServiceTasks = createAsyncThunk(
   "serviceTask/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/`);
+      const response = await axios.get(`${API_URL}/?type=service`);
       console.log(response.data);
       return response.data;
     } catch (err) {
@@ -55,7 +55,7 @@ export const fetchServiceTaskById = createAsyncThunk(
   "serviceTask/fetchById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/${id}`);
+      const response = await axios.get(`${API_URL}/${id}/?type=service`);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
@@ -68,9 +68,13 @@ export const updateServiceTask = createAsyncThunk(
   "serviceTask/update",
   async ({ id, formData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${API_URL}/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.put(
+        `${API_URL}/${id}/?type=service`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       return response.data.task;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
@@ -83,7 +87,7 @@ export const deleteServiceTask = createAsyncThunk(
   "serviceTask/delete",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API_URL}/delete/${id}`);
+      await axios.delete(`${API_URL}/delete/${id}/?type=service`);
       return id;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);

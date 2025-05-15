@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const API_URL = "/marketingTask";
+const API_URL = "/Task";
 
 export const createMarketingTask = createAsyncThunk(
   "marketingTask/create",
@@ -41,8 +41,8 @@ export const fetchAllMarketingTasks = createAsyncThunk(
   "marketingTask/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/`);
-      console.log(response.data);
+      const response = await axios.get(`${API_URL}/?type=marketing`);
+
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
@@ -55,7 +55,7 @@ export const fetchMarketingTaskById = createAsyncThunk(
   "marketingTask/fetchById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/${id}`);
+      const response = await axios.get(`${API_URL}/${id}/?type=marketing`);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
@@ -68,9 +68,13 @@ export const updateMarketingTask = createAsyncThunk(
   "marketingTask/update",
   async ({ id, formData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${API_URL}/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.put(
+        `${API_URL}/${id}/?type=marketing`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       return response.data.task;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
@@ -83,7 +87,7 @@ export const deleteMarketingTask = createAsyncThunk(
   "marketingTask/delete",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API_URL}/delete/${id}`);
+      await axios.delete(`${API_URL}/delete/${id}/?type=marketing`);
       return id;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);

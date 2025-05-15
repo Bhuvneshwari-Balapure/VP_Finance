@@ -1,10 +1,13 @@
-const ServiceTask = require("../Models/ServiceModel");
+const getModelByType = require("../utils/GetModelByType"); // adjust the path if needed
+
 const path = require("path");
 
 // // Create a new task
-
 exports.createTask = async (req, res) => {
   try {
+    const type = req.body.type;
+    console.log(type, "type of the model");
+    const TaskModel = getModelByType(type);
     // Clean field names (remove tab characters)
     const body = {};
     console.log("body data", body);
@@ -36,7 +39,8 @@ exports.createTask = async (req, res) => {
     }
 
     // Create a new task document
-    const newTask = new ServiceTask({
+    const newTask = new TaskModel({
+      type,
       cat: body.cat,
       sub: body.sub,
       depart: body.depart,
@@ -71,7 +75,11 @@ exports.createTask = async (req, res) => {
 // Get all tasks
 exports.getAllTasks = async (req, res) => {
   try {
-    const tasks = await ServiceTask.find().sort({ createdAt: -1 }); // Newest first
+    const type = req.query.type;
+    console.log(type, "type of the model");
+    // const { type } = req.query;
+    const TaskModel = getModelByType(type);
+    const tasks = await TaskModel.find().sort({ createdAt: -1 });
     res.status(200).json(tasks);
   } catch (err) {
     res
@@ -82,7 +90,14 @@ exports.getAllTasks = async (req, res) => {
 
 exports.getTaskById = async (req, res) => {
   try {
-    const task = await ServiceTask.findById(req.params.id);
+    // ✅ Get task type from query parameter
+    const type = req.query.type;
+    console.log(type, "type of the model");
+    // const { type } = req.query;
+
+    // ✅ Get correct model based on type
+    const TaskModel = getModelByType(type);
+    const task = await TaskModel.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
     res.status(200).json(task);
   } catch (err) {
@@ -94,6 +109,9 @@ exports.getTaskById = async (req, res) => {
 
 exports.updateTask = async (req, res) => {
   try {
+    const type = req.body.type;
+    console.log(type, "type of the model");
+    const TaskModel = getModelByType(type);
     const id = req.params.id;
     const body = {};
     for (let key in req.body) {
@@ -146,7 +164,7 @@ exports.updateTask = async (req, res) => {
 
     console.log(updates, "wertyuio");
 
-    const updated = await ServiceTask.findByIdAndUpdate(id, updates, {
+    const updated = await TaskModel.findByIdAndUpdate(id, updates, {
       new: true,
       runValidators: true,
     });
@@ -164,7 +182,13 @@ exports.updateTask = async (req, res) => {
 
 exports.deleteTask = async (req, res) => {
   try {
-    const deleted = await ServiceTask.findByIdAndDelete(req.params.id);
+    const type = req.query.type;
+    console.log(type, "type of the model");
+    // const { type } = req.query;
+    const TaskModel = getModelByType(type);
+
+    // ✅ [3] Replaced hardcoded CompositeTask with dynamic model
+    const deleted = await TaskModel.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ message: "Task not found" });
     res.status(200).json({ message: "Task deleted successfully" });
   } catch (err) {

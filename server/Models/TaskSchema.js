@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const CompositeTaskSchema = new mongoose.Schema({
+const TaskSchema = new mongoose.Schema({
   cat: { type: String }, // Financial Product ID or name
   sub: { type: String }, // Company Name
   depart: { type: String }, // Employee Type
@@ -34,4 +34,4 @@ const CompositeTaskSchema = new mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model("CompositeTask", CompositeTaskSchema);
+module.exports = TaskSchema;

@@ -13,9 +13,7 @@ const LeadOccupationRoute = require("./Routes/Lead/LeadOccupationRoute");
 const LeadAreaRoute = require("./Routes/Lead/LeadAreaRoute");
 const LeadSubAreaRoute = require("./Routes/Lead/LeadSubAreaRoute");
 const LeadCityRoute = require("./Routes/Lead/CityRoute");
-const CompositeRoute = require("./Routes/CompositeTask/CompositeRoute");
-const MarketingRoute = require("./Routes/MarketingRoute");
-const ServiceRoute = require("./Routes/ServiceRoute");
+const TaskRoute = require("./Routes/TaskRoute");
 // ---------------------------------------------------------------------
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -36,9 +34,7 @@ app.use("/api/leadOccupation", LeadOccupationRoute);
 app.use("/api/leadarea", LeadAreaRoute);
 app.use("/api/leadsubarea", LeadSubAreaRoute);
 app.use("/api/leadcity", LeadCityRoute);
-app.use("/api/compositeTask", CompositeRoute);
-app.use("/api/MarketingTask", MarketingRoute);
-app.use("/api/ServiceTask", ServiceRoute);
+app.use("/api/Task", TaskRoute);
 
 const port = process.env.PORT;
 app.listen(port, () => {
