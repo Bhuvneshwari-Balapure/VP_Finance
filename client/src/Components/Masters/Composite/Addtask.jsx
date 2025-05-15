@@ -157,6 +157,7 @@ const Addtask = ({ on, data }) => {
       ...prev,
       formChecklists: [...prev.formChecklists, { name: "", file: null }],
     }));
+    console.error("Submission error:", formData);
   };
 
   const removeFormChecklist = (index) => {
