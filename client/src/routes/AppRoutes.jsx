@@ -24,6 +24,7 @@ import JoiningData from "../Components/Employee/OfficeAdmin/JoiningData";
 import SuspectLeadsTable from "../Components/Customer/SuspectLeadsTable";
 import SuspectLeadTabs from "../Components/Customer/SuspectLeadTabs";
 import FinancialProduct from "../Components/Offices/Financlal/FinancialProduct";
+import CompanyTabs from "../Components/Offices/Financlal/CompanyTabs";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -49,6 +50,7 @@ const AppRoutes = () => {
         <Route path="/interview-process" element={<SelectedInterviewTable />} />
         <Route path="/joining-data" element={<JoiningData />} />
         <Route path="/financial-product-list" element={<FinancialProduct />} />
+        <Route path="/company-name" element={<CompanyTabs />} />
       </Route>
     </Routes>
   );

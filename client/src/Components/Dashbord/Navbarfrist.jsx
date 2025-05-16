@@ -444,6 +444,9 @@ const Navbarfristn = () => {
                       <Dropdown.Item as={Link} to="/financial-product-list">
                         Financial Product List
                       </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/company-name">
+                        Company Name
+                      </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/insurance-product">
                         Insurance Product
                       </Dropdown.Item>

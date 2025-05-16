@@ -34,13 +34,8 @@ export const createCompanyName = createAsyncThunk(
   async (CompanyNameData, { rejectWithValue }) => {
     try {
       // Transform data to match backend schema
-      const payload = {
-        name: CompanyNameData.name,
-        shortcode: CompanyNameData.code,
-        pincode: CompanyNameData.pin,
-      };
 
-      const response = await axios.post(API_URL, payload);
+      const response = await axios.post(API_URL, CompanyNameData);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
