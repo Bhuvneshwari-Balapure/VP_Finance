@@ -494,9 +494,6 @@ const Addtask = ({ on, data }) => {
                               "undo",
                               "redo",
                             ],
-                            ckfinder: {
-                              uploadUrl: "http://localhost:8080/api/upload",
-                            },
                           }}
                         />
                         <div className="form-group mt-4">
