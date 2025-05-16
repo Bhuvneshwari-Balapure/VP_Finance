@@ -16,6 +16,7 @@ const LeadCityRoute = require("./Routes/Lead/CityRoute");
 const TaskRoute = require("./Routes/TaskRoute");
 const FinancialProductRoute = require("./Routes/FinancialProductRoute");
 const CompanyNameRoute = require("./Routes/CompanyNameRoute");
+const SuspectLeadRoute = require("./Routes/SuspectLeadRoute");
 
 // ---------------------------------------------------------------------
 app.use(bodyParser.json());
@@ -40,6 +41,7 @@ app.use("/api/leadcity", LeadCityRoute);
 app.use("/api/Task", TaskRoute);
 app.use("/api/FinancialProduct", FinancialProductRoute);
 app.use("/api/CompanyName", CompanyNameRoute);
+app.use("/api/SuspectLead", SuspectLeadRoute);
 
 const port = process.env.PORT;
 app.listen(port, () => {

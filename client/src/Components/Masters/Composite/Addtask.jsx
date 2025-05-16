@@ -111,15 +111,15 @@ const Addtask = ({ on, data }) => {
   };
 
   // For form checklist files
-  const updateFormChecklist = (index, field, value) => {
-    const newFormChecklists = [...formData.formChecklists];
-    if (value instanceof File) {
-      newFormChecklists[index][field] = value;
-    } else {
-      newFormChecklists[index][field] = value;
-    }
-    setFormData((prev) => ({ ...prev, formChecklists: newFormChecklists }));
-  };
+  // const updateFormChecklist = (index, field, value) => {
+  //   const newFormChecklists = [...formData.formChecklists];
+  //   if (value instanceof File) {
+  //     newFormChecklists[index][field] = value;
+  //   } else {
+  //     newFormChecklists[index][field] = value;
+  //   }
+  //   setFormData((prev) => ({ ...prev, formChecklists: newFormChecklists }));
+  // };
 
   const handleEditorChange = (editor, data, field) => {
     if (field === "descp") {
@@ -133,6 +133,8 @@ const Addtask = ({ on, data }) => {
       setFormData((prev) => ({ ...prev, [field]: data }));
     }
   };
+
+  // -------------checklist----------------
   const addChecklist = () => {
     setFormData((prev) => ({
       ...prev,
@@ -152,12 +154,22 @@ const Addtask = ({ on, data }) => {
     setFormData((prev) => ({ ...prev, checklists: newChecklists }));
   };
 
+  // const addFormChecklist = () => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     formChecklists: [...prev.formChecklists, { name: "", file: null }],
+  //   }));
+  //   console.error("Submission error:", formData);
+  // };
+  // ----------------------form checklist-------------------------
   const addFormChecklist = () => {
     setFormData((prev) => ({
       ...prev,
-      formChecklists: [...prev.formChecklists, { name: "", file: null }],
+      formChecklists: [
+        ...prev.formChecklists,
+        { name: "", downloadFormUrl: null, sampleFormUrl: null },
+      ],
     }));
-    console.error("Submission error:", formData);
   };
 
   const removeFormChecklist = (index) => {
@@ -165,6 +177,34 @@ const Addtask = ({ on, data }) => {
     newFormChecklists.splice(index, 1);
     setFormData((prev) => ({ ...prev, formChecklists: newFormChecklists }));
   };
+
+  const updateFormChecklist = (index, field, value) => {
+    setFormData((prev) => {
+      const updatedFormChecklists = [...prev.formChecklists];
+      updatedFormChecklists[index] = {
+        ...updatedFormChecklists[index],
+        [field]: value,
+      };
+      return { ...prev, formChecklists: updatedFormChecklists };
+    });
+  };
+
+  // const removeFormChecklist = (index) => {
+  //   const newFormChecklists = [...formData.formChecklists];
+  //   newFormChecklists.splice(index, 1);
+  //   setFormData((prev) => ({ ...prev, formChecklists: newFormChecklists }));
+  // };
+
+  //  const updateFormChecklist = (index, field, value) => {
+  //   setFormData((prevData) => {
+  //     const updatedChecklist = [...prevData.formChecklists];
+  //     updatedChecklist[index] = {
+  //       ...updatedChecklist[index],
+  //       [field]: value,
+  //     };
+  //     return { ...prevData, formChecklists: updatedChecklist };
+  //   });
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -193,10 +233,10 @@ const Addtask = ({ on, data }) => {
       });
 
       // Add formChecklists as JSON string
-      formDataToSend.append(
-        "formChecklists",
-        JSON.stringify(formData.formChecklists)
-      );
+      // formDataToSend.append(
+      //   "formChecklists",
+      //   JSON.stringify(formData.formChecklists)
+      // );
 
       // Add files if they exist
       if (formData.descp.image) {
@@ -204,12 +244,28 @@ const Addtask = ({ on, data }) => {
       }
 
       // Add form files
+      // formData.formChecklists.forEach((item, index) => {
+      //   if (item.downloadFormUrl instanceof File) {
+      //     formDataToSend.append(`downloadFormUrl`, item.downloadFormUrl);
+      //   }
+      //   if (item.sampleFormUrl instanceof File) {
+      //     formDataToSend.append(`sampleFormUrl`, item.sampleFormUrl);
+      //   }
+      // });
+
       formData.formChecklists.forEach((item, index) => {
+        formDataToSend.append(`formChecklists[${index}][name]`, item.name);
         if (item.downloadFormUrl instanceof File) {
-          formDataToSend.append(`downloadFormUrl`, item.downloadFormUrl);
+          formDataToSend.append(
+            `formChecklists[${index}][downloadFormUrl]`,
+            item.downloadFormUrl
+          );
         }
         if (item.sampleFormUrl instanceof File) {
-          formDataToSend.append(`sampleFormUrl`, item.sampleFormUrl);
+          formDataToSend.append(
+            `formChecklists[${index}][sampleFormUrl]`,
+            item.sampleFormUrl
+          );
         }
       });
 
@@ -640,7 +696,7 @@ const Addtask = ({ on, data }) => {
                   </div>
                 </div>
 
-                {/* Download Form Tab */}
+                {/* Download Forms Tab */}
                 <div
                   className={`tab-pane fade ${
                     activeTab === "tab_6" ? "show active" : ""
@@ -648,29 +704,25 @@ const Addtask = ({ on, data }) => {
                   id="tab_6"
                 >
                   <div className="card">
-                    <div className="card-header bg-light">
-                      <div className="d-flex justify-content-between align-items-center">
-                        <h4 className="card-title">Downloadable Forms</h4>
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-primary"
-                          onClick={addFormChecklist}
-                        >
-                          <FaPlus className="mr-1" /> Add Form
-                        </button>
-                      </div>
+                    <div className="card-header bg-light d-flex justify-content-between align-items-center">
+                      <h4 className="card-title mb-0">Form Checklists</h4>
+                      <button
+                        type="button"
+                        className="btn btn-sm"
+                        style={{ backgroundColor: "#2B3A4A", color: "white" }}
+                        onClick={addFormChecklist}
+                      >
+                        <FaPlus className="mr-1" /> Add Form
+                      </button>
                     </div>
                     <div className="card-body">
                       {formData.formChecklists.map((item, index) => (
-                        <div
-                          key={index}
-                          className="form-row mb-3 align-items-center"
-                        >
-                          <div className="col-md-5 mb-2">
+                        <div key={index} className="border rounded p-3 mb-3">
+                          <div className="form-group">
+                            <label>Form Name</label>
                             <input
                               type="text"
                               className="form-control"
-                              placeholder="Form name"
                               value={item.name}
                               onChange={(e) =>
                                 updateFormChecklist(
@@ -679,64 +731,61 @@ const Addtask = ({ on, data }) => {
                                   e.target.value
                                 )
                               }
+                              placeholder={`Form name ${index + 1}`}
                             />
                           </div>
-                          <div className="col-md-5 mb-2">
-                            {/* downloadFormFile */}
-                            <div className="custom-file">
-                              <input
-                                type="file"
-                                className="custom-file-input"
-                                id={`downloadForm_${index}`}
-                                onChange={(e) =>
-                                  updateFormChecklist(
-                                    index,
-                                    "downloadFormUrl",
-                                    e.target.files[0]
-                                  )
-                                }
-                              />
-                              <label
-                                className="custom-file-label"
-                                htmlFor={`downloadForm_${index}`}
-                              >
-                                {item.downloadFormUrl instanceof File
-                                  ? item.downloadFormUrl.name
-                                  : "Choose download form"}
-                              </label>
-                            </div>
 
-                            <div className="custom-file mt-2">
-                              <input
-                                type="file"
-                                className="custom-file-input"
-                                id={`sampleForm_${index}`}
-                                onChange={(e) =>
-                                  updateFormChecklist(
-                                    index,
-                                    "sampleFormUrl",
-                                    e.target.files[0]
-                                  )
-                                }
-                              />
-                              <label
-                                className="custom-file-label"
-                                htmlFor={`sampleForm_${index}`}
-                              >
-                                {item.sampleFormUrl instanceof File
-                                  ? item.sampleFormUrl.name
-                                  : "Choose sample form"}
-                              </label>
-                            </div>
+                          <div className="form-group">
+                            <label>Download Form File</label>
+                            <input
+                              type="file"
+                              className="form-control"
+                              onChange={(e) =>
+                                updateFormChecklist(
+                                  index,
+                                  "downloadFormUrl",
+                                  e.target.files[0]
+                                )
+                              }
+                            />
+                            {item.downloadFormUrl &&
+                              typeof item.downloadFormUrl === "string" && (
+                                <small className="text-success">
+                                  Existing file: {item.downloadFormUrl}
+                                </small>
+                              )}
                           </div>
-                          <div className="col-md-2 mb-2">
+
+                          <div className="form-group">
+                            <label>Sample Form File</label>
+                            <input
+                              type="file"
+                              className="form-control"
+                              onChange={(e) =>
+                                updateFormChecklist(
+                                  index,
+                                  "sampleFormUrl",
+                                  e.target.files[0]
+                                )
+                              }
+                            />
+                            {item.sampleFormUrl &&
+                              typeof item.sampleFormUrl === "string" && (
+                                <small className="text-success">
+                                  Existing file: {item.sampleFormUrl}
+                                </small>
+                              )}
+                          </div>
+
+                          <div className="text-right">
                             {index > 0 && (
                               <button
                                 type="button"
-                                className="btn btn-sm btn-danger btn-block"
+                                className="btn btn-danger btn-sm"
                                 onClick={() => removeFormChecklist(index)}
                               >
-                                <FaTrash />
+                                <FaTrash className="mr-1" />
+                                Remove
                               </button>
                             )}
                           </div>

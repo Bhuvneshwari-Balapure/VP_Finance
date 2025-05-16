@@ -9,6 +9,7 @@ import MarketingTaskReducer from "./feature/MarketingTask/MarketingSlice";
 import ServiceTaskReducer from "./feature/ServiceTask/ServiceSlice";
 import FinancialProductReducer from "./feature/FinancialProduct/FinancialSlice";
 import CompanyNameReducer from "./feature/ComapnyName/CompanySlice";
+import SuspectLeadReducer from "./feature/SuspectLead/SuspectLeadSlice";
 export const store = configureStore({
   reducer: {
     leadsource: leadSourceReducer,
@@ -21,5 +22,6 @@ export const store = configureStore({
     ServiceTask: ServiceTaskReducer,
     financialProduct: FinancialProductReducer,
     CompanyName: CompanyNameReducer,
+    suspectLead: SuspectLeadReducer,
   },
 });

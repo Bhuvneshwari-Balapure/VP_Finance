@@ -31,16 +31,11 @@ export const fetchFinancialProductById = createAsyncThunk(
 // create
 export const createFinancialProduct = createAsyncThunk(
   "FinancialProduct/create",
-  async (FinancialProductData, { rejectWithValue }) => {
+  async (name, { rejectWithValue }) => {
     try {
       // Transform data to match backend schema
-      const payload = {
-        name: FinancialProductData.name,
-        shortcode: FinancialProductData.code,
-        pincode: FinancialProductData.pin,
-      };
 
-      const response = await axios.post(API_URL, payload);
+      const response = await axios.post(API_URL, { name });
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
@@ -50,21 +45,17 @@ export const createFinancialProduct = createAsyncThunk(
 // update
 export const updateFinancialProduct = createAsyncThunk(
   "FinancialProduct/update",
-  async ({ id, FinancialProductData }, { rejectWithValue }) => {
+  async ({ editId, name }, { rejectWithValue }) => {
     try {
-      // Transform data to match backend schema
-      const payload = {
-        name: FinancialProductData.name,
-        shortcode: FinancialProductData.code,
-        pincode: FinancialProductData.pin,
-      };
-      const response = await axios.put(`${API_URL}/${id}`, payload);
+      console.log(name, "S");
+      const response = await axios.put(`${API_URL}/${editId}`, { name });
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
     }
   }
 );
+
 // delete
 export const deleteFinancialProduct = createAsyncThunk(
   "FinancialProduct/delete",

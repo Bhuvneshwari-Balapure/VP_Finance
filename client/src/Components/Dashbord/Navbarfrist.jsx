@@ -42,7 +42,7 @@ const Navbarfristn = () => {
       { name: "Opportunities", to: "/crm/opportunities" },
     ],
     reports: [
-      { name: "Financial Reports", to: "/reports/financial" },
+      { name: "Financial Reports", to: "/financial-product-list" },
       { name: "Sales Reports", to: "/reports/sales" },
       { name: "Customer Reports", to: "/reports/customer" },
     ],
@@ -543,46 +543,65 @@ const Navbarfristn = () => {
                   </div>
                 </Dropdown.Menu>
               </Dropdown>
-      {/* task */}
-           <Dropdown as={Nav.Item} className="nav-item dropdown-hover">
-  <Dropdown.Toggle as={Nav.Link}>
-                <FiCheckSquare className="nav-icon" />
-    <i className="ti-check-box"></i> Task <FiChevronDown size={12} className="ms-1" />
-  </Dropdown.Toggle>
-  <Dropdown.Menu className="custom-dropdown p-4" style={{ minWidth: '200px' }}>
-    <div className="row">
-      {/* Task Categories */}
-      <div className="col-md-6">
-        <h6 className="text-danger">TASK CATEGORIES</h6>
-        <Dropdown.Item as={Link} to="/task-composite">Composite</Dropdown.Item>
-        <Dropdown.Item as={Link} to="/task-marketing">Marketing</Dropdown.Item>
-        <Dropdown.Item as={Link} to="/task-servicing">Servicing</Dropdown.Item>
-      </div>
-    </div>
-  </Dropdown.Menu>
-</Dropdown>
-
+              {/* task */}
+              <Dropdown as={Nav.Item} className="nav-item dropdown-hover">
+                <Dropdown.Toggle as={Nav.Link}>
+                  <FiCheckSquare className="nav-icon" />
+                  <i className="ti-check-box"></i> Task{" "}
+                  <FiChevronDown size={12} className="ms-1" />
+                </Dropdown.Toggle>
+                <Dropdown.Menu
+                  className="custom-dropdown p-4"
+                  style={{ minWidth: "200px" }}
+                >
+                  <div className="row">
+                    {/* Task Categories */}
+                    <div className="col-md-6">
+                      <h6 className="text-danger">TASK CATEGORIES</h6>
+                      <Dropdown.Item as={Link} to="/task-composite">
+                        Composite
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/task-marketing">
+                        Marketing
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/task-servicing">
+                        Servicing
+                      </Dropdown.Item>
+                    </div>
+                  </div>
+                </Dropdown.Menu>
+              </Dropdown>
 
               {/* Reports */}
               <Dropdown as={Nav.Item} className="nav-item dropdown-hover">
-  <Dropdown.Toggle as={Nav.Link}>
-    <FiFileText className="nav-icon" />
-    Reports <FiChevronDown size={12} className="ms-1" />
-  </Dropdown.Toggle>
-  <Dropdown.Menu className="custom-dropdown p-4" style={{ minWidth: '300px' }}>
-    <div className="row">
-      {/* Report Items */}
-      <div className="col-md-12">
-        <h6 className="text-danger">REPORTS</h6>
-        <Dropdown.Item as={Link} to="/report-1">Report 1</Dropdown.Item>
-        <Dropdown.Item as={Link} to="/report-2">Report 2</Dropdown.Item>
-        <Dropdown.Item as={Link} to="/report-3">Report 3</Dropdown.Item>
-        <Dropdown.Item as={Link} to="/report-4">Report 4</Dropdown.Item>
-      </div>
-    </div>
-  </Dropdown.Menu>
-</Dropdown>
-
+                <Dropdown.Toggle as={Nav.Link}>
+                  <FiFileText className="nav-icon" />
+                  Reports <FiChevronDown size={12} className="ms-1" />
+                </Dropdown.Toggle>
+                <Dropdown.Menu
+                  className="custom-dropdown p-4"
+                  style={{ minWidth: "300px" }}
+                >
+                  <div className="row">
+                    {/* Report Items */}
+                    <div className="col-md-12">
+                      <h6 className="text-danger">REPORTS</h6>
+                      <Dropdown.Item as={Link} to="/report-1">
+                        Report 1
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/report-2">
+                        Report 2
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/report-3">
+                        Report 3
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/report-4">
+                        Report 4
+                      </Dropdown.Item>
+                    </div>
+                  </div>
+                </Dropdown.Menu>
+              </Dropdown>
             </Nav>
           </Navbar.Collapse>
         </Container>

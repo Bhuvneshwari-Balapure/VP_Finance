@@ -1,96 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const AddProspectLead = () => {
   const [form, setForm] = useState({
-    group_code: '',
-    salutation: 'Mr.',
-    name: '',
-    gender: 'Male',
-    comp_name: '',
-    designation: '',
-    annual_income: 'Choose',
-    grade: '1',
-    mobile: '',
-    contact_no: '',
-    whatsapp_no: '',
-    pa_name: '',
-    pa_relation: '',
-    pa_mobile: '',
-    email: '',
-    dob: '',
-    dob_record: '',
-    dom: '',
-    resi_addr: '',
-    resi_landmark: '',
-    resi_pincode: '',
-    office_addr: '',
-    office_landmark: '',
-    office_pincode: '',
-    pref_meet_addr: '',
-    pref_area: '',
-    meeting_time: '',
-    city: '',
-    aadhar_no: '',
-    pan_no: '',
-    lead_source: 'Choose',
-    lead_name: 'Choose',
-    lead_occupation: 'Businessman',
-    lead_occupation_type: 'CA',
-    calling_purpose: '',
-    call_name: '',
-    remark: ''
+    group_code: "",
+    salutation: "Mr.",
+    name: "",
+    gender: "Male",
+    comp_name: "",
+    designation: "",
+    annual_income: "Choose",
+    grade: "1",
+    mobile: "",
+    contact_no: "",
+    whatsapp_no: "",
+    pa_name: "",
+    pa_relation: "",
+    pa_mobile: "",
+    email: "",
+
+    dob_record: "",
+    dom: "",
+    resi_addr: "",
+    resi_landmark: "",
+    resi_pincode: "",
+    office_addr: "",
+    office_landmark: "",
+    office_pincode: "",
+    pref_meet_addr: "",
+    pref_area: "",
+    meeting_time: "",
+    city: "",
+    aadhar_no: "",
+    pan_no: "",
+    lead_source: "Choose",
+    lead_name: "Choose",
+    lead_occupation: "Businessman",
+    lead_occupation_type: "CA",
+    calling_purpose: "",
+    call_name: "",
+    remark: "",
   });
 
-  const [sourceRadio, setSourceRadio] = useState('');
+  const [sourceRadio, setSourceRadio] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleRadioChange = (e) => {
     const value = e.target.value;
     setSourceRadio(value);
 
-    let address = '';
-    let pincode = '';
+    let address = "";
+    let pincode = "";
 
-    if (value === 'textbox1') {
+    if (value === "textbox1") {
       address = form.resi_addr;
       pincode = form.resi_pincode;
-    } else if (value === 'textbox2') {
+    } else if (value === "textbox2") {
       address = form.office_addr;
       pincode = form.office_pincode;
     }
 
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      pref_meet_addr: address
+      pref_meet_addr: address,
     }));
-
-    fetchAreaByPincode(pincode);
-  };
-
-  const fetchAreaByPincode = async (pin) => {
-    try {
-      const response = await axios.post('ajax/backend.php', { pin1: pin });
-      const json = response.data;
-      const area = Object.values(json)[1];
-      setForm(prev => ({ ...prev, pref_area: area }));
-    } catch (error) {
-      console.error('Error fetching area:', error);
-    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', form);
+    console.log("Form submitted:", form);
     // Submit form to backend API
   };
 
+  // Edit
+
   return (
     <section className="content bg-white p-4">
-      <h3 className='mb-4'>Prospect Master</h3>
+      <h3 className="mb-4">Prospect Master</h3>
       <div className="row">
         <div className="col-lg-12 col-xs-12">
           <div className="box box-primary">
@@ -100,7 +89,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-2 col-xs-3 mb-3">
                   <label>Group</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     type="text"
                     name="group_code"
                     value={form.group_code}
@@ -114,7 +103,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-2 col-xs-3 mb-3">
                   <label>Salutation</label>
                   <select
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="salutation"
                     value={form.salutation}
                     onChange={handleChange}
@@ -136,7 +125,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-5 col-xs-6 mb-3">
                   <label>Family Head</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="name"
                     value={form.name}
                     onChange={handleChange}
@@ -150,7 +139,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-3 col-xs-4 mb-3">
                   <label>Gender</label>
                   <select
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="gender"
                     value={form.gender}
                     onChange={handleChange}
@@ -166,7 +155,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-4 col-xs-4 mb-3">
                   <label>Organisation</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="comp_name"
                     value={form.comp_name}
                     onChange={handleChange}
@@ -209,7 +198,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-2 mb-3">
                   <label>Grade</label>
                   <select
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="grade"
                     value={form.grade}
                     onChange={handleChange}
@@ -225,7 +214,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-4 col-xs-4 mb-3">
                   <label>Reg. Mob</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="mobile"
                     value={form.mobile}
                     onChange={handleChange}
@@ -238,7 +227,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-4 col-xs-4 mb-3">
                   <label>Contact No.</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="contact_no"
                     value={form.contact_no}
                     onChange={handleChange}
@@ -251,7 +240,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-4 col-xs-4 mb-3">
                   <label>Whatsapp No.</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="whatsapp_no"
                     value={form.whatsapp_no}
                     onChange={handleChange}
@@ -265,7 +254,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-4 col-xs-4 mb-3">
                   <label>PA Name</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="pa_name"
                     value={form.pa_name}
                     onChange={handleChange}
@@ -278,7 +267,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-4 col-xs-4 mb-3">
                   <label>PA's Relation</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="pa_relation"
                     value={form.pa_relation}
                     onChange={handleChange}
@@ -291,7 +280,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-4 col-xs-4 mb-3">
                   <label>PA Mobile No</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="pa_mobile"
                     value={form.pa_mobile}
                     onChange={handleChange}
@@ -305,7 +294,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-3 col-xs-4 mb-3">
                   <label>Email id.</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="email"
                     value={form.email}
                     onChange={handleChange}
@@ -316,22 +305,9 @@ const AddProspectLead = () => {
                 </div>
 
                 <div className="form-group col-md-3 mb-3">
-                  <label>Date of Birth (Actual)</label>
-                  <input
-                    style={{ border: '1px solid #636363' }}
-                    name="dob"
-                    value={form.dob}
-                    onChange={handleChange}
-                    type="date"
-                    className="form-control"
-                    placeholder="Email"
-                  />
-                </div>
-
-                <div className="form-group col-md-3 mb-3">
                   <label>Date of Birth (Record)</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="dob_record"
                     value={form.dob_record}
                     onChange={handleChange}
@@ -344,7 +320,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-3 mb-3">
                   <label>Marriage Date</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="dom"
                     value={form.dom}
                     onChange={handleChange}
@@ -358,12 +334,12 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-1 col-xs-2 mb-3">
                   <label>Select</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     type="radio"
                     name="sourceRadio"
                     value="textbox1"
                     id="radioTextbox1"
-                    checked={sourceRadio === 'textbox1'}
+                    checked={sourceRadio === "textbox1"}
                     onChange={handleRadioChange}
                   />
                 </div>
@@ -371,7 +347,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-5 col-xs-10 mb-3">
                   <label>Resi. Address</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     id="textbox1"
                     name="resi_addr"
                     value={form.resi_addr}
@@ -385,7 +361,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-3 mb-3">
                   <label>Landmark</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="resi_landmark"
                     value={form.resi_landmark}
                     onChange={handleChange}
@@ -398,7 +374,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-3 mb-3">
                   <label>Pin Code</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     id="textbox12"
                     name="resi_pincode"
                     value={form.resi_pincode}
@@ -413,12 +389,12 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-1 col-xs-2 mb-3">
                   <label>Select</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     type="radio"
                     name="sourceRadio"
                     value="textbox2"
                     id="radioTextbox2"
-                    checked={sourceRadio === 'textbox2'}
+                    checked={sourceRadio === "textbox2"}
                     onChange={handleRadioChange}
                   />
                 </div>
@@ -426,7 +402,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-5 col-xs-10 mb-3">
                   <label>Off. Address</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     id="textbox2"
                     name="office_addr"
                     value={form.office_addr}
@@ -440,7 +416,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-3 mb-3">
                   <label>Landmark</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="office_landmark"
                     value={form.office_landmark}
                     onChange={handleChange}
@@ -453,7 +429,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-3 mb-3">
                   <label>Pincode</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     id="textbox21"
                     name="office_pincode"
                     value={form.office_pincode}
@@ -470,9 +446,11 @@ const AddProspectLead = () => {
                 </div>
 
                 <div className="form-group col-md-5 mb-3">
-                  <label style={{ color: 'blue', fontWeight: 'bold' }}>Preferred Meeting Address</label>
+                  <label style={{ color: "blue", fontWeight: "bold" }}>
+                    Preferred Meeting Address
+                  </label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="pref_meet_addr"
                     value={form.pref_meet_addr}
                     onChange={handleChange}
@@ -484,9 +462,11 @@ const AddProspectLead = () => {
                 </div>
 
                 <div className="form-group col-md-3 mb-3">
-                  <label style={{ color: 'blue', fontWeight: 'bold' }}>Area</label>
+                  <label style={{ color: "blue", fontWeight: "bold" }}>
+                    Area
+                  </label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="pref_area"
                     value={form.pref_area}
                     onChange={handleChange}
@@ -499,9 +479,11 @@ const AddProspectLead = () => {
 
                 {/* Meeting Time Slot */}
                 <div className="form-group col-md-3 mb-3">
-                  <label style={{ color: 'blue', fontWeight: 'bold' }}>Meeting Time Slot</label>
+                  <label style={{ color: "blue", fontWeight: "bold" }}>
+                    Meeting Time Slot
+                  </label>
                   <select
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     className="form-control"
                     name="meeting_time"
                     value={form.meeting_time}
@@ -527,7 +509,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-4 col-xs-6 mb-3">
                   <label>City</label>
                   <select
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="city"
                     value={form.city}
                     onChange={handleChange}
@@ -542,7 +524,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-4 col-xs-6 mb-3">
                   <label>Aadhar No</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="aadhar_no"
                     value={form.aadhar_no}
                     onChange={handleChange}
@@ -555,7 +537,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-4 col-xs-6 mb-3">
                   <label>Pan No.</label>
                   <input
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="pan_no"
                     value={form.pan_no}
                     onChange={handleChange}
@@ -569,7 +551,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-3 col-xs-6 mb-3">
                   <label>Lead Source</label>
                   <select
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="lead_source"
                     value={form.lead_source}
                     onChange={handleChange}
@@ -591,7 +573,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-3 col-xs-6 mb-3">
                   <label>Lead Name</label>
                   <select
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="lead_name"
                     value={form.lead_name}
                     onChange={handleChange}
@@ -613,7 +595,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-3 col-xs-6 mb-3">
                   <label>Lead Occupation</label>
                   <select
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="lead_occupation"
                     value={form.lead_occupation}
                     onChange={handleChange}
@@ -633,7 +615,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-3 col-xs-6 mb-3">
                   <label>Lead Occupation Type</label>
                   <select
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="lead_occupation_type"
                     value={form.lead_occupation_type}
                     onChange={handleChange}
@@ -649,7 +631,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-6 col-xs-6 mb-3">
                   <label>Calling Purpose</label>
                   <select
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="calling_purpose"
                     value={form.calling_purpose}
                     onChange={handleChange}
@@ -665,7 +647,7 @@ const AddProspectLead = () => {
                 <div className="form-group col-md-6 col-xs-6 mb-3">
                   <label>Name</label>
                   <select
-                    style={{ border: '1px solid #636363' }}
+                    style={{ border: "1px solid #636363" }}
                     name="call_name"
                     value={form.call_name}
                     onChange={handleChange}
@@ -691,17 +673,14 @@ const AddProspectLead = () => {
 
                 {/* Submit Button */}
                 <div className="box-footer col-12 text-center mt-3">
-                  <button
-                    style={{ border: '1px solid #636363', backgroundColor:"" }}
-                    name="submit"
-                    className="btn"
-                    type="submit"
-                    
-                  >
-                    Submit
+                  <button type="submit">
+                    {editingLead ? "Update Lead" : "Add Lead"}
                   </button>
                   <input
-                    style={{ border: '1px solid #636363', backgroundColor: "#2B3A4A" }}
+                    style={{
+                      border: "1px solid #636363",
+                      backgroundColor: "#2B3A4A",
+                    }}
                     name="id"
                     type="hidden"
                     className="btn"

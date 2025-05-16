@@ -21,6 +21,9 @@ import CareerEnquiry from "../Components/Employee/OfficeAdmin/CareerEnquiry";
 import ResumesShortlist from "../Components/Employee/OfficeAdmin/ResumesShortlist";
 import SelectedInterviewTable from "../Components/Employee/OfficeAdmin/SelectedInterviewTable";
 import JoiningData from "../Components/Employee/OfficeAdmin/JoiningData";
+import SuspectLeadsTable from "../Components/Customer/SuspectLeadsTable";
+import SuspectLeadTabs from "../Components/Customer/SuspectLeadTabs";
+import FinancialProduct from "../Components/Offices/Financlal/FinancialProduct";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -35,7 +38,9 @@ const AppRoutes = () => {
         <Route path="/marketing-task" element={<MarketingTask />} />
         <Route path="/servicing-task" element={<ServicingTask />} />
         <Route path="/add-prospect-lead" element={<AddProspectLead />} />
-        <Route path="/add-suspect-lead" element={<AddSuspect />} />
+        {/* <Route path="/add-suspect-lead" element={<AddSuspect />} /> */}
+        <Route path="/add-suspect-lead" element={<SuspectLeadTabs />} />
+        {/* <Route path="/display-suspect-lead" element={<SuspectLeadsTable />} /> */}
         <Route path="/customer-detail" element={<CustomerDetail />} />
         <Route path="/import-lead" element={<ImportLead />} />
         <Route path="/add-employee" element={<EmployeeAddForm />} />
@@ -43,6 +48,7 @@ const AppRoutes = () => {
         <Route path="/resume-shortlist" element={<ResumesShortlist />} />
         <Route path="/interview-process" element={<SelectedInterviewTable />} />
         <Route path="/joining-data" element={<JoiningData />} />
+        <Route path="/financial-product-list" element={<FinancialProduct />} />
       </Route>
     </Routes>
   );

@@ -1,244 +1,497 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Form, Button, Spinner } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createSuspectLead,
+  fetchSuspectLeadById,
+  updateSuspectLead,
+} from "../../redux/feature/SuspectLead/SuspectLeadThunx";
 
-const AddSuspect = () => {
-  const [form, setForm] = useState({
-    salutation: '',
-    familyHead: '',
-    gender: '',
-    organisation: '',
-    designation: '',
-    annualIncome: '',
-    grade: '',
-    mobile: '',
-    contactNo: '',
-    whatsapp: '',
-    email: '',
-    dob: '',
-    dom: '',
-    resiAddr: '',
-    resiLandmark: '',
-    resiPincode: '',
-    officeAddr: '',
-    officeLandmark: '',
-    officePincode: '',
-    preferredMeetingAddr: '',
-    preferredMeetingArea: '',
-    city: '',
-  });
+const initialFormState = {
+  salutation: "",
+  familyHead: "",
+  gender: "",
+  organisation: "",
+  designation: "",
+  annualIncome: "",
+  grade: "",
+  mobile: "",
+  contactNo: "",
+  whatsapp: "",
+  email: "",
+  dob: "",
+  dom: "",
+  preferredAddressType: "",
+  resiAddr: "",
+  resiLandmark: "",
+  resiPincode: "",
+  officeAddr: "",
+  officeLandmark: "",
+  officePincode: "",
+  preferredMeetingAddr: "",
+  preferredMeetingArea: "",
+  city: "",
+  leadSource: "",
+  leadName: "",
+  leadOccupation: "",
+  occupationType: "",
+  callingPurpose: "",
+  name: "",
+};
 
-  const [sourceRadio, setSourceRadio] = useState('');
+const AddSuspect = ({ editId, setActiveTab, setEditId }) => {
+  const dispatch = useDispatch();
+  const { loading, error, currentLead } = useSelector(
+    (state) => state.suspectLead
+  );
+  const [form, setForm] = useState(initialFormState);
+  console.log(currentLead, "dfjldksf");
+
+  useEffect(() => {
+    if (editId) {
+      dispatch(fetchSuspectLeadById(editId));
+    } else {
+      setForm(initialFormState);
+    }
+  }, [editId, dispatch]);
+
+  useEffect(() => {
+    if (editId && currentLead && currentLead._id === editId) {
+      setForm({
+        ...initialFormState,
+        ...currentLead,
+      });
+    }
+  }, [editId, currentLead]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    let updatedForm = { ...form, [name]: value };
+
+    if (name === "annualIncome") {
+      let grade = "";
+      if (value === "25 lakh to 1 Cr.") grade = 1;
+      else if (value === "5 to 25 lakh") grade = 2;
+      else if (value === "2.5 to 5 lakh") grade = 3;
+      updatedForm.grade = grade;
+    }
+
+    setForm(updatedForm);
   };
 
   const handleRadioChange = (e) => {
     const value = e.target.value;
-    setSourceRadio(value);
-    let address = '';
-    let pincode = '';
+    const address =
+      value === "resi"
+        ? form.resiAddr
+        : value === "office"
+        ? form.officeAddr
+        : "";
+    const pincode =
+      value === "resi"
+        ? form.resiPincode
+        : value === "office"
+        ? form.officePincode
+        : "";
 
-    if (value === 'textbox1') {
-      address = form.resiAddr;
-      pincode = form.resiPincode;
-    } else if (value === 'textbox2') {
-      address = form.officeAddr;
-      pincode = form.officePincode;
-    }
-
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      preferredMeetingAddr: address
+      preferredAddressType: value,
+      preferredMeetingAddr: address,
+      preferredMeetingArea: pincode ? `Area for ${pincode}` : "",
     }));
-
-    fetchAreaByPincode(pincode);
   };
 
-  const fetchAreaByPincode = async (pin) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const cleanedForm = { ...form };
+    if (form.preferredAddressType === "resi") {
+      cleanedForm.officeAddr = "";
+      cleanedForm.officeLandmark = "";
+      cleanedForm.officePincode = "";
+    } else if (form.preferredAddressType === "office") {
+      cleanedForm.resiAddr = "";
+      cleanedForm.resiLandmark = "";
+      cleanedForm.resiPincode = "";
+    }
+
     try {
-      const response = await axios.post('ajax/backend.php', { pin1: pin });
-      const json = response.data;
-      const area = Object.values(json)[1];
-      setForm(prev => ({ ...prev, preferredMeetingArea: area }));
+      let resultAction;
+      if (editId) {
+        resultAction = await dispatch(
+          updateSuspectLead({ id: editId, leadData: cleanedForm })
+        );
+      } else {
+        resultAction = await dispatch(createSuspectLead(cleanedForm));
+      }
+
+      if (resultAction.payload) {
+        alert(`Lead successfully ${editId ? "updated" : "added"}!`);
+        if (!editId) {
+          setForm(initialFormState);
+        } else {
+          setActiveTab("display");
+          setEditId(null);
+        }
+      }
     } catch (error) {
-      console.error('Error fetching area:', error);
+      console.error("Error submitting form:", error);
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted:', form);
-    // Submit form to backend API
-  };
+  if (editId && loading) {
+    return (
+      <Container className="text-center mt-4">
+        <Spinner animation="border" /> Loading lead data...
+      </Container>
+    );
+  }
 
   return (
+    <Container className="mt-4 p-3 border rounded bg-light">
+      <h4 className="mb-4">
+        {editId ? "Edit Suspect Lead" : "Add Suspect Lead"}
+      </h4>
+      {error && <div className="text-danger mb-3">Error: {error}</div>}
+      <Form onSubmit={handleSubmit}>
+        <Row className="mb-3">
+          <Col md={4}>
+            <Form.Label>Salutation</Form.Label>
+            <Form.Select
+              name="salutation"
+              value={form.salutation}
+              onChange={handleChange}
+            >
+              <option value="">Select</option>
+              <option>Mr.</option>
+              <option>Mrs.</option>
+              <option>Ms.</option>
+              <option>Mast.</option>
+              <option>Shri.</option>
+              <option>Smt.</option>
+              <option>Kum.</option>
+              <option>Kr.</option>
+              <option>Dr.</option>
+            </Form.Select>
+          </Col>
+          <Col md={4}>
+            <Form.Label>Family Head</Form.Label>
+            <Form.Control
+              name="familyHead"
+              value={form.familyHead}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={4}>
+            <Form.Label>Gender</Form.Label>
+            <Form.Select
+              name="gender"
+              value={form.gender}
+              onChange={handleChange}
+            >
+              <option value="">Select</option>
+              <option>Male</option>
+              <option>Female</option>
+            </Form.Select>
+          </Col>
+        </Row>
 
-    <div className='bg-white p-4'>
- <h3 className='mb-5'>Add Suspect Leads</h3>
-      <form onSubmit={handleSubmit} className="row g-3"> {/* Added g-3 for gutter spacing */}
+        <Row className="mb-3">
+          <Col md={3}>
+            <Form.Label>Organisation</Form.Label>
+            <Form.Control
+              name="organisation"
+              value={form.organisation}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>Designation</Form.Label>
+            <Form.Control
+              name="designation"
+              value={form.designation}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>Annual Income</Form.Label>
+            <Form.Select
+              name="annualIncome"
+              value={form.annualIncome}
+              onChange={handleChange}
+            >
+              <option value="">Choose</option>
+              <option>25 lakh to 1 Cr.</option>
+              <option>5 to 25 lakh</option>
+              <option>2.5 to 5 lakh</option>
+            </Form.Select>
+          </Col>
+          <Col md={3}>
+            <Form.Label>Grade</Form.Label>
+            <Form.Control name="grade" value={form.grade} readOnly />
+          </Col>
+        </Row>
 
-        {/* Salutation */}
-        <div className="form-group col-md-2 col-xs-3 mb-3">
-          <label>Salutation</label>
-          <select name="salutation" value={form.salutation} onChange={handleChange} className="form-control">
-            <option value="">Select</option>
-            <option>Mr.</option>
-            <option>Mrs.</option>
-            <option>Ms.</option>
-            <option>Mast.</option>
-            <option>Shri.</option>
-            <option>Smt.</option>
-            <option>Kum.</option>
-            <option>Kr.</option>
-            <option>Dr.</option>
-          </select>
-        </div>
+        <Row className="mb-3">
+          <Col md={4}>
+            <Form.Label>Mobile No.</Form.Label>
+            <Form.Control
+              name="mobile"
+              value={form.mobile}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={4}>
+            <Form.Label>Contact No.</Form.Label>
+            <Form.Control
+              name="contactNo"
+              value={form.contactNo}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={4}>
+            <Form.Label>Whatsapp</Form.Label>
+            <Form.Control
+              name="whatsapp"
+              value={form.whatsapp}
+              onChange={handleChange}
+            />
+          </Col>
+        </Row>
 
-        {/* Family Head */}
-        <div className="form-group col-md-5 col-xs-9 mb-3">
-          <label>Family Head</label>
-          <input name="familyHead" value={form.familyHead} onChange={handleChange} type="text" className="form-control" placeholder="Name" />
-        </div>
+        <Row className="mb-3">
+          <Col md={4}>
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={4}>
+            <Form.Label>DOB</Form.Label>
+            <Form.Control
+              name="dob"
+              type="date"
+              value={form.dob}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={4}>
+            <Form.Label>DOM</Form.Label>
+            <Form.Control
+              name="dom"
+              type="date"
+              value={form.dom}
+              onChange={handleChange}
+            />
+          </Col>
+        </Row>
 
-        {/* Gender */}
-        <div className="form-group col-md-3 col-xs-4 mb-3">
-          <label>Gender</label>
-          <select name="gender" value={form.gender} onChange={handleChange} className="form-control">
-            <option>Male</option>
-            <option>Female</option>
-            <option>Others</option>
-          </select>
-        </div>
+        {/* Resi & Office Address */}
+        <Row className="mb-3">
+          <Col md={2} className="pt-4">
+            {/* <Form.Check
+              type="radio"
+              value="resi"
+              checked={sourceRadio === "resi"}
+              onChange={handleRadioChange}
+              label="Select"
+            /> */}
+            <Form.Check
+              type="radio"
+              value="resi"
+              name="preferredAddressType"
+              checked={form.preferredAddressType === "resi"}
+              onChange={handleRadioChange}
+              label="Select"
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>Resi. Address</Form.Label>
+            <Form.Control
+              name="resiAddr"
+              value={form.resiAddr}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>Landmark</Form.Label>
+            <Form.Control
+              name="resiLandmark"
+              value={form.resiLandmark}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>Pin Code</Form.Label>
+            <Form.Control
+              name="resiPincode"
+              value={form.resiPincode}
+              onChange={handleChange}
+            />
+          </Col>
+        </Row>
 
-        {/* Organisation */}
-        <div className="form-group col-md-3 col-xs-4 mb-3">
-          <label>Organisation</label>
-          <input name="organisation" value={form.organisation} onChange={handleChange} type="text" className="form-control" />
-        </div>
+        <Row className="mb-3">
+          <Col md={2} className="pt-4">
+            {/* <Form.Check
+              type="radio"
+              value="office"
+              checked={sourceRadio === "office"}
+              onChange={handleRadioChange}
+              label="Select"
+            /> */}
+            <Form.Check
+              type="radio"
+              value="office"
+              name="preferredAddressType"
+              checked={form.preferredAddressType === "office"}
+              onChange={handleRadioChange}
+              label="Select"
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>Off. Address</Form.Label>
+            <Form.Control
+              name="officeAddr"
+              value={form.officeAddr}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>Landmark</Form.Label>
+            <Form.Control
+              name="officeLandmark"
+              value={form.officeLandmark}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={2}>
+            <Form.Label>Pincode</Form.Label>
+            <Form.Control
+              name="officePincode"
+              value={form.officePincode}
+              onChange={handleChange}
+            />
+          </Col>
+        </Row>
 
-        {/* Designation */}
-        <div className="form-group col-md-3 col-xs-4 mb-3">
-          <label>Designation</label>
-          <input name="designation" value={form.designation} onChange={handleChange} type="text" className="form-control" />
-        </div>
+        <Row className="mb-3">
+          <Col md={4}>
+            <Form.Label className="text-primary fw-bold">
+              Preferred Meeting Address
+            </Form.Label>
+            <Form.Control
+              name="preferredMeetingAddr"
+              value={form.preferredMeetingAddr}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label className="text-primary fw-bold">Area</Form.Label>
+            <Form.Control
+              name="preferredMeetingArea"
+              value={form.preferredMeetingArea}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>City</Form.Label>
+            <Form.Control
+              name="city"
+              value={form.city}
+              onChange={handleChange}
+            />
+          </Col>
+        </Row>
 
-        {/* Annual Income */}
-        <div className="form-group col-md-3 col-xs-6 mb-3">
-          <label>Annual Income</label>
-          <select name="annualIncome" value={form.annualIncome} onChange={handleChange} className="form-control">
-            <option>Choose</option>
-            <option value="1">25 lakh to 1 Cr.</option>
-            <option value="2">5 to 25 lakh</option>
-            <option value="3">2.5 to 5 lakh</option>
-          </select>
-        </div>
+        <Row className="mb-3">
+          <Col md={3}>
+            <Form.Label>Lead Source</Form.Label>
+            <Form.Control
+              name="leadSource"
+              value={form.leadSource}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>Lead Name</Form.Label>
+            <Form.Control
+              name="leadName"
+              value={form.leadName}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>Lead Occupation</Form.Label>
+            <Form.Control
+              name="leadOccupation"
+              value={form.leadOccupation}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>Occupation Type</Form.Label>
+            <Form.Control
+              name="occupationType"
+              value={form.occupationType}
+              onChange={handleChange}
+            />
+          </Col>
+        </Row>
 
-        {/* Grade */}
-        <div className="form-group col-md-3 col-xs-6 mb-3">
-          <label>Grade</label>
-          <select name="grade" value={form.grade} onChange={handleChange} className="form-control">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-          </select>
-        </div>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Label>Calling Purpose</Form.Label>
+            <Form.Select
+              name="callingPurpose"
+              value={form.callingPurpose}
+              onChange={handleChange}
+            >
+              <option value="Servicing">Servicing</option>
+              <option value="Sales">Marketing</option>
+            </Form.Select>
+          </Col>
+          <Col md={6}>
+            <Form.Label>Name</Form.Label>
+            <Form.Select name="name" value={form.name} onChange={handleChange}>
+              <option value="LIC">LIC</option>
+              <option value="Portfolio Management">Portfolio Management</option>
+            </Form.Select>
+          </Col>
+        </Row>
 
-        {/* Mobile, Contact, WhatsApp */}
-        <div className="form-group col-md-4 col-xs-4 mb-3">
-          <label>Mobile No.</label>
-          <input name="mobile" value={form.mobile} onChange={handleChange} type="text" className="form-control" />
-        </div>
-        <div className="form-group col-md-4 col-xs-4 mb-3">
-          <label>Contact No.</label>
-          <input name="contactNo" value={form.contactNo} onChange={handleChange} type="text" className="form-control" />
-        </div>
-        <div className="form-group col-md-4 col-xs-4 mb-3">
-          <label>WhatsApp</label>
-          <input name="whatsapp" value={form.whatsapp} onChange={handleChange} type="text" className="form-control" />
-        </div>
+        <div className="d-flex justify-content-between">
+          <Button variant="primary" type="submit" disabled={loading}>
+            {loading ? (
+              <>
+                <Spinner as="span" animation="border" size="sm" />{" "}
+                {editId ? "Updating..." : "Submitting..."}
+              </>
+            ) : editId ? (
+              "Update Lead"
+            ) : (
+              "Submit Lead"
+            )}
+          </Button>
 
-        {/* Email, DOB, DOM */}
-        <div className="form-group col-md-4 col-xs-4 mb-3">
-          <label>Email</label>
-          <input name="email" value={form.email} onChange={handleChange} type="email" className="form-control" />
+          {editId && (
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setActiveTab("display");
+                setEditId(null);
+              }}
+            >
+              Cancel
+            </Button>
+          )}
         </div>
-        <div className="form-group col-md-4 col-xs-4 mb-3">
-          <label>DOB</label>
-          <input name="dob" value={form.dob} onChange={handleChange} type="date" className="form-control" />
-        </div>
-        <div className="form-group col-md-4 col-xs-4 mb-3">
-          <label>DOM</label>
-          <input name="dom" value={form.dom} onChange={handleChange} type="date" className="form-control" />
-        </div>
-
-        {/* Resi. Address */}
-        <div className="form-group col-md-1 col-xs-2 mb-3">
-          <label>Select</label>
-          <input type="radio" name="sourceRadio" value="textbox1" checked={sourceRadio === 'textbox1'} onChange={handleRadioChange} className="mt-2" />
-        </div>
-        <div className="form-group col-md-5 col-xs-10 mb-3">
-          <label>Resi. Address</label>
-          <input name="resiAddr" value={form.resiAddr} onChange={handleChange} type="text" className="form-control" id="textbox1" />
-        </div>
-        <div className="form-group col-md-3 col-xs-6 mb-3">
-          <label>Landmark</label>
-          <input name="resiLandmark" value={form.resiLandmark} onChange={handleChange} type="text" className="form-control" />
-        </div>
-        <div className="form-group col-md-3 col-xs-6 mb-3">
-          <label>Pin Code</label>
-          <input name="resiPincode" value={form.resiPincode} onChange={handleChange} type="text" className="form-control" id="textbox12" />
-        </div>
-
-        {/* Office Address */}
-        <div className="form-group col-md-1 col-xs-2 mb-3">
-          <label>Select</label>
-          <input type="radio" name="sourceRadio" value="textbox2" checked={sourceRadio === 'textbox2'} onChange={handleRadioChange} className="mt-2" />
-        </div>
-        <div className="form-group col-md-5 col-xs-10 mb-3">
-          <label>Office Address</label>
-          <input name="officeAddr" value={form.officeAddr} onChange={handleChange} type="text" className="form-control" id="textbox2" />
-        </div>
-        <div className="form-group col-md-3 col-xs-6 mb-3">
-          <label>Landmark</label>
-          <input name="officeLandmark" value={form.officeLandmark} onChange={handleChange} type="text" className="form-control" />
-        </div>
-        <div className="form-group col-md-3 col-xs-6 mb-3">
-          <label>Pincode</label>
-          <input name="officePincode" value={form.officePincode} onChange={handleChange} type="text" className="form-control" id="textbox21" />
-        </div>
-
-        {/* Preferred Meeting Address & Area */}
-        <div className="form-group col-md-5 col-xs-10 mb-3">
-          <label><b style={{ color: 'blue' }}>Preferred Meeting Address</b></label>
-          <input name="preferredMeetingAddr" value={form.preferredMeetingAddr} onChange={handleChange} type="text" className="form-control" />
-        </div>
-        <div className="form-group col-md-3 col-xs-6 mb-3">
-          <label><b style={{ color: 'blue' }}>Area</b></label>
-          <input name="preferredMeetingArea" value={form.preferredMeetingArea} onChange={handleChange} type="text" className="form-control" id="area123" />
-        </div>
-
-        {/* City */}
-        <div className="form-group col-md-3 col-xs-6 mb-3">
-          <label>City</label>
-          <input name="city" value={form.city} onChange={handleChange} type="text" className="form-control" />
-        </div>
-
-     {/* Submit Button */}
-                <div className="box-footer col-12 text-center mt-3">
-                  <button
-                    style={{ border: '1px solid #636363', backgroundColor:"" }}
-                    name="submit"
-                    className="btn"
-                    type="submit"
-                    
-                  >
-                    Submit
-                  </button>
-        </div>
-
-      </form>
-    </div>
+      </Form>
+    </Container>
   );
 };
 

@@ -8,8 +8,8 @@ const upload = require("../config/multer");
 
 const uploadFields = upload.fields([
   { name: "image", maxCount: 1 },
-  { name: "downloadFormUrl", maxCount: 1 },
-  { name: "sampleFormUrl", maxCount: 1 },
+  { name: "downloadFormUrl", maxCount: 1000 },
+  { name: "sampleFormUrl", maxCount: 1000 },
 ]);
 
 // Create a new task

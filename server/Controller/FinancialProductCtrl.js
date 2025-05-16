@@ -3,8 +3,9 @@ const FinancialProduct = require("../Models/FinancialProductModel");
 // Create
 exports.createProduct = async (req, res) => {
   console.log(req.body, "HHHH");
+
   try {
-    const product = new FinancialProduct({ name: req.body.name });
+    const product = new FinancialProduct(req.body);
     await product.save();
     res.status(201).json(product);
   } catch (err) {
