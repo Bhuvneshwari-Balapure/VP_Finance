@@ -148,9 +148,19 @@ const Navbarfristn = () => {
                     {/* Lead Master */}
                     <div className="col-md-4">
                       <h6 className="text-danger">LEAD MASTER</h6>
+
+                      <Dropdown.Item as={Link} to="/lead-type">
+                        Lead Type
+                      </Dropdown.Item>
+
+                      <Dropdown.Item as={Link} to="/occupation-type">
+                        Occupation Type
+                      </Dropdown.Item>
+
                       <Dropdown.Item as={Link} to="/lead-source">
                         Lead Source
                       </Dropdown.Item>
+
                       <Dropdown.Item as={Link} to="/lead-occupation">
                         Lead Occupation
                       </Dropdown.Item>

@@ -9,16 +9,6 @@ const leadSourceSchema = new mongoose.Schema(
     leadType: {
       type: String,
       required: true,
-      enum: [
-        "Digital Platform",
-        "Organization Data",
-        "Administrator Referral",
-        "Direct Approach",
-        "Business Associates",
-        "Customer Referral",
-        "Internship Student",
-      ],
-      default: "",
     },
   },
   { timestamps: true }

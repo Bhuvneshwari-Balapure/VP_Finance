@@ -15,6 +15,7 @@ import {
   updateDetails,
   deleteDetails,
 } from "../../../redux/feature/LeadSource/LeadThunx";
+import { fetchLeadType } from "../../../redux/feature/LeadType/LeadTypeThunx";
 
 const LeadSource = () => {
   const [leadType, setLeadType] = useState("");
@@ -23,9 +24,19 @@ const LeadSource = () => {
   const [editId, setEditId] = useState(null);
 
   const dispatch = useDispatch();
+
+  // Lead sources slice from Redux
   const { details: leadSources, loading } = useSelector(
     (state) => state.leadsource
   );
+
+  // Lead types slice from Redux — adjust 'leadType' based on your actual slice name
+  const leadTypeState = useSelector((state) => state.LeadType);
+
+  useEffect(() => {
+    dispatch(fetchLeadType());
+    dispatch(fetchDetails());
+  }, [dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,7 +54,6 @@ const LeadSource = () => {
       dispatch(createDetails(leadData));
     }
 
-    // Reset form
     setLeadName("");
     setLeadType("");
     setIsEditing(false);
@@ -70,10 +80,6 @@ const LeadSource = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(fetchDetails());
-  }, [dispatch]);
-
   return (
     <Container
       fluid
@@ -82,7 +88,6 @@ const LeadSource = () => {
     >
       <h3 className="mb-4">Lead Source</h3>
       <Row>
-        {/* Left Side - Add/Edit Lead Source */}
         <Col md={6}>
           <Card className="shadow-sm border-top border-primary">
             <Card.Body>
@@ -98,19 +103,11 @@ const LeadSource = () => {
                     required
                   >
                     <option value="">--Choose--</option>
-                    <option value="Digital Platform">Digital Platform</option>
-                    <option value="Organization Data">Organization Data</option>
-                    <option value="Direct Approach">Direct Approach</option>
-                    <option value="Internship Student">
-                      Internship Student
-                    </option>
-                    <option value="Business Associates">
-                      Business Associates
-                    </option>
-                    <option value="Customer Referral">Customer Referral</option>
-                    <option value="Administrator Referral">
-                      Administrator Referral
-                    </option>
+                    {(leadTypeState?.LeadType || []).map((item) => (
+                      <option key={item._id} value={item.leadType}>
+                        {item.leadType}
+                      </option>
+                    ))}
                   </Form.Select>
                 </Form.Group>
 
@@ -140,7 +137,6 @@ const LeadSource = () => {
           </Card>
         </Col>
 
-        {/* Right Side - All Lead Sources */}
         <Col md={6}>
           <Card className="shadow-sm border-top border-success">
             <Card.Body>

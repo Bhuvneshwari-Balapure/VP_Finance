@@ -9,16 +9,6 @@ const leadOccupationSchema = new mongoose.Schema(
     leadOccupation: {
       type: String,
       required: true,
-      enum: [
-        "Businessman",
-        "Private Service",
-        "Government Service",
-        "Retiered Person",
-        "Agreeculturist",
-        "Housewife",
-        "Student",
-        "Not Specified",
-      ],
     },
   },
   { timestamps: true }

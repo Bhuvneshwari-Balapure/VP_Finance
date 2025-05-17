@@ -26,6 +26,8 @@ import SuspectLeadTabs from "../Components/Customer/SuspectLeadTabs";
 import FinancialProduct from "../Components/Offices/Financlal/FinancialProduct";
 import CompanyTabs from "../Components/Offices/Financlal/CompanyTabs";
 import RegistrarTabs from "../Components/Offices/Mutual Funds/Registrar/RegistrarTabs";
+import LeadType from "../Components/Masters/Leads/LeadType";
+import OccupationType from "../Components/Masters/Leads/OccupationType";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -34,6 +36,8 @@ const AppRoutes = () => {
         <Route path="/composite" element={<Composite />} />
         <Route path="/area" element={<Area />} />
         <Route path="/city" element={<City />} />
+        <Route path="/lead-type" element={<LeadType />} />
+        <Route path="/occupation-type" element={<OccupationType />} />
         <Route path="/lead-occupation" element={<LeadOccupation />} />
         <Route path="/lead-source" element={<LeadSource />} />
         <Route path="/sub-area" element={<SubArea />} />

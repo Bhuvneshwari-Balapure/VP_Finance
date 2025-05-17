@@ -10,6 +10,9 @@ import ServiceTaskReducer from "./feature/ServiceTask/ServiceSlice";
 import FinancialProductReducer from "./feature/FinancialProduct/FinancialSlice";
 import CompanyNameReducer from "./feature/ComapnyName/CompanySlice";
 import SuspectLeadReducer from "./feature/SuspectLead/SuspectLeadSlice";
+import registrarReducer from "./feature/Registrar/RegistrarSlice";
+import LeadTypeReducer from "./feature/LeadType/LeadTypeSlice";
+import OccupationTypeReducer from "./feature/OccupationType/OccupationSlice";
 export const store = configureStore({
   reducer: {
     leadsource: leadSourceReducer,
@@ -23,5 +26,8 @@ export const store = configureStore({
     financialProduct: FinancialProductReducer,
     CompanyName: CompanyNameReducer,
     suspectLead: SuspectLeadReducer,
+    registrar: registrarReducer,
+    LeadType: LeadTypeReducer,
+    OccupationType: OccupationTypeReducer,
   },
 });

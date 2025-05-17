@@ -1,94 +1,167 @@
 import React from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchFinancialProduct } from "../../../../redux/feature/FinancialProduct/FinancialThunx";
+
+// initial data
+const initialFormState = {
+  financialProduct: "",
+  arn1: "",
+  euin1: "",
+  expiry1: "",
+  nimsEmail1: "",
+  nimsPassword1: "",
+  arn2: "",
+  euin2: "",
+  expiry2: "",
+  nimsEmail2: "",
+  nimsPassword2: "",
+  registrarName: "",
+  localOfficeAddress: "",
+  contactNo: "",
+  emailId: "",
+  branchManager: "",
+  branchManagerMobile: "",
+  headOfficeAddress: "",
+  headOfficeContact: "",
+  headOfficeEmail: "",
+  website: "",
+  rmName: "",
+  rmDOB: "",
+  rmMobile: "",
+  rmEmail: "",
+  portalLink: "",
+  altPortalLink: "",
+  loginName1: "",
+  username1: "",
+  password1: "",
+  loginName2: "",
+  username2: "",
+  password2: "",
+  loginName3: "",
+  username3: "",
+  password3: "",
+  appName1: "",
+  appUsername1: "",
+  appPassword1: "",
+  appName2: "",
+  appUsername2: "",
+  appPassword2: "",
+  remark: "",
+};
+
 function Registrar() {
+  const [formData, setFormData] = useState(initialFormState);
   const dispatch = useDispatch();
   const financialProduct = useSelector((state) => state.financialProduct);
-  console.log(financialProduct, "fjdslfj");
+
   useEffect(() => {
     dispatch(fetchFinancialProduct());
   }, [dispatch]);
 
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    // dispatch logic here
+  };
+
+  const renderInput = (field, label, type = "text", placeholder = "") => (
+    <Form.Group controlId={field}>
+      <Form.Label>{label}</Form.Label>
+      <Form.Control
+        type={type}
+        value={formData[field]}
+        onChange={(e) => handleChange(field, e.target.value)}
+        placeholder={placeholder}
+      />
+    </Form.Group>
+  );
+
   return (
-    <div className="p-4">
+    <div className="p-4 border rounded">
       <h5 className="text-center mb-4">MUTUAL FUND</h5>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <Row>
           <Col md={3}>
-            <Form.Group controlId="financialProduct">
+            <Form.Group className="mb-3">
               <Form.Label>Financial Product</Form.Label>
-              <Form.Select>
-                <option>Mutual Funds</option>
+              <Form.Select
+                value={formData.financialProduct}
+                onChange={(e) =>
+                  handleChange("financialProduct", e.target.value)
+                }
+                required
+              >
+                <option value="">Choose Financial Product --</option>
+                {financialProduct.loading && (
+                  <option disabled>Loading...</option>
+                )}
+                {!financialProduct.loading &&
+                  financialProduct.FinancialProducts?.map((item) => (
+                    <option key={item._id} value={item._id}>
+                      {item.name}
+                    </option>
+                  ))}
               </Form.Select>
             </Form.Group>
           </Col>
+
           <Col md={3}>
-            <Form.Group controlId="arn1">
-              <Form.Label>ARN No 1</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput("arn1", "ARN No 1", "text", "Enter ARN No 1")}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="euin1">
-              <Form.Label>EUIN No 1</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput("euin1", "EUIN No 1", "text", "Enter EUIN No 1")}
           </Col>
-          <Col md={3}>
-            <Form.Group controlId="expiry1">
-              <Form.Label>Expiry Date 1</Form.Label>
-              <Form.Control type="date" />
-            </Form.Group>
-          </Col>
+          <Col md={3}>{renderInput("expiry1", "Expiry Date 1", "date")}</Col>
         </Row>
 
         <Row className="mt-3">
           <Col md={3}>
-            <Form.Group controlId="nimsEmail1">
-              <Form.Label>NIMS Email 1</Form.Label>
-              <Form.Control type="email" />
-            </Form.Group>
+            {renderInput(
+              "nimsEmail1",
+              "NIMS Email 1",
+              "email",
+              "Enter NIMS Email 1"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="nimsPassword1">
-              <Form.Label>NIMS Password 1</Form.Label>
-              <Form.Control type="password" />
-            </Form.Group>
+            {renderInput(
+              "nimsPassword1",
+              "NIMS Password 1",
+              "password",
+              "Enter NIMS Password 1"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="arn2">
-              <Form.Label>ARN No 2</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput("arn2", "ARN No 2", "text", "Enter ARN No 2")}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="euin2">
-              <Form.Label>EUIN No 2</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput("euin2", "EUIN No 2", "text", "Enter EUIN No 2")}
           </Col>
         </Row>
 
         <Row className="mt-3">
+          <Col md={3}>{renderInput("expiry2", "Expiry Date 2", "date")}</Col>
           <Col md={3}>
-            <Form.Group controlId="expiry2">
-              <Form.Label>Expiry Date 2</Form.Label>
-              <Form.Control type="date" />
-            </Form.Group>
+            {renderInput(
+              "nimsEmail2",
+              "NIMS Email 2",
+              "email",
+              "Enter NIMS Email 2"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="nimsEmail2">
-              <Form.Label>NIMS Email 2</Form.Label>
-              <Form.Control type="email" />
-            </Form.Group>
-          </Col>
-          <Col md={3}>
-            <Form.Group controlId="nimsPassword2">
-              <Form.Label>NIMS Password 2</Form.Label>
-              <Form.Control type="password" />
-            </Form.Group>
+            {renderInput(
+              "nimsPassword2",
+              "NIMS Password 2",
+              "password",
+              "Enter NIMS Password 2"
+            )}
           </Col>
         </Row>
 
@@ -96,159 +169,181 @@ function Registrar() {
 
         <Row>
           <Col md={3}>
-            <Form.Group controlId="registrarName">
-              <Form.Label>Registrar Name</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput(
+              "registrarName",
+              "Registrar Name",
+              "text",
+              "Enter Registrar Name"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="localOfficeAddress">
-              <Form.Label>Local Office Address</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput(
+              "localOfficeAddress",
+              "Local Office Address",
+              "text",
+              "Enter Local Office Address"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="contactNo">
-              <Form.Label>Contact No</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput("contactNo", "Contact No", "text", "Enter Contact No")}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="emailId">
-              <Form.Label>Email Id</Form.Label>
-              <Form.Control type="email" />
-            </Form.Group>
+            {renderInput("emailId", "Email Id", "email", "Enter Email Id")}
           </Col>
         </Row>
 
         <Row className="mt-3">
           <Col md={3}>
-            <Form.Group controlId="branchManager">
-              <Form.Label>Branch Manager Name</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput(
+              "branchManager",
+              "Branch Manager Name",
+              "text",
+              "Enter Branch Manager Name"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="branchManagerMobile">
-              <Form.Label>Branch Manager Mobile</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput(
+              "branchManagerMobile",
+              "Branch Manager Mobile",
+              "text",
+              "Enter Branch Manager Mobile"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="headOfficeAddress">
-              <Form.Label>Head Office Address</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput(
+              "headOfficeAddress",
+              "Head Office Address",
+              "text",
+              "Enter Head Office Address"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="headOfficeContact">
-              <Form.Label>Head Office Contact</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput(
+              "headOfficeContact",
+              "Head Office Contact",
+              "text",
+              "Enter Head Office Contact"
+            )}
           </Col>
         </Row>
 
         <Row className="mt-3">
           <Col md={3}>
-            <Form.Group controlId="headOfficeEmail">
-              <Form.Label>Head Office Email</Form.Label>
-              <Form.Control type="email" />
-            </Form.Group>
+            {renderInput(
+              "headOfficeEmail",
+              "Head Office Email",
+              "email",
+              "Enter Head Office Email"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="website">
-              <Form.Label>Website</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput("website", "Website", "text", "Enter Website URL")}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="rmName">
-              <Form.Label>Relationship Manager Name</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput(
+              "rmName",
+              "Relationship Manager Name",
+              "text",
+              "Enter RM Name"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="rmDOB">
-              <Form.Label>Relationship Manager DOB</Form.Label>
-              <Form.Control type="date" />
-            </Form.Group>
+            {renderInput("rmDOB", "Relationship Manager DOB", "date")}
           </Col>
         </Row>
 
         <Row className="mt-3">
           <Col md={3}>
-            <Form.Group controlId="rmMobile">
-              <Form.Label>Relationship Manager Mobile</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput(
+              "rmMobile",
+              "Relationship Manager Mobile",
+              "text",
+              "Enter RM Mobile"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="rmEmail">
-              <Form.Label>Relationship Manager Email</Form.Label>
-              <Form.Control type="email" />
-            </Form.Group>
+            {renderInput(
+              "rmEmail",
+              "Relationship Manager Email",
+              "email",
+              "Enter RM Email"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="portalLink">
-              <Form.Label>Portal Link</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput(
+              "portalLink",
+              "Portal Link",
+              "text",
+              "Enter Portal Link"
+            )}
           </Col>
           <Col md={3}>
-            <Form.Group controlId="altPortalLink">
-              <Form.Label>Alternate Portal Link</Form.Label>
-              <Form.Control type="text" />
-            </Form.Group>
+            {renderInput(
+              "altPortalLink",
+              "Alternate Portal Link",
+              "text",
+              "Enter Alternate Portal Link"
+            )}
           </Col>
         </Row>
 
-        {/* Login Section */}
         <Row className="mt-3">
           {[1, 2, 3].map((num) => (
             <React.Fragment key={num}>
               <Col md={3}>
-                <Form.Group controlId={`loginName${num}`}>
-                  <Form.Label>Login Name {num}</Form.Label>
-                  <Form.Control type="text" />
-                </Form.Group>
+                {renderInput(
+                  `loginName${num}`,
+                  `Login Name ${num}`,
+                  "text",
+                  `Enter Login Name ${num}`
+                )}
               </Col>
               <Col md={3}>
-                <Form.Group controlId={`username${num}`}>
-                  <Form.Label>Username {num}</Form.Label>
-                  <Form.Control type="text" />
-                </Form.Group>
+                {renderInput(
+                  `username${num}`,
+                  `Username ${num}`,
+                  "text",
+                  `Enter Username ${num}`
+                )}
               </Col>
               <Col md={3}>
-                <Form.Group controlId={`password${num}`}>
-                  <Form.Label>Password {num}</Form.Label>
-                  <Form.Control type="password" />
-                </Form.Group>
+                {renderInput(
+                  `password${num}`,
+                  `Password ${num}`,
+                  "password",
+                  `Enter Password ${num}`
+                )}
               </Col>
             </React.Fragment>
           ))}
         </Row>
 
-        {/* App Section */}
         <Row className="mt-3">
           {[1, 2].map((num) => (
             <React.Fragment key={num}>
               <Col md={3}>
-                <Form.Group controlId={`appName${num}`}>
-                  <Form.Label>App Name</Form.Label>
-                  <Form.Control type="text" />
-                </Form.Group>
+                {renderInput(
+                  `appName${num}`,
+                  "App Name",
+                  "text",
+                  "Enter App Name"
+                )}
               </Col>
               <Col md={3}>
-                <Form.Group controlId={`appUsername${num}`}>
-                  <Form.Label>App Username</Form.Label>
-                  <Form.Control type="text" />
-                </Form.Group>
+                {renderInput(
+                  `appUsername${num}`,
+                  "App Username",
+                  "text",
+                  "Enter App Username"
+                )}
               </Col>
               <Col md={3}>
-                <Form.Group controlId={`appPassword${num}`}>
-                  <Form.Label>App Password</Form.Label>
-                  <Form.Control type="password" />
-                </Form.Group>
+                {renderInput(
+                  `appPassword${num}`,
+                  "App Password",
+                  "password",
+                  "Enter App Password"
+                )}
               </Col>
             </React.Fragment>
           ))}
@@ -258,7 +353,13 @@ function Registrar() {
           <Col md={12}>
             <Form.Group controlId="remark">
               <Form.Label>Remark</Form.Label>
-              <Form.Control as="textarea" rows={2} />
+              <Form.Control
+                as="textarea"
+                rows={2}
+                value={formData.remark}
+                onChange={(e) => handleChange("remark", e.target.value)}
+                placeholder="Enter Remarks"
+              />
             </Form.Group>
           </Col>
         </Row>
