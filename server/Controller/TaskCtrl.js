@@ -20,8 +20,10 @@ exports.createTask = async (req, res) => {
 
     // Handle files
     const image = req.files?.image?.[0]?.filename || "";
-    const downloadFormUrl = req.files?.downloadFormUrl?.[0]?.filename || "";
-    const sampleFormUrl = req.files?.sampleFormUrl?.[0]?.filename || "";
+    // const downloadFormUrl = req.files?.downloadFormUrl?.[0]?.filename || "";
+    // const sampleFormUrl = req.files?.sampleFormUrl?.[0]?.filename || "";
+    let downloadFormFiles = req.files?.downloadFormUrl || [];
+    let sampleFormFiles = req.files?.sampleFormUrl || [];
 
     // Prepare checklists array
     const checklists = Array.isArray(body.checklists)
@@ -30,14 +32,29 @@ exports.createTask = async (req, res) => {
       ? [body.checklists]
       : [];
 
-    // Parse formChecklists (if JSON string)
+    // // Parse formChecklists (if JSON string)
+    // let formChecklists = [];
+    // if (body.formChecklists) {
+    //   formChecklists = JSON.parse(body.formChecklists);
+    //   if (formChecklists.length > 0) {
+    //     formChecklists[0].downloadFormUrl = downloadFormUrl;
+    //     formChecklists[0].sampleFormUrl = sampleFormUrl;
+    //   }
+    // }
+
+    // Parse formChecklists
     let formChecklists = [];
     if (body.formChecklists) {
       formChecklists = JSON.parse(body.formChecklists);
-      if (formChecklists.length > 0) {
-        formChecklists[0].downloadFormUrl = downloadFormUrl;
-        formChecklists[0].sampleFormUrl = sampleFormUrl;
-      }
+
+      // Attach the files to each checklist object
+      formChecklists = formChecklists.map((item, index) => {
+        return {
+          name: item.name,
+          downloadFormUrl: downloadFormFiles[index]?.filename || "",
+          sampleFormUrl: sampleFormFiles[index]?.filename || "",
+        };
+      });
     }
 
     const cats = await Financial.findOne({ _id: req.body.cat });

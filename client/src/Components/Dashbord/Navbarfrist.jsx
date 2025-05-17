@@ -18,6 +18,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const Navbarfristn = () => {
   const [expanded, setExpanded] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const toggleMenu = () => setOpen(!open);
 
   const dropdownItems = {
     masters: [
@@ -447,12 +450,41 @@ const Navbarfristn = () => {
                       <Dropdown.Item as={Link} to="/company-name">
                         Company Name
                       </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/insurance-product">
-                        Insurance Product
-                      </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/mutual-fund">
+
+                      {/* <Dropdown.Item as={Link} to="/mutual-fund">
                         Mutual Fund
-                      </Dropdown.Item>
+                      </Dropdown.Item> */}
+                      <Dropdown>
+                        <Dropdown.Item
+                          variant="light"
+                          id="dropdown-basic"
+                          className="menu-item"
+                          onClick={toggleMenu}
+                        >
+                          <span className="bullet"></span> Mutual Fund{" "}
+                          {open ? "▾" : "▸"}
+                          {open && (
+                            <div className="submenu">
+                              <ul>
+                                <li>
+                                  <div className="submenu-item">
+                                    <span className="bullet"></span>
+                                    <Link to="/mutual-fund/registrar">
+                                      Registrar
+                                    </Link>
+                                  </div>
+                                </li>
+                                <li>
+                                  <div className="submenu-item">
+                                    <span className="bullet"></span>
+                                    <Link to="/mutual-fund/amc">AMC Name</Link>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          )}
+                        </Dropdown.Item>
+                      </Dropdown>
                       <Dropdown.Item as={Link} to="/other-product">
                         Other Product
                       </Dropdown.Item>

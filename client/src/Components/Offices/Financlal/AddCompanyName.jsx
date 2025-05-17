@@ -53,7 +53,6 @@ function AddCompanyName({ editId, setActiveTab, setEditId }) {
   }, [editId, dispatch]);
 
   const { selectedCompany } = companyState;
-
   useEffect(() => {
     if (editId && selectedCompany && selectedCompany._id === editId) {
       setFormData({
@@ -69,42 +68,23 @@ function AddCompanyName({ editId, setActiveTab, setEditId }) {
 
   useEffect(() => {
     if (success) {
-      toast.success("Company created successfully!");
-      setFormData({
-        financialProduct: "",
-        companyName: "",
-        localOfficeAddress: "",
-        contactNo: "",
-        emailId: "",
-        branchManagerMobile: "",
-        headOfficeAddress: "",
-        headOfficeContact: "",
-        headOfficeEmail: "",
-        website: "",
-        relationshipManagerName: "",
-        relationshipManagerDOB: "",
-        relationshipManagerMobile: "",
-        relationshipManagerEmail: "",
-        agencyCode: "",
-        portalLink: "",
-        alternatePortalLink: "",
-        loginCredentials: [
-          { loginName: "", username: "", password: "" },
-          { loginName: "", username: "", password: "" },
-          { loginName: "", username: "", password: "" },
-        ],
-        appDetails: [
-          { appName: "", appUsername: "", appPassword: "" },
-          { appName: "", appUsername: "", appPassword: "" },
-        ],
-      });
+      if (editId) {
+        toast.success("Company updated successfully!");
+      } else {
+        toast.success("Company created successfully!");
+      }
+
+      setFormData(initialFormState);
+      setEditId(null); // Optional: reset edit mode
+      setActiveTab("view"); // Optional: switch tab after save/update
       dispatch(resetCompanyNameStatus());
     }
+
     if (error) {
       toast.error(error || "Something went wrong!");
       dispatch(resetCompanyNameStatus());
     }
-  }, [success, error, dispatch]);
+  }, [success, error, editId, dispatch, setActiveTab, setEditId]);
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -479,8 +459,8 @@ function AddCompanyName({ editId, setActiveTab, setEditId }) {
           ))}
 
           <Col md={12}>
-            <Button variant="primary" type="submit" disabled={loading}>
-              {loading ? "Submitting..." : "Save"}
+            <Button type="submit" variant="primary" disabled={loading}>
+              {loading ? "Saving..." : editId ? "Update" : "Save"}
             </Button>
           </Col>
         </Row>

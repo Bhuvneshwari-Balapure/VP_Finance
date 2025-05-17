@@ -48,11 +48,7 @@ export const updateCompanyName = createAsyncThunk(
   async ({ id, CompanyNameData }, { rejectWithValue }) => {
     try {
       // Transform data to match backend schema
-      const payload = {
-        name: CompanyNameData.name,
-        shortcode: CompanyNameData.code,
-        pincode: CompanyNameData.pin,
-      };
+      const payload = { ...CompanyNameData };
       const response = await axios.put(`${API_URL}/${id}`, payload);
       return response.data;
     } catch (err) {

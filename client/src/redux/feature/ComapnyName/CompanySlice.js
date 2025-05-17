@@ -43,11 +43,11 @@ const CompanyNameSlice = createSlice({
       .addCase(fetchCompanyNameById.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.selectedProduct = null;
+        state.selectedCompany = null;
       })
       .addCase(fetchCompanyNameById.fulfilled, (state, action) => {
         state.loading = false;
-        state.selectedProduct = action.payload;
+        state.selectedCompany = action.payload;
       })
       .addCase(fetchCompanyNameById.rejected, (state, action) => {
         state.loading = false;

@@ -106,17 +106,6 @@ const Addtask = ({ on, data }) => {
     }
   };
 
-  // For form checklist files
-  const updateFormChecklist = (index, field, value) => {
-    const newFormChecklists = [...formData.formChecklists];
-    if (value instanceof File) {
-      newFormChecklists[index][field] = value;
-    } else {
-      newFormChecklists[index][field] = value;
-    }
-    setFormData((prev) => ({ ...prev, formChecklists: newFormChecklists }));
-  };
-
   const handleEditorChange = (editor, data, field) => {
     if (field === "descp") {
       // For description, we need to preserve the image property
@@ -129,6 +118,7 @@ const Addtask = ({ on, data }) => {
       setFormData((prev) => ({ ...prev, [field]: data }));
     }
   };
+  // checklist
   const addChecklist = () => {
     setFormData((prev) => ({
       ...prev,
@@ -146,6 +136,17 @@ const Addtask = ({ on, data }) => {
     const newChecklists = [...formData.checklists];
     newChecklists.splice(index, 1);
     setFormData((prev) => ({ ...prev, checklists: newChecklists }));
+  };
+
+  // For form checklist files
+  const updateFormChecklist = (index, field, value) => {
+    const newFormChecklists = [...formData.formChecklists];
+    if (value instanceof File) {
+      newFormChecklists[index][field] = value;
+    } else {
+      newFormChecklists[index][field] = value;
+    }
+    setFormData((prev) => ({ ...prev, formChecklists: newFormChecklists }));
   };
 
   const addFormChecklist = () => {
@@ -198,12 +199,12 @@ const Addtask = ({ on, data }) => {
       }
 
       // Add form files
-      formData.formChecklists.forEach((item, index) => {
+      formData.formChecklists.forEach((item) => {
         if (item.downloadFormUrl instanceof File) {
-          formDataToSend.append(`downloadFormUrl`, item.downloadFormUrl);
+          formDataToSend.append("downloadFormUrl", item.downloadFormUrl);
         }
         if (item.sampleFormUrl instanceof File) {
-          formDataToSend.append(`sampleFormUrl`, item.sampleFormUrl);
+          formDataToSend.append("sampleFormUrl", item.sampleFormUrl);
         }
       });
 
@@ -299,20 +300,6 @@ const Addtask = ({ on, data }) => {
                 </div>
               </div>
 
-              {/* <div className="col-md-6">
-                <div className="form-group">
-                  <label className="font-weight-bold">Company Name</label>
-                  <select
-                    id="sub_category"
-                    name="sub"
-                    className="form-control select2"
-                    value={formData.sub}
-                    onChange={handleChange}
-                  >
-                    <option value="">Choose Company Name</option>
-                  </select>
-                </div>
-              </div> */}
               <div className="col-md-6">
                 <div className="form-group">
                   <label className="font-weight-bold">Company Name</label>

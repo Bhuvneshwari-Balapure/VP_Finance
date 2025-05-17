@@ -41,7 +41,11 @@ function CompanyTabs() {
         {activeTab === "add" ? (
           <div>
             {/* Add Company Name content */}
-            <AddCompanyName editId={editId} />
+            <AddCompanyName
+              setActiveTab={setActiveTab}
+              setEditId={setEditId}
+              editId={editId}
+            />
           </div>
         ) : (
           <div>
