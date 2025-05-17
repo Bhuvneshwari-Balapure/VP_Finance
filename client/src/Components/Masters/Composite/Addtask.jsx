@@ -52,9 +52,6 @@ const Addtask = ({ on, data }) => {
   const filteredCompanies = company.filter(
     (item) => item.financialProduct?._id === formData.cat
   );
-
-  console.log(filteredCompanies, "Filter Company Name");
-
   useEffect(() => {
     if (data) {
       setFormData(data);
@@ -64,7 +61,6 @@ const Addtask = ({ on, data }) => {
   const [activeTab, setActiveTab] = useState("tab_1");
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  console.log(isSubmitting);
 
   // Clear messages when component unmounts
   useEffect(() => {
@@ -111,15 +107,15 @@ const Addtask = ({ on, data }) => {
   };
 
   // For form checklist files
-  // const updateFormChecklist = (index, field, value) => {
-  //   const newFormChecklists = [...formData.formChecklists];
-  //   if (value instanceof File) {
-  //     newFormChecklists[index][field] = value;
-  //   } else {
-  //     newFormChecklists[index][field] = value;
-  //   }
-  //   setFormData((prev) => ({ ...prev, formChecklists: newFormChecklists }));
-  // };
+  const updateFormChecklist = (index, field, value) => {
+    const newFormChecklists = [...formData.formChecklists];
+    if (value instanceof File) {
+      newFormChecklists[index][field] = value;
+    } else {
+      newFormChecklists[index][field] = value;
+    }
+    setFormData((prev) => ({ ...prev, formChecklists: newFormChecklists }));
+  };
 
   const handleEditorChange = (editor, data, field) => {
     if (field === "descp") {
@@ -133,8 +129,6 @@ const Addtask = ({ on, data }) => {
       setFormData((prev) => ({ ...prev, [field]: data }));
     }
   };
-
-  // -------------checklist----------------
   const addChecklist = () => {
     setFormData((prev) => ({
       ...prev,
@@ -154,21 +148,10 @@ const Addtask = ({ on, data }) => {
     setFormData((prev) => ({ ...prev, checklists: newChecklists }));
   };
 
-  // const addFormChecklist = () => {
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     formChecklists: [...prev.formChecklists, { name: "", file: null }],
-  //   }));
-  //   console.error("Submission error:", formData);
-  // };
-  // ----------------------form checklist-------------------------
   const addFormChecklist = () => {
     setFormData((prev) => ({
       ...prev,
-      formChecklists: [
-        ...prev.formChecklists,
-        { name: "", downloadFormUrl: null, sampleFormUrl: null },
-      ],
+      formChecklists: [...prev.formChecklists, { name: "", file: null }],
     }));
   };
 
@@ -178,41 +161,12 @@ const Addtask = ({ on, data }) => {
     setFormData((prev) => ({ ...prev, formChecklists: newFormChecklists }));
   };
 
-  const updateFormChecklist = (index, field, value) => {
-    setFormData((prev) => {
-      const updatedFormChecklists = [...prev.formChecklists];
-      updatedFormChecklists[index] = {
-        ...updatedFormChecklists[index],
-        [field]: value,
-      };
-      return { ...prev, formChecklists: updatedFormChecklists };
-    });
-  };
-
-  // const removeFormChecklist = (index) => {
-  //   const newFormChecklists = [...formData.formChecklists];
-  //   newFormChecklists.splice(index, 1);
-  //   setFormData((prev) => ({ ...prev, formChecklists: newFormChecklists }));
-  // };
-
-  //  const updateFormChecklist = (index, field, value) => {
-  //   setFormData((prevData) => {
-  //     const updatedChecklist = [...prevData.formChecklists];
-  //     updatedChecklist[index] = {
-  //       ...updatedChecklist[index],
-  //       [field]: value,
-  //     };
-  //     return { ...prevData, formChecklists: updatedChecklist };
-  //   });
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
       // Prepare form data
-      console.log(FormData, "DAS");
       const formDataToSend = new FormData();
 
       // Add all text fields
@@ -233,10 +187,10 @@ const Addtask = ({ on, data }) => {
       });
 
       // Add formChecklists as JSON string
-      // formDataToSend.append(
-      //   "formChecklists",
-      //   JSON.stringify(formData.formChecklists)
-      // );
+      formDataToSend.append(
+        "formChecklists",
+        JSON.stringify(formData.formChecklists)
+      );
 
       // Add files if they exist
       if (formData.descp.image) {
@@ -244,28 +198,12 @@ const Addtask = ({ on, data }) => {
       }
 
       // Add form files
-      // formData.formChecklists.forEach((item, index) => {
-      //   if (item.downloadFormUrl instanceof File) {
-      //     formDataToSend.append(`downloadFormUrl`, item.downloadFormUrl);
-      //   }
-      //   if (item.sampleFormUrl instanceof File) {
-      //     formDataToSend.append(`sampleFormUrl`, item.sampleFormUrl);
-      //   }
-      // });
-
       formData.formChecklists.forEach((item, index) => {
-        formDataToSend.append(`formChecklists[${index}][name]`, item.name);
         if (item.downloadFormUrl instanceof File) {
-          formDataToSend.append(
-            `formChecklists[${index}][downloadFormUrl]`,
-            item.downloadFormUrl
-          );
+          formDataToSend.append(`downloadFormUrl`, item.downloadFormUrl);
         }
         if (item.sampleFormUrl instanceof File) {
-          formDataToSend.append(
-            `formChecklists[${index}][sampleFormUrl]`,
-            item.sampleFormUrl
-          );
+          formDataToSend.append(`sampleFormUrl`, item.sampleFormUrl);
         }
       });
 
@@ -283,7 +221,7 @@ const Addtask = ({ on, data }) => {
         sub: "",
         depart: "",
         name: "",
-        type: "composite",
+        type: "marketing",
         descp: { text: "", image: null },
         email_descp: "",
         sms_descp: "",

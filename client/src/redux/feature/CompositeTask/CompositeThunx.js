@@ -3,23 +3,6 @@ import axios from "../../../config/axios";
 
 const API_URL = "/Task";
 
-// CREATE TASK
-// export const createCompositeTask = createAsyncThunk(
-//   "compositeTask/create",
-//   async (formData, { rejectWithValue }) => {
-//     try {
-//       const response = await axios.post(API_URL, formData, {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//         },
-//       });
-//       return response.data;
-//     } catch (err) {
-//       return rejectWithValue(err.response?.data?.message || err.message);
-//     }
-//   }
-// );
-
 export const createCompositeTask = createAsyncThunk(
   "compositeTask/create",
   async (formData, { rejectWithValue }) => {
@@ -111,3 +94,20 @@ export const deleteCompositeTask = createAsyncThunk(
     }
   }
 );
+
+// CREATE TASK
+// export const createCompositeTask = createAsyncThunk(
+//   "compositeTask/create",
+//   async (formData, { rejectWithValue }) => {
+//     try {
+//       const response = await axios.post(API_URL, formData, {
+//         headers: {
+//           "Content-Type": "multipart/form-data",
+//         },
+//       });
+//       return response.data;
+//     } catch (err) {
+//       return rejectWithValue(err.response?.data?.message || err.message);
+//     }
+//   }
+// );
