@@ -1,7 +1,16 @@
 import React from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
-
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchFinancialProduct } from "../../../../redux/feature/FinancialProduct/FinancialThunx";
 function Registrar() {
+  const dispatch = useDispatch();
+  const financialProduct = useSelector((state) => state.financialProduct);
+  console.log(financialProduct, "fjdslfj");
+  useEffect(() => {
+    dispatch(fetchFinancialProduct());
+  }, [dispatch]);
+
   return (
     <div className="p-4">
       <h5 className="text-center mb-4">MUTUAL FUND</h5>

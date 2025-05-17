@@ -260,7 +260,7 @@ const Addtask = ({ on, data }) => {
     <div className="">
       <div className="card shadow-lg">
         <div className="card-header  text-black">
-          <h3 className="card-title mt-4">Task Management Form</h3>
+          <h3 className="text-center card-title mt-4">Composite Task Form</h3>
           <div className="card-tools">
             <button
               type="button"
@@ -635,8 +635,11 @@ const Addtask = ({ on, data }) => {
                     </div>
                     <div className="card-body">
                       {formData.formChecklists.map((item, index) => (
-                        <div key={index} className="border rounded p-3 mb-3">
-                          <div className="form-group">
+                        <div
+                          key={index}
+                          className="border rounded p-3 mb-3 d-flex g-4 justify-content-between w-100"
+                        >
+                          <div className="form-group ">
                             <label>Form Name</label>
                             <input
                               type="text"
@@ -654,7 +657,7 @@ const Addtask = ({ on, data }) => {
                           </div>
 
                           <div className="form-group">
-                            <label>Download Form File</label>
+                            <label>Blank Form</label>
                             <input
                               type="file"
                               className="form-control"
@@ -675,7 +678,7 @@ const Addtask = ({ on, data }) => {
                           </div>
 
                           <div className="form-group">
-                            <label>Sample Form File</label>
+                            <label>Sample Form</label>
                             <input
                               type="file"
                               className="form-control"
@@ -699,7 +702,7 @@ const Addtask = ({ on, data }) => {
                             {index > 0 && (
                               <button
                                 type="button"
-                                className="btn btn-danger btn-sm"
+                                className="btn btn-danger btn-sm mt-4"
                                 onClick={() => removeFormChecklist(index)}
                               >
                                 <FaTrash className="mr-1" />
@@ -738,7 +741,7 @@ const Addtask = ({ on, data }) => {
                   {data ? "Updated Successfully!" : "Submitted Successfully!"}
                 </>
               ) : (
-                <>{data ? "Update Task" : "Submit Task"}</>
+                <>{data ? "Update" : "Submit"}</>
               )}
             </button>
           </div>
