@@ -430,11 +430,7 @@ const Addtask = ({ on, data }) => {
                             <label
                               className="custom-file-label"
                               htmlFor="customFile"
-                            >
-                              {formData.descp.image
-                                ? formData.descp.image.name
-                                : "Choose file"}
-                            </label>
+                            ></label>
                           </div>
                         </div>
                       </div>

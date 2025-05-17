@@ -25,6 +25,7 @@ import SuspectLeadsTable from "../Components/Customer/SuspectLeadsTable";
 import SuspectLeadTabs from "../Components/Customer/SuspectLeadTabs";
 import FinancialProduct from "../Components/Offices/Financlal/FinancialProduct";
 import CompanyTabs from "../Components/Offices/Financlal/CompanyTabs";
+import RegistrarTabs from "../Components/Offices/Mutual Funds/Registrar/RegistrarTabs";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -51,6 +52,7 @@ const AppRoutes = () => {
         <Route path="/joining-data" element={<JoiningData />} />
         <Route path="/financial-product-list" element={<FinancialProduct />} />
         <Route path="/company-name" element={<CompanyTabs />} />
+        <Route path="/mutual-fund/registrar" element={<RegistrarTabs />} />
       </Route>
     </Routes>
   );

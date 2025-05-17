@@ -436,9 +436,9 @@ const ServicingAddtask = ({ on, data }) => {
                               className="custom-file-label"
                               htmlFor="customFile"
                             >
-                              {formData.descp.image
+                              {/* {formData.descp.image
                                 ? formData.descp.image.name
-                                : "Choose file"}
+                                : "Choose file"} */}
                             </label>
                           </div>
                         </div>
