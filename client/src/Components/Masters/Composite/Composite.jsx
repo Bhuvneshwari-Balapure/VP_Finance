@@ -163,9 +163,8 @@ const Composite = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {tasks.map((task, index) => (
+                          {currentEntries.map((task, index) => (
                             <tr key={task._id || index}>
-                              {console.log(task, "PP")},
                               <td>{indexOfFirstEntry + index + 1}</td>
                               <td>{task.cat}</td>
                               <td>{task.sub}</td>
