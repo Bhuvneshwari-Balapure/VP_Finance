@@ -29,6 +29,7 @@ import RegistrarTabs from "../Components/Offices/Mutual Funds/Registrar/Registra
 import LeadType from "../Components/Masters/Leads/LeadType";
 import OccupationType from "../Components/Masters/Leads/OccupationType";
 import AMCtabs from "../Components/Offices/Mutual Funds/AMC/AMCtabs";
+import OfficeDiaryTabs from "../Components/Offices/OfficeRecord/Office Diary/OfficeDiaryTabs";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -59,6 +60,7 @@ const AppRoutes = () => {
         <Route path="/company-name" element={<CompanyTabs />} />
         <Route path="/mutual-fund/registrar" element={<RegistrarTabs />} />
         <Route path="/mutual-fund/amc" element={<AMCtabs />} />
+        <Route path="/office-diary" element={<OfficeDiaryTabs />} />
       </Route>
     </Routes>
   );

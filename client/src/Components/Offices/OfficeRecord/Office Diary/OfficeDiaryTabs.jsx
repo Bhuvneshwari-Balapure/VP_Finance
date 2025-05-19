@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import AMC from "./AMC";
-import AMCDetail from "./AMCDetail";
+import AddOfficeDiary from "./AddOfficeDiary";
+import OfficeDiaryDetail from "./OfficeDiaryDetail";
 
-function AMCtabs() {
+function OfficeDiaryTabs() {
   const [activeTab, setActiveTab] = useState("add");
   const [editId, setEditId] = useState(null);
 
   return (
     <div style={{ padding: "20px" }}>
-      <h3>AMC NAME</h3>
+      <h3>Office Diary</h3>
 
       <div style={{ display: "flex", borderBottom: "2px solid #ccc" }}>
         <div
@@ -38,17 +38,20 @@ function AMCtabs() {
 
       <div style={{ marginTop: "20px" }}>
         {activeTab === "add" ? (
-          <AMC
+          <AddOfficeDiary
             setActiveTab={setActiveTab}
             setEditId={setEditId}
             editId={editId}
           />
         ) : (
-          <AMCDetail setActiveTab={setActiveTab} setEditId={setEditId} />
+          <OfficeDiaryDetail
+            setActiveTab={setActiveTab}
+            setEditId={setEditId}
+          />
         )}
       </div>
     </div>
   );
 }
 
-export default AMCtabs;
+export default OfficeDiaryTabs;

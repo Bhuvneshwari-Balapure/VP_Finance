@@ -14,6 +14,7 @@ import registrarReducer from "./feature/Registrar/RegistrarSlice";
 import AMCReducer from "./feature/AMC/AMCSlice";
 import LeadTypeReducer from "./feature/LeadType/LeadTypeSlice";
 import OccupationTypeReducer from "./feature/OccupationType/OccupationSlice";
+import officeDiaryReducer from "./feature/OfficeDiary/OfficeDiarySlice";
 export const store = configureStore({
   reducer: {
     leadsource: leadSourceReducer,
@@ -31,5 +32,6 @@ export const store = configureStore({
     AMC: AMCReducer,
     LeadType: LeadTypeReducer,
     OccupationType: OccupationTypeReducer,
+    officeDiary: officeDiaryReducer,
   },
 });
