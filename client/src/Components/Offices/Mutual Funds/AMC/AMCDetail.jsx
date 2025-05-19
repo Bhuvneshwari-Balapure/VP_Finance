@@ -9,7 +9,7 @@ import { deleteAMC, fetchAMC } from "../../../../redux/feature/AMC/AMCThunx";
 function AMCDetail({ setActiveTab, setEditId }) {
   const dispatch = useDispatch();
   const AMCData = useSelector((state) => state.AMC);
-  console.log(AMCData, "registrar Data");
+  console.log(AMCData, "AMC Data");
   useEffect(() => {
     dispatch(fetchAMC());
   }, [dispatch]);
@@ -17,14 +17,14 @@ function AMCDetail({ setActiveTab, setEditId }) {
   // Delete
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this registrar?")) {
+    if (window.confirm("Are you sure you want to delete this AMC?")) {
       dispatch(deleteAMC(id))
         .unwrap()
         .then(() => {
-          toast.success("Registrar deleted successfully!");
+          toast.success("AMC deleted successfully!");
         })
         .catch((err) => {
-          toast.error("Failed to delete registrar.");
+          toast.error("Failed to delete AMC.");
           console.log(err, "error in deleting");
         });
     }
