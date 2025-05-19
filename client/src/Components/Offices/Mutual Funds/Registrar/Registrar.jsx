@@ -3,6 +3,13 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchFinancialProduct } from "../../../../redux/feature/FinancialProduct/FinancialThunx";
+import {
+  createRegistrar,
+  getRegistrarById,
+  updateRegistrar,
+} from "../../../../redux/feature/Registrar/RegistrarThunx";
+import { toast } from "react-toastify";
+import { resetRegistrarStatus } from "../../../../redux/feature/Registrar/RegistrarSlice";
 
 // initial data
 const initialFormState = {
@@ -51,23 +58,76 @@ const initialFormState = {
   remark: "",
 };
 
-function Registrar() {
+function Registrar({ editId, setActiveTab, setEditId }) {
   const [formData, setFormData] = useState(initialFormState);
   const dispatch = useDispatch();
   const financialProduct = useSelector((state) => state.financialProduct);
+  const registrarState = useSelector((state) => state.registrar);
+
+  const { loading, error, success } = registrarState;
+
+  // fetch financial product
 
   useEffect(() => {
     dispatch(fetchFinancialProduct());
   }, [dispatch]);
 
+  // eidt update
+  useEffect(() => {
+    if (editId) {
+      dispatch(getRegistrarById(editId)); // ✅ Now safe to use
+    } else {
+      setFormData(initialFormState);
+    }
+  }, [editId, dispatch]);
+
+  const { selectedRegistrar } = useSelector((state) => state.registrar);
+  useEffect(() => {
+    if (editId && selectedRegistrar && selectedRegistrar._id === editId) {
+      setFormData({
+        ...initialFormState,
+        ...selectedRegistrar,
+      });
+    }
+  }, [editId, selectedRegistrar]);
+  useEffect(() => {
+    if (success) {
+      if (editId) {
+        toast.success("Company updated successfully!");
+      } else {
+        toast.success("Company created successfully!");
+      }
+
+      setFormData(initialFormState);
+      setEditId(null); // Optional: reset edit mode
+      setActiveTab("view"); // Optional: switch tab after save/update
+      dispatch(resetRegistrarStatus());
+    }
+
+    if (error) {
+      toast.error(error || "Something went wrong!");
+      dispatch(resetRegistrarStatus());
+    }
+  }, [success, error, editId, dispatch, setActiveTab, setEditId]);
+
+  // handle change
+
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  // handle Submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (editId) {
+      dispatch(updateRegistrar({ id: editId, registrarData: formData }));
+    } else {
+      dispatch(createRegistrar(formData));
+    }
     console.log(formData);
     // dispatch logic here
+
+    setActiveTab("view");
   };
 
   const renderInput = (field, label, type = "text", placeholder = "") => (
@@ -103,7 +163,7 @@ function Registrar() {
                 )}
                 {!financialProduct.loading &&
                   financialProduct.FinancialProducts?.map((item) => (
-                    <option key={item._id} value={item._id}>
+                    <option key={item._id} value={item.name}>
                       {item.name}
                     </option>
                   ))}
@@ -365,8 +425,8 @@ function Registrar() {
         </Row>
 
         <div className="text-center mt-4">
-          <Button variant="primary" type="submit">
-            Save
+          <Button type="submit" variant="primary" disabled={loading}>
+            {loading ? "Saving..." : editId ? "Update" : "Save"}
           </Button>
         </div>
       </Form>

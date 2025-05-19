@@ -9,6 +9,7 @@ export const fetchRegistrars = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get(API_URL);
+      console.log(response.data, "fetch Registrar Thunx");
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -22,6 +23,7 @@ export const createRegistrar = createAsyncThunk(
   async (registrarData, thunkAPI) => {
     try {
       const response = await axios.post(API_URL, registrarData);
+      console.log(response.data, "data from Thunx registrar");
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -49,6 +51,19 @@ export const deleteRegistrar = createAsyncThunk(
     try {
       await axios.delete(`${API_URL}/${id}`);
       return id;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+// fetch by id
+export const getRegistrarById = createAsyncThunk(
+  "registrars/fetchById",
+  async (id, thunkAPI) => {
+    try {
+      const response = await axios.get(`${API_URL}/${id}`);
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }

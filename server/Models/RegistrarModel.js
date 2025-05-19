@@ -2,8 +2,11 @@ const mongoose = require("mongoose");
 
 const RegistrarSchema = new mongoose.Schema(
   {
-    financialProduct: { type: String, required: true }, // usually ObjectId, but String here for simplicity
-
+    financialProduct: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "FinancialProduct",
+      required: true,
+    },
     arn1: String,
     euin1: String,
     expiry1: Date,

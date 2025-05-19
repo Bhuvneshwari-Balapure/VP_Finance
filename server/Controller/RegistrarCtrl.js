@@ -1,11 +1,27 @@
 const Registrar = require("../Models/RegistrarModel");
-
+const FinancialProduct = require("../Models/FinancialProductModel");
+const { default: mongoose } = require("mongoose");
 // Create new Registrar
 exports.createRegistrar = async (req, res) => {
   try {
+    console.log(req.body, "Req.body registrar");
+    const { financialProduct } = req.body;
+
+    // Find the product by name
+    const productExists = await FinancialProduct.findOne({
+      name: financialProduct,
+    });
+    if (!productExists) {
+      return res.status(400).json({ error: "Invalid financial Product Id" });
+    }
+    // Replace name with ObjectId
+    req.body.financialProduct = productExists._id;
+
     const registrar = new Registrar(req.body);
-    const savedRegistrar = await registrar.save();
-    res.status(201).json(savedRegistrar);
+    await registrar.save();
+
+    res.status(201).json(registrar);
+    console.log(registrar, "Saved Registrar");
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -14,7 +30,12 @@ exports.createRegistrar = async (req, res) => {
 // Get all Registrars
 exports.getAllRegistrars = async (req, res) => {
   try {
-    const registrars = await Registrar.find();
+    // const registrars = await Registrar.find();
+    const registrars = await Registrar.find().populate(
+      "financialProduct",
+      "name"
+    );
+
     res.status(200).json(registrars);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -36,11 +57,35 @@ exports.getRegistrarById = async (req, res) => {
 // Update Registrar by ID
 exports.updateRegistrar = async (req, res) => {
   try {
+    const { financialProduct } = req.body;
+
+    if (financialProduct) {
+      let product = null;
+
+      // If the financialProduct is not a valid ObjectId, treat it as a name
+      if (!mongoose.Types.ObjectId.isValid(financialProduct)) {
+        product = await FinancialProduct.findOne({ name: financialProduct });
+        if (!product) {
+          return res
+            .status(400)
+            .json({ error: "Invalid financial Product name" });
+        }
+        req.body.financialProduct = product._id;
+      } else {
+        product = await FinancialProduct.findById(financialProduct);
+        if (!product) {
+          return res
+            .status(400)
+            .json({ error: "Invalid financial Product Id" });
+        }
+      }
+    }
+
     const updatedRegistrar = await Registrar.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true, runValidators: true }
-    );
+    ).populate("financialProduct");
     if (!updatedRegistrar)
       return res.status(404).json({ error: "Registrar not found" });
     res.status(200).json(updatedRegistrar);

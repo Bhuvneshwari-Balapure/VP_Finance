@@ -4,10 +4,12 @@ import {
   createRegistrar,
   updateRegistrar,
   deleteRegistrar,
+  getRegistrarById,
 } from "./RegistrarThunx";
 
 const initialState = {
   registrars: [],
+  selectedRegistrar: null,
   loading: false,
   error: null,
 };
@@ -16,8 +18,7 @@ const registrarSlice = createSlice({
   name: "registrar",
   initialState,
   reducers: {
-    // You can add synchronous reducers here if needed
-    clearError(state) {
+    resetRegistrarStatus(state) {
       state.error = null;
     },
   },
@@ -51,6 +52,20 @@ const registrarSlice = createSlice({
         state.error = action.payload;
       })
 
+      // Get registrar by ID
+      .addCase(getRegistrarById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.selectedRegistrar = null;
+      })
+      .addCase(getRegistrarById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedRegistrar = action.payload;
+      })
+      .addCase(getRegistrarById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // Update registrar
       .addCase(updateRegistrar.pending, (state) => {
         state.loading = true;
@@ -88,6 +103,6 @@ const registrarSlice = createSlice({
   },
 });
 
-export const { clearError } = registrarSlice.actions;
+export const { resetRegistrarStatus } = registrarSlice.actions;
 
 export default registrarSlice.reducer;
