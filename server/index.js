@@ -18,6 +18,7 @@ const FinancialProductRoute = require("./Routes/FinancialProductRoute");
 const CompanyNameRoute = require("./Routes/CompanyNameRoute");
 const SuspectLeadRoute = require("./Routes/SuspectLeadRoute");
 const RegistrarRoute = require("./Routes/RegistrarRoute");
+const AMCRoute = require("./Routes/AMCRoute");
 const LeadTypeRoute = require("./Routes/LeadTypeRoute");
 const OccupationTypeRoute = require("./Routes/OccupationTypeRoute");
 
@@ -46,6 +47,7 @@ app.use("/api/FinancialProduct", FinancialProductRoute);
 app.use("/api/CompanyName", CompanyNameRoute);
 app.use("/api/SuspectLead", SuspectLeadRoute);
 app.use("/api/registrar", RegistrarRoute);
+app.use("/api/AMC", AMCRoute);
 app.use("/api/leadType", LeadTypeRoute);
 app.use("/api/occupation-types", OccupationTypeRoute);
 

@@ -1,20 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const registrarController = require("../Controller/RegistrarCtrl");
+const AmcCtrl = require("../Controller/AMCCtrl");
 
-// Create Registrar
-router.post("/", registrarController.createRegistrar);
+// Create AMC
+router.post("/", AmcCtrl.createAMC);
 
-// Read all Registrars
-router.get("/", registrarController.getAllRegistrars);
+// Read all AMCs
+router.get("/", AmcCtrl.getAllAMCs);
 
-// Read single Registrar by ID
-router.get("/:id", registrarController.getRegistrarById);
+// Read single AMC by ID
+router.get("/:id", AmcCtrl.getAMCById);
 
-// Update Registrar by ID
-router.put("/:id", registrarController.updateRegistrar);
+// Update AMC by ID
+router.put("/:id", AmcCtrl.updateAMC);
 
-// Delete Registrar by ID
-router.delete("/:id", registrarController.deleteRegistrar);
+// Delete AMC by ID
+router.delete("/:id", AmcCtrl.deleteAMC);
 
 module.exports = router;

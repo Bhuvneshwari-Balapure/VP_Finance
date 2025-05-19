@@ -1,70 +1,59 @@
 const mongoose = require("mongoose");
 
-const AMCSchema = new mongoose.Schema(
+const amcSchema = new mongoose.Schema(
   {
-    financialProduct: {
+    registrar: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Registrar",
       required: true,
     },
-    arn1: String,
-    euin1: String,
-    expiry1: Date,
+    amcName: { type: String, required: true },
+    localAddress: { type: String },
+    contactNo: { type: Number },
+    email: { type: String },
 
-    nimsEmail1: String,
-    nimsPassword1: String,
+    branchManagerName: { type: String },
+    branchManagerMobile: { type: Number },
 
-    arn2: String,
-    euin2: String,
-    expiry2: Date,
+    headOfficeAddress: { type: String },
+    headOfficeContact: { type: Number },
+    headOfficeEmail: { type: String },
 
-    nimsEmail2: String,
-    nimsPassword2: String,
+    website: { type: String },
 
-    registrarName: String,
-    localOfficeAddress: String,
-    contactNo: Number,
-    emailId: String,
+    rmName: { type: String },
+    rmDob: { type: Date },
+    rmMobile: { type: Number },
+    rmEmail: { type: String },
 
-    branchManager: String,
-    branchManagerMobile: Number,
-    headOfficeAddress: String,
-    headOfficeContact: Number,
+    portalLink: { type: String },
+    alternatePortalLink: { type: String },
 
-    headOfficeEmail: String,
-    website: String,
+    loginName1: { type: String },
+    username1: { type: String },
+    password1: { type: String },
 
-    rmName: String,
-    rmDOB: Date,
-    rmMobile: Number,
-    rmEmail: String,
+    loginName2: { type: String },
+    username2: { type: String },
+    password2: { type: String },
 
-    portalLink: String,
-    altPortalLink: String,
+    loginName3: { type: String },
+    username3: { type: String },
+    password3: { type: String },
 
-    loginName1: String,
-    username1: String,
-    password1: String,
+    appName1: { type: String },
+    appUsername1: { type: String },
+    appPassword1: { type: String },
 
-    loginName2: String,
-    username2: String,
-    password2: String,
+    appName2: { type: String },
+    appUsername2: { type: String },
+    appPassword2: { type: String },
 
-    loginName3: String,
-    username3: String,
-    password3: String,
-
-    appName1: String,
-    appUsername1: String,
-    appPassword1: String,
-
-    appName2: String,
-    appUsername2: String,
-    appPassword2: String,
-
-    remark: String,
+    extraRemark: { type: String },
   },
-  { timestamps: true }
+  {
+    timestamps: true, // Automatically adds createdAt and up{ type : Date}dAt fields
+  }
 );
 
-module.exports = mongoose.model("AMC", AMCSchema);
+module.exports = mongoose.model("AMC", amcSchema);

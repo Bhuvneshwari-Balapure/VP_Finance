@@ -1,45 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchFinancialProduct } from "../../../../redux/feature/FinancialProduct/FinancialThunx";
-import {
-  createRegistrar,
-  getRegistrarById,
-  updateRegistrar,
-} from "../../../../redux/feature/Registrar/RegistrarThunx";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { resetRegistrarStatus } from "../../../../redux/feature/Registrar/RegistrarSlice";
 
-// initial data
+import {
+  createAMC,
+  getAMCById,
+  updateAMC,
+} from "../../../../redux/feature/AMC/AMCThunx";
+import { resetAMCStatus } from "../../../../redux/feature/AMC/AMCSlice";
+import { fetchRegistrars } from "../../../../redux/feature/Registrar/RegistrarThunx";
+
 const initialFormState = {
-  financialProduct: "",
-  arn1: "",
-  euin1: "",
-  expiry1: "",
-  nimsEmail1: "",
-  nimsPassword1: "",
-  arn2: "",
-  euin2: "",
-  expiry2: "",
-  nimsEmail2: "",
-  nimsPassword2: "",
-  registrarName: "",
-  localOfficeAddress: "",
+  registrar: "",
+  amcName: "",
+  localAddress: "",
   contactNo: "",
-  emailId: "",
-  branchManager: "",
+  email: "",
+  branchManagerName: "",
   branchManagerMobile: "",
   headOfficeAddress: "",
   headOfficeContact: "",
   headOfficeEmail: "",
   website: "",
   rmName: "",
-  rmDOB: "",
+  rmDob: "",
   rmMobile: "",
   rmEmail: "",
   portalLink: "",
-  altPortalLink: "",
+  alternatePortalLink: "",
   loginName1: "",
   username1: "",
   password1: "",
@@ -55,373 +44,178 @@ const initialFormState = {
   appName2: "",
   appUsername2: "",
   appPassword2: "",
-  remark: "",
+  extraRemark: "",
 };
 
 function AMC({ editId, setActiveTab, setEditId }) {
   const [formData, setFormData] = useState(initialFormState);
   const dispatch = useDispatch();
-  const financialProduct = useSelector((state) => state.financialProduct);
-  const registrarState = useSelector((state) => state.registrar);
-
-  const { loading, error, success } = registrarState;
-
-  // fetch financial product
+  const registrarData = useSelector((state) => state.registrar);
+  console.log(registrarData, "registrar");
+  const AMCState = useSelector((state) => state.AMC);
+  const { loading, error, success } = AMCState;
 
   useEffect(() => {
-    dispatch(fetchFinancialProduct());
+    dispatch(fetchRegistrars());
   }, [dispatch]);
 
-  // eidt update
   useEffect(() => {
     if (editId) {
-      dispatch(getRegistrarById(editId)); // ✅ Now safe to use
+      dispatch(getAMCById(editId));
     } else {
       setFormData(initialFormState);
     }
   }, [editId, dispatch]);
 
-  const { selectedRegistrar } = useSelector((state) => state.registrar);
+  const { selectedAMC } = useSelector((state) => state.registrar);
+
   useEffect(() => {
-    if (editId && selectedRegistrar && selectedRegistrar._id === editId) {
-      setFormData({
-        ...initialFormState,
-        ...selectedRegistrar,
-      });
+    if (editId && selectedAMC && selectedAMC._id === editId) {
+      setFormData({ ...initialFormState, ...selectedAMC });
     }
-  }, [editId, selectedRegistrar]);
+  }, [editId, selectedAMC]);
+
   useEffect(() => {
     if (success) {
-      if (editId) {
-        toast.success("Company updated successfully!");
-      } else {
-        toast.success("Company created successfully!");
-      }
-
+      toast.success(
+        editId ? "AMC updated successfully!" : "AMC created successfully!"
+      );
       setFormData(initialFormState);
-      setEditId(null); // Optional: reset edit mode
-      setActiveTab("view"); // Optional: switch tab after save/update
-      dispatch(resetRegistrarStatus());
+      setEditId(null);
+      setActiveTab("view");
+      dispatch(resetAMCStatus());
     }
 
     if (error) {
       toast.error(error || "Something went wrong!");
-      dispatch(resetRegistrarStatus());
+      dispatch(resetAMCStatus());
     }
   }, [success, error, editId, dispatch, setActiveTab, setEditId]);
-
-  // handle change
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // handle Submit
   const handleSubmit = (e) => {
     e.preventDefault();
     if (editId) {
-      dispatch(updateRegistrar({ id: editId, registrarData: formData }));
+      dispatch(updateAMC({ id: editId, registrarData: formData }));
     } else {
-      dispatch(createRegistrar(formData));
+      dispatch(createAMC(formData));
     }
-    console.log(formData);
-    // dispatch logic here
-
-    setActiveTab("view");
   };
-
-  const renderInput = (field, label, type = "text", placeholder = "") => (
-    <Form.Group controlId={field}>
-      <Form.Label>{label}</Form.Label>
-      <Form.Control
-        type={type}
-        value={formData[field]}
-        onChange={(e) => handleChange(field, e.target.value)}
-        placeholder={placeholder}
-      />
-    </Form.Group>
-  );
 
   return (
     <div className="p-4 border rounded">
-      <h5 className="text-center mb-4">MUTUAL FUND</h5>
+      <h5 className="text-center mb-4">AMC Name</h5>
       <Form onSubmit={handleSubmit}>
-        <Row>
-          <Col md={3}>
-            <Form.Group className="mb-3">
-              <Form.Label>Financial Product</Form.Label>
+        <Row className="mb-3">
+          <Col md={4}>
+            <Form.Group>
+              <Form.Label>Registrar Name</Form.Label>
               <Form.Select
-                value={formData.financialProduct}
-                onChange={(e) =>
-                  handleChange("financialProduct", e.target.value)
-                }
+                value={formData.registrar}
+                onChange={(e) => handleChange("registrar", e.target.value)}
                 required
               >
-                <option value="">Choose Financial Product --</option>
-                {financialProduct.loading && (
-                  <option disabled>Loading...</option>
-                )}
-                {!financialProduct.loading &&
-                  financialProduct.FinancialProducts?.map((item) => (
-                    <option key={item._id} value={item.name}>
-                      {item.name}
-                    </option>
-                  ))}
+                <option value="">Choose Registrar Name --</option>
+                {registrarData.loading && <option disabled>Loading...</option>}
+                {registrarData.registrars?.map((item) => (
+                  <option key={item._id} value={item._id}>
+                    {item.registrarName}
+                  </option>
+                ))}
               </Form.Select>
             </Form.Group>
           </Col>
-
-          <Col md={3}>
-            {renderInput("arn1", "ARN No 1", "text", "Enter ARN No 1")}
-          </Col>
-          <Col md={3}>
-            {renderInput("euin1", "EUIN No 1", "text", "Enter EUIN No 1")}
-          </Col>
-          <Col md={3}>{renderInput("expiry1", "Expiry Date 1", "date")}</Col>
-        </Row>
-
-        <Row className="mt-3">
-          <Col md={3}>
-            {renderInput(
-              "nimsEmail1",
-              "NIMS Email 1",
-              "email",
-              "Enter NIMS Email 1"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput(
-              "nimsPassword1",
-              "NIMS Password 1",
-              "password",
-              "Enter NIMS Password 1"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput("arn2", "ARN No 2", "text", "Enter ARN No 2")}
-          </Col>
-          <Col md={3}>
-            {renderInput("euin2", "EUIN No 2", "text", "Enter EUIN No 2")}
-          </Col>
-        </Row>
-
-        <Row className="mt-3">
-          <Col md={3}>{renderInput("expiry2", "Expiry Date 2", "date")}</Col>
-          <Col md={3}>
-            {renderInput(
-              "nimsEmail2",
-              "NIMS Email 2",
-              "email",
-              "Enter NIMS Email 2"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput(
-              "nimsPassword2",
-              "NIMS Password 2",
-              "password",
-              "Enter NIMS Password 2"
-            )}
-          </Col>
-        </Row>
-
-        <h5 className="text-center mt-4 mb-3">REGISTRAR</h5>
-
-        <Row>
-          <Col md={3}>
-            {renderInput(
-              "registrarName",
-              "Registrar Name",
-              "text",
-              "Enter Registrar Name"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput(
-              "localOfficeAddress",
-              "Local Office Address",
-              "text",
-              "Enter Local Office Address"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput("contactNo", "Contact No", "text", "Enter Contact No")}
-          </Col>
-          <Col md={3}>
-            {renderInput("emailId", "Email Id", "email", "Enter Email Id")}
-          </Col>
-        </Row>
-
-        <Row className="mt-3">
-          <Col md={3}>
-            {renderInput(
-              "branchManager",
-              "Branch Manager Name",
-              "text",
-              "Enter Branch Manager Name"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput(
-              "branchManagerMobile",
-              "Branch Manager Mobile",
-              "text",
-              "Enter Branch Manager Mobile"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput(
-              "headOfficeAddress",
-              "Head Office Address",
-              "text",
-              "Enter Head Office Address"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput(
-              "headOfficeContact",
-              "Head Office Contact",
-              "text",
-              "Enter Head Office Contact"
-            )}
-          </Col>
-        </Row>
-
-        <Row className="mt-3">
-          <Col md={3}>
-            {renderInput(
-              "headOfficeEmail",
-              "Head Office Email",
-              "email",
-              "Enter Head Office Email"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput("website", "Website", "text", "Enter Website URL")}
-          </Col>
-          <Col md={3}>
-            {renderInput(
-              "rmName",
-              "Relationship Manager Name",
-              "text",
-              "Enter RM Name"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput("rmDOB", "Relationship Manager DOB", "date")}
-          </Col>
-        </Row>
-
-        <Row className="mt-3">
-          <Col md={3}>
-            {renderInput(
-              "rmMobile",
-              "Relationship Manager Mobile",
-              "text",
-              "Enter RM Mobile"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput(
-              "rmEmail",
-              "Relationship Manager Email",
-              "email",
-              "Enter RM Email"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput(
-              "portalLink",
-              "Portal Link",
-              "text",
-              "Enter Portal Link"
-            )}
-          </Col>
-          <Col md={3}>
-            {renderInput(
-              "altPortalLink",
-              "Alternate Portal Link",
-              "text",
-              "Enter Alternate Portal Link"
-            )}
-          </Col>
-        </Row>
-
-        <Row className="mt-3">
-          {[1, 2, 3].map((num) => (
-            <React.Fragment key={num}>
-              <Col md={3}>
-                {renderInput(
-                  `loginName${num}`,
-                  `Login Name ${num}`,
-                  "text",
-                  `Enter Login Name ${num}`
-                )}
-              </Col>
-              <Col md={3}>
-                {renderInput(
-                  `username${num}`,
-                  `Username ${num}`,
-                  "text",
-                  `Enter Username ${num}`
-                )}
-              </Col>
-              <Col md={3}>
-                {renderInput(
-                  `password${num}`,
-                  `Password ${num}`,
-                  "password",
-                  `Enter Password ${num}`
-                )}
-              </Col>
-            </React.Fragment>
-          ))}
-        </Row>
-
-        <Row className="mt-3">
-          {[1, 2].map((num) => (
-            <React.Fragment key={num}>
-              <Col md={3}>
-                {renderInput(
-                  `appName${num}`,
-                  "App Name",
-                  "text",
-                  "Enter App Name"
-                )}
-              </Col>
-              <Col md={3}>
-                {renderInput(
-                  `appUsername${num}`,
-                  "App Username",
-                  "text",
-                  "Enter App Username"
-                )}
-              </Col>
-              <Col md={3}>
-                {renderInput(
-                  `appPassword${num}`,
-                  "App Password",
-                  "password",
-                  "Enter App Password"
-                )}
-              </Col>
-            </React.Fragment>
-          ))}
-        </Row>
-
-        <Row className="mt-3">
-          <Col md={12}>
-            <Form.Group controlId="remark">
-              <Form.Label>Remark</Form.Label>
+          <Col md={4}>
+            <Form.Group>
+              <Form.Label>AMC Name</Form.Label>
               <Form.Control
-                as="textarea"
-                rows={2}
-                value={formData.remark}
-                onChange={(e) => handleChange("remark", e.target.value)}
-                placeholder="Enter Remarks"
+                type="text"
+                value={formData.amcName}
+                onChange={(e) => handleChange("amcName", e.target.value)}
               />
             </Form.Group>
           </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col md={4}>{renderInput("localAddress", "Local Address")}</Col>
+          <Col md={4}>{renderInput("contactNo", "Contact No")}</Col>
+          <Col md={4}>{renderInput("email", "Email Id")}</Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col md={4}>
+            {renderInput("branchManagerName", "Branch Manager Name")}
+          </Col>
+          <Col md={4}>
+            {renderInput("branchManagerMobile", "Branch Manager Mobile")}
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col md={4}>
+            {renderInput("headOfficeAddress", "Head Office Address")}
+          </Col>
+          <Col md={4}>
+            {renderInput("headOfficeContact", "Head Office Contact")}
+          </Col>
+          <Col md={4}>
+            {renderInput("headOfficeEmail", "Head Office Email")}
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col md={4}>{renderInput("website", "Website")}</Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col md={3}>{renderInput("rmName", "Relationship Manager Name")}</Col>
+          <Col md={3}>
+            <Form.Group>
+              <Form.Label>Relationship Manager DOB</Form.Label>
+              <Form.Control
+                type="date"
+                value={formData.rmDob}
+                onChange={(e) => handleChange("rmDob", e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={3}>
+            {renderInput("rmMobile", "Relationship Manager Mobile")}
+          </Col>
+          <Col md={3}>
+            {renderInput("rmEmail", "Relationship Manager Email")}
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col md={6}>{renderInput("portalLink", "Portal Link")}</Col>
+          <Col md={6}>
+            {renderInput("alternatePortalLink", "Alternate Portal Link")}
+          </Col>
+        </Row>
+
+        {[1, 2, 3].map((i) => (
+          <Row className="mb-3" key={i}>
+            <Col md={4}>{renderInput(`loginName${i}`, `Login Name ${i}`)}</Col>
+            <Col md={4}>{renderInput(`username${i}`, `Username ${i}`)}</Col>
+            <Col md={4}>{renderInput(`password${i}`, `Password ${i}`)}</Col>
+          </Row>
+        ))}
+
+        {[1, 2].map((i) => (
+          <Row className="mb-3" key={`app${i}`}>
+            <Col md={4}>{renderInput(`appName${i}`, `App Name`)}</Col>
+            <Col md={4}>{renderInput(`appUsername${i}`, `App Username`)}</Col>
+            <Col md={4}>{renderInput(`appPassword${i}`, `App Password`)}</Col>
+          </Row>
+        ))}
+
+        <Row className="mb-3">
+          <Col>{renderInput("extraRemark", "Extra Remark")}</Col>
         </Row>
 
         <div className="text-center mt-4">
@@ -432,6 +226,19 @@ function AMC({ editId, setActiveTab, setEditId }) {
       </Form>
     </div>
   );
+
+  function renderInput(field, label, type = "text") {
+    return (
+      <Form.Group controlId={field}>
+        <Form.Label>{label}</Form.Label>
+        <Form.Control
+          type={type}
+          value={formData[field]}
+          onChange={(e) => handleChange(field, e.target.value)}
+        />
+      </Form.Group>
+    );
+  }
 }
 
 export default AMC;

@@ -1,78 +1,82 @@
+const { default: mongoose } = require("mongoose");
 const AMC = require("../Models/AMCModel");
 const Registrar = require("../Models/RegistrarModel");
-const { default: mongoose } = require("mongoose");
-// Create new AMC
+
+// Create a new AMC
 exports.createAMC = async (req, res) => {
   try {
     console.log(req.body, "Req.body AMC");
-    const { Registrar } = req.body;
+    const { registrar } = req.body;
 
-    // Find the product by name
-    const RegistrarExist = await Registrar.findOne({
-      registrarName: Registrar,
-    });
-    if (!RegistrarExist) {
-      return res.status(400).json({ error: "Invalid Registrar Product Id" });
+    // Find registrar by _id (ObjectId)
+    const registrarExists = await Registrar.findById(registrar);
+
+    if (!registrarExists) {
+      return res.status(400).json({ error: "Invalid Registrar Id" });
     }
-    // Replace name with ObjectId
-    req.body.Registrar = RegistrarExist._id;
 
-    const AMC = new AMC(req.body);
-    await AMC.save();
-
-    res.status(201).json(AMC);
-    console.log(AMC, "Saved AMC");
+    // registrar is already ObjectId string, no need to convert again
+    // just continue saving
+    const newAMC = new AMC(req.body);
+    const savedAMC = await newAMC.save();
+    res.status(201).json(savedAMC);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res
+      .status(400)
+      .json({ message: "Failed to create AMC", error: error.message });
   }
 };
 
 // Get all AMCs
 exports.getAllAMCs = async (req, res) => {
   try {
-    // const AMCs = await AMC.find();
-    const AMCs = await AMC.find().populate("Registrar", "name");
-
-    res.status(200).json(AMCs);
+    const amcs = await AMC.find().populate("registrar", "registrarName"); // populate registrar if needed
+    res.status(200).json(amcs);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch AMCs", error: error.message });
   }
 };
 
-// Get single AMC by ID
+// Get AMC by ID
 exports.getAMCById = async (req, res) => {
   try {
-    const AMC = await AMC.findById(req.params.id);
-    if (!AMC) return res.status(404).json({ error: "AMC not found" });
-    res.status(200).json(AMC);
+    const amc = await AMC.findById(req.params.id).populate(
+      "registrar",
+      "registrarName"
+    );
+    if (!amc) {
+      return res.status(404).json({ message: "AMC not found" });
+    }
+    res.status(200).json(amc);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch AMC", error: error.message });
   }
 };
 
 // Update AMC by ID
 exports.updateAMC = async (req, res) => {
   try {
-    const { Registrar } = req.body;
+    const { registrar } = req.body;
 
-    if (Registrar) {
-      let product = null;
+    if (registrar) {
+      let registrarDoc = null;
 
-      // If the Registrar is not a valid ObjectId, treat it as a name
-      if (!mongoose.Types.ObjectId.isValid(Registrar)) {
-        product = await Registrar.findOne({ name: Registrar });
-        if (!product) {
-          return res
-            .status(400)
-            .json({ error: "Invalid financial Product name" });
+      // Agar registrar valid ObjectId nahi hai to registrarName ke roop mein treat karo
+      if (!mongoose.Types.ObjectId.isValid(registrar)) {
+        registrarDoc = await Registrar.findOne({ registrarName: registrar });
+        if (!registrarDoc) {
+          return res.status(400).json({ error: "Invalid Registrar Name" });
         }
-        req.body.Registrar = product._id;
+        req.body.registrar = registrarDoc._id;
       } else {
-        product = await Registrar.findById(Registrar);
-        if (!product) {
-          return res
-            .status(400)
-            .json({ error: "Invalid financial Product Id" });
+        // Agar ObjectId valid hai to Registrar exist karta hai ya nahi check karo
+        registrarDoc = await Registrar.findById(registrar);
+        if (!registrarDoc) {
+          return res.status(400).json({ error: "Invalid Registrar Id" });
         }
       }
     }
@@ -80,11 +84,17 @@ exports.updateAMC = async (req, res) => {
     const updatedAMC = await AMC.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
-    }).populate("Registrar");
-    if (!updatedAMC) return res.status(404).json({ error: "AMC not found" });
+    }).populate("registrar", "registrarName");
+
+    if (!updatedAMC) {
+      return res.status(404).json({ message: "AMC not found" });
+    }
+
     res.status(200).json(updatedAMC);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res
+      .status(400)
+      .json({ message: "Failed to update AMC", error: error.message });
   }
 };
 
@@ -92,9 +102,13 @@ exports.updateAMC = async (req, res) => {
 exports.deleteAMC = async (req, res) => {
   try {
     const deletedAMC = await AMC.findByIdAndDelete(req.params.id);
-    if (!deletedAMC) return res.status(404).json({ error: "AMC not found" });
+    if (!deletedAMC) {
+      return res.status(404).json({ message: "AMC not found" });
+    }
     res.status(200).json({ message: "AMC deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to delete AMC", error: error.message });
   }
 };
