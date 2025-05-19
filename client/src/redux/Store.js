@@ -11,6 +11,7 @@ import FinancialProductReducer from "./feature/FinancialProduct/FinancialSlice";
 import CompanyNameReducer from "./feature/ComapnyName/CompanySlice";
 import SuspectLeadReducer from "./feature/SuspectLead/SuspectLeadSlice";
 import registrarReducer from "./feature/Registrar/RegistrarSlice";
+import AMCReducer from "./feature/AMC/AMCSlice";
 import LeadTypeReducer from "./feature/LeadType/LeadTypeSlice";
 import OccupationTypeReducer from "./feature/OccupationType/OccupationSlice";
 export const store = configureStore({
@@ -27,6 +28,7 @@ export const store = configureStore({
     CompanyName: CompanyNameReducer,
     suspectLead: SuspectLeadReducer,
     registrar: registrarReducer,
+    AMC: AMCReducer,
     LeadType: LeadTypeReducer,
     OccupationType: OccupationTypeReducer,
   },

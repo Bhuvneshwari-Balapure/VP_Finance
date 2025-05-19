@@ -77,7 +77,7 @@ function RegistrarDetail({ setActiveTab, setEditId }) {
             <tr key={item._id || index}>
               <td>{index + 1}</td>
               <td>{item.registrarName}</td>
-              <td>{item?.financialProduct}</td>
+              <td>{item?.financialProduct?.name}</td>
               <td>{item.arn1}</td>
               <td>{item.euin1}</td>
               <td>{item.username1}</td>
