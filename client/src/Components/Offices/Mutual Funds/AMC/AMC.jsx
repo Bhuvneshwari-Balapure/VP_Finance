@@ -50,8 +50,8 @@ const initialFormState = {
 function AMC({ editId, setActiveTab, setEditId }) {
   const [formData, setFormData] = useState(initialFormState);
   const dispatch = useDispatch();
-  const registrarData = useSelector((state) => state.registrar);
-  console.log(registrarData, "registrar");
+  const registrarAMC = useSelector((state) => state.registrar);
+  console.log(registrarAMC, "registrar");
   const AMCState = useSelector((state) => state.AMC);
   const { loading, error, success } = AMCState;
 
@@ -67,11 +67,16 @@ function AMC({ editId, setActiveTab, setEditId }) {
     }
   }, [editId, dispatch]);
 
-  const { selectedAMC } = useSelector((state) => state.registrar);
+  const { selectedAMC } = useSelector((state) => state.AMC); // from AMC slice now
 
   useEffect(() => {
     if (editId && selectedAMC && selectedAMC._id === editId) {
-      setFormData({ ...initialFormState, ...selectedAMC });
+      // Map only keys present in formData to avoid extra keys from API
+      const filteredData = {};
+      Object.keys(initialFormState).forEach((key) => {
+        filteredData[key] = selectedAMC[key] ?? ""; // fallback to empty string if missing
+      });
+      setFormData(filteredData);
     }
   }, [editId, selectedAMC]);
 
@@ -99,10 +104,11 @@ function AMC({ editId, setActiveTab, setEditId }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (editId) {
-      dispatch(updateAMC({ id: editId, registrarData: formData }));
+      dispatch(updateAMC({ id: editId, AMCData: formData }));
     } else {
       dispatch(createAMC(formData));
     }
+    setActiveTab("view");
   };
 
   return (
@@ -119,8 +125,8 @@ function AMC({ editId, setActiveTab, setEditId }) {
                 required
               >
                 <option value="">Choose Registrar Name --</option>
-                {registrarData.loading && <option disabled>Loading...</option>}
-                {registrarData.registrars?.map((item) => (
+                {registrarAMC.loading && <option disabled>Loading...</option>}
+                {registrarAMC.registrars?.map((item) => (
                   <option key={item._id} value={item._id}>
                     {item.registrarName}
                   </option>

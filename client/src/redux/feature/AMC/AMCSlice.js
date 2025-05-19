@@ -56,11 +56,11 @@ const AmcSlice = createSlice({
       .addCase(getAMCById.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.selectedRegistrar = null;
+        state.selectedAMC = null;
       })
       .addCase(getAMCById.fulfilled, (state, action) => {
         state.loading = false;
-        state.selectedRegistrar = action.payload;
+        state.selectedAMC = action.payload;
       })
       .addCase(getAMCById.rejected, (state, action) => {
         state.loading = false;
