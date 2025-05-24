@@ -30,6 +30,8 @@ import LeadType from "../Components/Masters/Leads/LeadType";
 import OccupationType from "../Components/Masters/Leads/OccupationType";
 import AMCtabs from "../Components/Offices/Mutual Funds/AMC/AMCtabs";
 import OfficeDiaryTabs from "../Components/Offices/OfficeRecord/Office Diary/OfficeDiaryTabs";
+import OfficePurchase from "../Components/Offices/Other/OfficePurchase";
+import ImpDocument from "../Components/Offices/Other/ImportantDocument/ImpDocument";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -61,6 +63,8 @@ const AppRoutes = () => {
         <Route path="/mutual-fund/registrar" element={<RegistrarTabs />} />
         <Route path="/mutual-fund/amc" element={<AMCtabs />} />
         <Route path="/office-diary" element={<OfficeDiaryTabs />} />
+        <Route path="/office-purchase" element={<OfficePurchase />} />
+        <Route path="/important-documents" element={<ImpDocument />} />
       </Route>
     </Routes>
   );

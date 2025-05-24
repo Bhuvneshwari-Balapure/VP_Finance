@@ -66,7 +66,7 @@ const Navbarfristn = () => {
 
   return (
     <div className="vpfinancial-navbar">
-      <div className="blue-header   py-2">
+      <div className="blue-header px-3   py-2">
         <Container>
           <h1 className="brand-title mb-0">
             Vpfinancial{" "}
@@ -85,9 +85,10 @@ const Navbarfristn = () => {
       </div>
 
       <Navbar
+        style={{ width: "100%" }}
         bg="white"
         expand="lg"
-        className="main-navigation border-top border-bottom"
+        className="main-navigation border-top border-bottom d-flex justify-content-center align-content-center"
         expanded={expanded}
         onToggle={() => setExpanded(!expanded)}
       >
@@ -100,7 +101,7 @@ const Navbarfristn = () => {
           </Navbar.Toggle>
 
           <Navbar.Collapse id="main-navbar-nav">
-            <Nav className="me-auto gap-4">
+            <Nav className="m-auto gap-4">
               <Nav.Link as={Link} to="/" className="nav-item">
                 <FiGrid className="nav-icon" />
                 <span className="nav-text">Dashboard</span>
@@ -503,17 +504,10 @@ const Navbarfristn = () => {
                     {/* Office Records */}
                     <div className="col-md-4">
                       <h6 className="text-danger">OFFICE RECORDS</h6>
-                      <Dropdown.Item as={Link} to="/office-record">
-                        Office Record
-                      </Dropdown.Item>
+
                       <Dropdown.Item as={Link} to="/office-diary">
                         Office Diary
                       </Dropdown.Item>
-                    </div>
-
-                    {/* Other */}
-                    <div className="col-md-4">
-                      <h6 className="text-danger">OTHER</h6>
                       <Dropdown.Item as={Link} to="/office-purchase">
                         Office Purchase
                       </Dropdown.Item>

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const leadSourceSchema = new mongoose.Schema(
   {
-    leadName: {
+    sourceName: {
       type: String,
       required: true,
     },

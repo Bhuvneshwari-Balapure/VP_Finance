@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import AddOfficeDiary from "./AddOfficeDiary";
-import OfficeDiaryDetail from "./OfficeDiaryDetail";
+import AddOfficePurchase from "./AddOfficePurchase";
+import OfficePurchaseDetail from "./OfficePurchaseDetail";
 
-function OfficeDiaryTabs() {
+function OfficePurchase() {
   const [activeTab, setActiveTab] = useState("add");
   const [editId, setEditId] = useState(null);
 
   return (
-    <div style={{ padding: "" }}>
-      <h3>Office Diary</h3>
+    <div style={{ padding: "20px" }}>
+      <h3>Office Purchase</h3>
 
       <div style={{ display: "flex", borderBottom: "2px solid #ccc" }}>
         <div
@@ -22,7 +22,7 @@ function OfficeDiaryTabs() {
             borderBottom: activeTab === "add" ? "3px solid #007bff" : "none",
           }}
         >
-          Add Dairy Name
+          Add office purchase
         </div>
         <div
           onClick={() => setActiveTab("view")}
@@ -32,19 +32,19 @@ function OfficeDiaryTabs() {
             borderBottom: activeTab === "view" ? "3px solid #007bff" : "none",
           }}
         >
-          View Dairy Name
+          View office purchase
         </div>
       </div>
 
       <div style={{ marginTop: "20px" }}>
         {activeTab === "add" ? (
-          <AddOfficeDiary
+          <AddOfficePurchase
             setActiveTab={setActiveTab}
             setEditId={setEditId}
             editId={editId}
           />
         ) : (
-          <OfficeDiaryDetail
+          <OfficePurchaseDetail
             setActiveTab={setActiveTab}
             setEditId={setEditId}
           />
@@ -54,4 +54,4 @@ function OfficeDiaryTabs() {
   );
 }
 
-export default OfficeDiaryTabs;
+export default OfficePurchase;

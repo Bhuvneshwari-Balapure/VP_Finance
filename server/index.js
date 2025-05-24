@@ -22,6 +22,8 @@ const AMCRoute = require("./Routes/AMCRoute");
 const LeadTypeRoute = require("./Routes/LeadTypeRoute");
 const OccupationTypeRoute = require("./Routes/OccupationTypeRoute");
 const OfficeDiaryRoute = require("./Routes/OfficeDiaryRoute");
+const OfficePurchaseRoute = require("./Routes/OfficePurchaseRoute");
+const ImpDocumentRoute = require("./Routes/ImpDocumentRoute");
 
 // ---------------------------------------------------------------------
 app.use(bodyParser.json());
@@ -52,6 +54,8 @@ app.use("/api/AMC", AMCRoute);
 app.use("/api/leadType", LeadTypeRoute);
 app.use("/api/occupation-types", OccupationTypeRoute);
 app.use("/api/office-diary", OfficeDiaryRoute);
+app.use("/api/office-purchase", OfficePurchaseRoute);
+app.use("/api/important-documents", ImpDocumentRoute);
 
 const port = process.env.PORT;
 app.listen(port, () => {

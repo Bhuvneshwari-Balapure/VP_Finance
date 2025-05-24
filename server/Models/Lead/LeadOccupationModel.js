@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const leadOccupationSchema = new mongoose.Schema(
   {
-    leadName: {
+    occupationName: {
       type: String,
       required: true,
     },

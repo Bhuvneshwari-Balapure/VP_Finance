@@ -46,7 +46,16 @@ const OfficeDiaryDetail = ({ setActiveTab, setEditId }) => {
           <thead>
             <tr>
               <th>#</th>
-              <th>Name</th>
+              <th>Org. Name</th>
+              <th>Service Person</th>
+              <th>Contact No</th>
+              <th>Licance No</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Purchage Date</th>
+              <th>Amount</th>
+              <th>User Id</th>
+              <th>Password</th>
               <th>Particulars</th>
               <th>PDF</th>
               <th>Uploaded At</th>
@@ -57,7 +66,16 @@ const OfficeDiaryDetail = ({ setActiveTab, setEditId }) => {
             {list.map((diary, index) => (
               <tr key={diary._id}>
                 <td>{index + 1}</td>
-                <td>{diary.name}</td>
+                <td>{diary.orgName}</td>
+                <td>{diary.servicePerson}</td>
+                <td>{diary.contactNo}</td>
+                <td>{diary.licanceNo}</td>
+                <td>{diary.startDate?.substring(0, 10)}</td>
+                <td>{diary.endDate?.substring(0, 10)}</td>
+                <td>{diary.purchageDate?.substring(0, 10)}</td>
+                <td>{diary.amount}</td>
+                <td>{diary.userId}</td>
+                <td>{diary.password}</td>
                 <td>{diary.particulars}</td>
                 <td>
                   <a

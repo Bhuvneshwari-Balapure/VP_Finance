@@ -4,11 +4,14 @@ import axios from "../../../config/axios";
 
 const API_URL = "/leadOccupation";
 
-export const fetchDetails = createAsyncThunk("/leadSource/fetch", async () => {
-  const response = await axios.get(`${API_URL}`);
-  console.log(response.data, "all Data of lead Occupations");
-  return response.data;
-});
+export const fetchLeadOccupationDetails = createAsyncThunk(
+  "/leadSource/fetch",
+  async () => {
+    const response = await axios.get(`${API_URL}`);
+    // console.log(response.data, "all Data of lead Occupations");
+    return response.data;
+  }
+);
 
 export const fetchDetailsById = createAsyncThunk(
   "/leadSource/fetchDetailsById",

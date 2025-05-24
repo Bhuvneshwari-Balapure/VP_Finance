@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  fetchDetails,
+  fetchLeadOccupationDetails,
   fetchDetailsById,
   createDetails,
   updateDetails,
@@ -27,15 +27,15 @@ const LeadAreaSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // First handle all specific cases with addCase
-      .addCase(fetchDetails.pending, (state) => {
+      .addCase(fetchLeadOccupationDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchDetails.fulfilled, (state, action) => {
+      .addCase(fetchLeadOccupationDetails.fulfilled, (state, action) => {
         state.loading = false;
         state.details = action.payload;
       })
-      .addCase(fetchDetails.rejected, (state, action) => {
+      .addCase(fetchLeadOccupationDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

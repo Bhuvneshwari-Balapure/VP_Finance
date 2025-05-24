@@ -5,10 +5,22 @@ const path = require("path");
 // CREATE
 exports.createDiary = async (req, res) => {
   try {
-    const { name, particulars } = req.body;
+    const {
+      orgName,
+      servicePerson,
+      contactNo,
+      licanceNo,
+      startDate,
+      endDate,
+      purchageDate,
+      amount,
+      userId,
+      password,
+      particulars,
+    } = req.body;
 
-    if (!name) {
-      return res.status(400).json({ message: "Name is required" });
+    if (!orgName) {
+      return res.status(400).json({ message: "Org. Name is required" });
     }
 
     if (!req.files || !req.files.diaryPdf || req.files.diaryPdf.length === 0) {
@@ -18,29 +30,36 @@ exports.createDiary = async (req, res) => {
     const pdfFile = req.files.diaryPdf[0];
 
     const newEntry = new OfficeDiary({
-      name,
-      particulars: particulars || "",
+      orgName,
+      servicePerson,
+      contactNo,
+      licanceNo,
+      startDate,
+      endDate,
+      purchageDate,
+      amount,
+      userId,
+      password,
+      particulars,
       pdfPath: `/public/Images/${pdfFile.filename}`,
     });
 
     await newEntry.save();
-    res
-      .status(201)
-      .json({ message: "Office Diary saved successfully", data: newEntry });
+    res.status(201).json({ message: "Diary created", data: newEntry });
   } catch (error) {
-    console.error("Error saving diary:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Create error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 // READ ALL
 exports.getAllDiaries = async (req, res) => {
   try {
-    const diaries = await OfficeDiary.find().sort({ createdAt: -1 });
+    const diaries = await OfficeDiary.find().sort({ uploadedAt: -1 });
     res.status(200).json(diaries);
   } catch (error) {
-    console.error("Error fetching diaries:", error);
-    res.status(500).json({ message: "Failed to retrieve data" });
+    console.error("Read all error:", error);
+    res.status(500).json({ message: "Failed to fetch diaries" });
   }
 };
 
@@ -48,46 +67,61 @@ exports.getAllDiaries = async (req, res) => {
 exports.getDiaryById = async (req, res) => {
   try {
     const diary = await OfficeDiary.findById(req.params.id);
-    if (!diary) return res.status(404).json({ message: "Diary not found" });
+    if (!diary) return res.status(404).json({ message: "Not found" });
     res.status(200).json(diary);
   } catch (error) {
-    res.status(500).json({ message: "Failed to get diary" });
+    res.status(500).json({ message: "Failed to fetch diary" });
   }
 };
 
 // UPDATE
 exports.updateDiary = async (req, res) => {
   try {
-    const { name, particulars } = req.body;
-    const existingDiary = await OfficeDiary.findById(req.params.id);
+    const diary = await OfficeDiary.findById(req.params.id);
+    if (!diary) return res.status(404).json({ message: "Diary not found" });
 
-    if (!existingDiary) {
-      return res.status(404).json({ message: "Diary not found" });
-    }
+    const {
+      orgName,
+      servicePerson,
+      contactNo,
+      licanceNo,
+      startDate,
+      endDate,
+      purchageDate,
+      amount,
+      userId,
+      password,
+      particulars,
+    } = req.body;
 
-    // Handle new file upload
-    if (req.files && req.files.diaryPdf && req.files.diaryPdf.length > 0) {
+    if (req.files?.diaryPdf?.length > 0) {
       const newPdf = req.files.diaryPdf[0];
 
-      // Remove old file
-      const oldPath = path.join(__dirname, "..", existingDiary.pdfPath);
-      if (fs.existsSync(oldPath)) {
-        fs.unlinkSync(oldPath);
-      }
+      // Delete old file
+      const oldPath = path.join(__dirname, "..", diary.pdfPath);
+      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
 
-      existingDiary.pdfPath = `/public/Images/${newPdf.filename}`;
+      diary.pdfPath = `/public/Images/${newPdf.filename}`;
     }
 
-    existingDiary.name = name || existingDiary.name;
-    existingDiary.particulars = particulars || existingDiary.particulars;
+    // Update fields
+    diary.orgName = orgName ?? diary.orgName;
+    diary.servicePerson = servicePerson ?? diary.servicePerson;
+    diary.contactNo = contactNo ?? diary.contactNo;
+    diary.licanceNo = licanceNo ?? diary.licanceNo;
+    diary.startDate = startDate ?? diary.startDate;
+    diary.endDate = endDate ?? diary.endDate;
+    diary.purchageDate = purchageDate ?? diary.purchageDate;
+    diary.amount = amount ?? diary.amount;
+    diary.userId = userId ?? diary.userId;
+    diary.password = password ?? diary.password;
+    diary.particulars = particulars ?? diary.particulars;
 
-    await existingDiary.save();
-    res
-      .status(200)
-      .json({ message: "Diary updated successfully", data: existingDiary });
+    await diary.save();
+    res.status(200).json({ message: "Diary updated", data: diary });
   } catch (error) {
-    console.error("Error updating diary:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Update error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -97,18 +131,14 @@ exports.deleteDiary = async (req, res) => {
     const diary = await OfficeDiary.findById(req.params.id);
     if (!diary) return res.status(404).json({ message: "Diary not found" });
 
-    // Remove associated file
+    // Delete PDF file
     const filePath = path.join(__dirname, "..", diary.pdfPath);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
     await diary.deleteOne();
-    res
-      .status(200)
-      .json({ message: "Diary deleted successfully", id: req.params.id });
+    res.status(200).json({ message: "Diary deleted", id: req.params.id });
   } catch (error) {
-    console.error("Error deleting diary:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Delete error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

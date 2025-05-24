@@ -3,8 +3,11 @@ const LeadOccupation = require("../../Models/Lead/LeadOccupationModel");
 // Create Lead
 const createOccupation = async (req, res) => {
   try {
-    const { leadName, leadOccupation } = req.body;
-    const lead = await LeadOccupation.create({ leadName, leadOccupation });
+    const { occupationName, leadOccupation } = req.body;
+    const lead = await LeadOccupation.create({
+      occupationName,
+      leadOccupation,
+    });
     res.status(201).json(lead);
   } catch (err) {
     res.status(400).json({ error: err.message });

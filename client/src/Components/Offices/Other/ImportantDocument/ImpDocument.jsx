@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import AddOfficeDiary from "./AddOfficeDiary";
-import OfficeDiaryDetail from "./OfficeDiaryDetail";
 
-function OfficeDiaryTabs() {
+import AddImpDocument from "./AddImpDocument";
+import ImpDocumentDetail from "./ImpDocumentDetail";
+
+function ImpDocument() {
   const [activeTab, setActiveTab] = useState("add");
   const [editId, setEditId] = useState(null);
 
   return (
-    <div style={{ padding: "" }}>
-      <h3>Office Diary</h3>
+    <div style={{ padding: "20px" }}>
+      <h3>Important Document</h3>
 
       <div style={{ display: "flex", borderBottom: "2px solid #ccc" }}>
         <div
@@ -22,7 +23,7 @@ function OfficeDiaryTabs() {
             borderBottom: activeTab === "add" ? "3px solid #007bff" : "none",
           }}
         >
-          Add Dairy Name
+          Add document
         </div>
         <div
           onClick={() => setActiveTab("view")}
@@ -32,19 +33,19 @@ function OfficeDiaryTabs() {
             borderBottom: activeTab === "view" ? "3px solid #007bff" : "none",
           }}
         >
-          View Dairy Name
+          View document
         </div>
       </div>
 
       <div style={{ marginTop: "20px" }}>
         {activeTab === "add" ? (
-          <AddOfficeDiary
+          <AddImpDocument
             setActiveTab={setActiveTab}
             setEditId={setEditId}
             editId={editId}
           />
         ) : (
-          <OfficeDiaryDetail
+          <ImpDocumentDetail
             setActiveTab={setActiveTab}
             setEditId={setEditId}
           />
@@ -54,4 +55,4 @@ function OfficeDiaryTabs() {
   );
 }
 
-export default OfficeDiaryTabs;
+export default ImpDocument;

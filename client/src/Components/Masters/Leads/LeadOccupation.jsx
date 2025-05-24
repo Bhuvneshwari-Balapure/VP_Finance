@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchDetails,
+  fetchLeadOccupationDetails,
   createDetails,
   updateDetails,
   deleteDetails,
@@ -19,7 +19,7 @@ import {
 
 const LeadOccupation = () => {
   const [leadOccupation, setLeadOccupation] = useState("");
-  const [leadName, setLeadName] = useState("");
+  const [occupationName, setoccupationName] = useState("");
   const [editId, setEditId] = useState(null);
 
   const dispatch = useDispatch();
@@ -30,29 +30,29 @@ const LeadOccupation = () => {
   console.log(occupationType, "occupation type");
 
   useEffect(() => {
-    dispatch(fetchDetails());
+    dispatch(fetchLeadOccupationDetails());
     dispatch(fetchOccupations());
   }, [dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!leadOccupation || !leadName) return;
+    if (!leadOccupation || !occupationName) return;
 
     if (editId) {
       dispatch(
-        updateDetails({ id: editId, data: { leadName, leadOccupation } })
+        updateDetails({ id: editId, data: { occupationName, leadOccupation } })
       );
     } else {
-      dispatch(createDetails({ leadName, leadOccupation }));
+      dispatch(createDetails({ occupationName, leadOccupation }));
     }
 
-    setLeadName("");
+    setoccupationName("");
     setLeadOccupation("");
     setEditId(null);
   };
 
   const handleEdit = (item) => {
-    setLeadName(item.leadName);
+    setoccupationName(item.occupationName);
     setLeadOccupation(item.leadOccupation);
     setEditId(item._id);
   };
@@ -101,8 +101,8 @@ const LeadOccupation = () => {
                   <Form.Control
                     type="text"
                     placeholder="Enter Name"
-                    value={leadName}
-                    onChange={(e) => setLeadName(e.target.value)}
+                    value={occupationName}
+                    onChange={(e) => setoccupationName(e.target.value)}
                     required
                   />
                 </Form.Group>
@@ -115,7 +115,7 @@ const LeadOccupation = () => {
                     variant="secondary"
                     className="ms-2"
                     onClick={() => {
-                      setLeadName("");
+                      setoccupationName("");
                       setLeadOccupation("");
                       setEditId(null);
                     }}

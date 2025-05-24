@@ -19,7 +19,7 @@ import { fetchLeadType } from "../../../redux/feature/LeadType/LeadTypeThunx";
 
 const LeadSource = () => {
   const [leadType, setLeadType] = useState("");
-  const [leadName, setLeadName] = useState("");
+  const [sourceName, setsourceName] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
 
@@ -41,12 +41,12 @@ const LeadSource = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!leadType || !leadName) {
+    if (!leadType || !sourceName) {
       alert("Please fill in both Lead Type and Lead Name.");
       return;
     }
 
-    const leadData = { leadType, leadName };
+    const leadData = { leadType, sourceName };
 
     if (isEditing) {
       dispatch(updateDetails({ id: editId, data: leadData }));
@@ -54,7 +54,7 @@ const LeadSource = () => {
       dispatch(createDetails(leadData));
     }
 
-    setLeadName("");
+    setsourceName("");
     setLeadType("");
     setIsEditing(false);
     setEditId(null);
@@ -62,14 +62,14 @@ const LeadSource = () => {
 
   const handleEdit = (source) => {
     setEditId(source._id);
-    setLeadName(source.leadName);
+    setsourceName(source.sourceName);
     setLeadType(source.leadType);
     setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
     setIsEditing(false);
-    setLeadName("");
+    setsourceName("");
     setLeadType("");
     setEditId(null);
   };
@@ -111,13 +111,13 @@ const LeadSource = () => {
                   </Form.Select>
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="leadName">
+                <Form.Group className="mb-3" controlId="sourceName">
                   <Form.Label>Lead Name</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Enter Name"
-                    value={leadName}
-                    onChange={(e) => setLeadName(e.target.value)}
+                    value={sourceName}
+                    onChange={(e) => setsourceName(e.target.value)}
                     required
                   />
                 </Form.Group>
@@ -151,7 +151,7 @@ const LeadSource = () => {
                       className="d-flex justify-content-between align-items-center"
                     >
                       <div>
-                        {source.leadName} ({source.leadType})
+                        {source.sourceName} ({source.leadType})
                       </div>
                       <div>
                         <Button

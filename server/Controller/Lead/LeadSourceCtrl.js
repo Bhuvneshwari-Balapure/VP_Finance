@@ -3,8 +3,8 @@ const Lead = require("../../Models/Lead/LeadSourceModel");
 // Create Lead
 const createLead = async (req, res) => {
   try {
-    const { leadName, leadType } = req.body;
-    const lead = await Lead.create({ leadName, leadType });
+    const { sourceName, leadType } = req.body;
+    const lead = await Lead.create({ sourceName, leadType });
     const saveData = await lead.save();
     res.status(201).json(saveData);
   } catch (err) {
