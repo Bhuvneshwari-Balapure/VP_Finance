@@ -9,7 +9,7 @@ import {
 } from "./LeadThunx";
 
 const initialState = {
-  details: [],
+  leadsourceDetail: [],
   detail: null,
   loading: false,
   error: null,
@@ -27,7 +27,7 @@ const LeadSourceSlice = createSlice({
       })
       .addCase(fetchDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.details = action.payload;
+        state.leadsourceDetail = action.payload;
       })
       .addCase(fetchDetails.rejected, (state, action) => {
         state.loading = false;
@@ -41,20 +41,22 @@ const LeadSourceSlice = createSlice({
 
       // Create
       .addCase(createDetails.fulfilled, (state, action) => {
-        state.details.unshift(action.payload);
+        state.leadsourceDetail.unshift(action.payload);
       })
 
       // Update
       .addCase(updateDetails.fulfilled, (state, action) => {
-        const index = state.details.findIndex(
+        const index = state.leadsourceDetail.findIndex(
           (d) => d._id === action.payload._id
         );
-        if (index !== -1) state.details[index] = action.payload;
+        if (index !== -1) state.leadsourceDetail[index] = action.payload;
       })
 
       // Delete
       .addCase(deleteDetails.fulfilled, (state, action) => {
-        state.details = state.details.filter((d) => d._id !== action.payload);
+        state.leadsourceDetail = state.leadsourceDetail.filter(
+          (d) => d._id !== action.payload
+        );
       });
   },
 });

@@ -141,7 +141,7 @@ const LeadOccupation = () => {
                       className="d-flex justify-content-between align-items-center"
                     >
                       <div>
-                        {item.leadName} ({item.leadOccupation})
+                        {item.occupationName} ({item.leadOccupation})
                       </div>
                       <div>
                         <Button

@@ -1,48 +1,39 @@
-// models/prospectLead.model.js
-
 const mongoose = require("mongoose");
 
 const ProspectLeadSchema = new mongoose.Schema(
   {
-    group_code: String,
-    salutation: String,
-    name: String,
-    gender: String,
-    comp_name: String,
-    designation: String,
-    annual_income: String,
-    grade: String,
-    mobile: String,
-    contact_no: String,
-    whatsapp_no: String,
-    pa_name: String,
-    pa_relation: String,
-    pa_mobile: String,
-    email: String,
-    dob_record: Date,
-    dom: Date,
-    resi_addr: String,
-    resi_landmark: String,
-    resi_pincode: String,
-    office_addr: String,
-    office_landmark: String,
-    office_pincode: String,
-    pref_meet_addr: String,
-    pref_area: String,
-    meeting_time: String,
-    city: String,
-    aadhar_no: String,
-    pan_no: String,
-    lead_source: String,
-    lead_name: String,
-    lead_occupation: String,
-    lead_occupation_type: String,
-    calling_purpose: String,
-    call_name: String,
-    remark: String,
+    salutation: { type: String },
+    familyHead: { type: String },
+    gender: { type: String },
+    organisation: { type: String },
+    designation: { type: String },
+    annualIncome: { type: String }, // storing as string since form uses select with string values
+    grade: { type: Number },
+    mobile: { type: Number },
+    contactNo: { type: Number },
+    whatsapp: { type: Number },
+    email: { type: String },
+    dob: { type: Date },
+    dom: { type: Date },
+    preferredAddressType: { type: String, enum: ["resi", "office"] },
+    resiAddr: { type: String },
+    resiLandmark: { type: String },
+    resiPincode: { type: String },
+    officeAddr: { type: String },
+    officeLandmark: { type: String },
+    officePincode: { type: String },
+    preferredMeetingAddr: { type: String },
+    preferredMeetingArea: { type: String },
+    city: { type: String },
+    leadSource: { type: String }, // added leadSource
+    leadName: { type: String }, // added leadName
+    leadOccupation: { type: String }, // added leadOccupation
+    occupationType: { type: String }, // calling purpose / occupation type
+    callingPurpose: { type: String }, // added callingPurpose (you might want to map this correctly)
+    name: { type: String },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt fields
+    timestamps: true, // adds createdAt and updatedAt
   }
 );
 

@@ -6,9 +6,8 @@ import {
   fetchSuspectLeadById,
   updateSuspectLead,
 } from "../../redux/feature/SuspectLead/SuspectLeadThunx";
-import { fetchDetails } from "../../redux/feature/LeadSource/LeadThunx";
 import { fetchLeadOccupationDetails } from "../../redux/feature/LeadOccupation/OccupationThunx";
-
+import { fetchDetails } from "../../redux/feature/LeadSource/LeadThunx";
 const initialFormState = {
   salutation: "",
   familyHead: "",
@@ -49,24 +48,25 @@ const AddSuspect = ({ editId, setActiveTab, setEditId }) => {
   );
   const [form, setForm] = useState(initialFormState);
 
-  // --------------------------
+  // --------------------------lead cource and lead occupation -----------------------------
   const leadOccupations = useSelector((state) => state.leadOccupation.details);
-  const leadSource = useSelector((state) => state.leadsource.details);
 
-  // console.log(leadSource);
+  const leadSources = useSelector((state) => state.leadsource.leadsourceDetail);
 
   useEffect(() => {
     const init = async () => {
       try {
-        await dispatch(fetchDetails()).unwrap();
         await dispatch(fetchLeadOccupationDetails()).unwrap();
+        await dispatch(fetchDetails()).unwrap();
       } catch (error) {
-        console.log(error, "FETCH ERROR");
+        console.log(error);
       }
     };
 
     init();
   }, []);
+
+  // console.log(leadSource);
 
   // --------------------------
   useEffect(() => {
@@ -360,13 +360,6 @@ const AddSuspect = ({ editId, setActiveTab, setEditId }) => {
 
         <Row className="mb-3">
           <Col md={2} className="pt-4">
-            {/* <Form.Check
-              type="radio"
-              value="office"
-              checked={sourceRadio === "office"}
-              onChange={handleRadioChange}
-              label="Select"
-            /> */}
             <Form.Check
               type="radio"
               value="office"
@@ -431,7 +424,8 @@ const AddSuspect = ({ editId, setActiveTab, setEditId }) => {
           </Col>
         </Row>
 
-        {/* <Row className="mb-3">
+        <Row className="mb-3">
+          {/* Lead Source */}
           <Col md={3}>
             <Form.Label>Lead Source</Form.Label>
             <Form.Select
@@ -440,62 +434,9 @@ const AddSuspect = ({ editId, setActiveTab, setEditId }) => {
               onChange={handleChange}
             >
               <option value="">Select Lead Source</option>
-              {leadSource.map((item) => (
-                // console.log(item.leadName),
-                <option key={item._id} value={item._id}>
-                  {item.leadName}
-                </option>
-              ))}
-            </Form.Select>
-          </Col>
-          <Col md={3}>
-            <Form.Label>Lead Name</Form.Label>
-            <Form.Control
-              name="leadName"
-              value={form.leadName}
-              onChange={handleChange}
-            />
-          </Col>
-          <Col md={3}>
-            <Form.Label>Lead Occupation</Form.Label>
-            <Form.Select
-              name="leadOccupation"
-              value={form.leadOccupation}
-              onChange={handleChange}
-            >
-              <option value="">Select Occupation</option>
-              {leadOccupations.map((item) => (
-                <option key={item._id} value={item._id}>
-                  {item.leadName}
-                </option>
-              ))}
-            </Form.Select>
-          </Col>
-
-          <Col md={3}>
-            <Form.Label>Occupation Type</Form.Label>
-            <Form.Control
-              name="occupationType"
-              value={form.occupationType}
-              onChange={handleChange}
-            />
-          </Col>
-        </Row> */}
-
-        <Row className="mb-3">
-          {/* Lead Source */}
-          <Col md={3}>
-            <Form.Label htmlFor="leadSource">Lead Source</Form.Label>
-            <Form.Select
-              id="leadSource"
-              name="leadSource"
-              value={form.leadSource}
-              onChange={handleChange}
-            >
-              <option value="">Select Lead Source</option>
-              {leadSource?.map((item) => (
-                <option key={item._id} value={item._id}>
-                  {item.sourceName}
+              {leadSources.map((source) => (
+                <option key={source._id} value={source.sourceName}>
+                  {source.sourceName}
                 </option>
               ))}
             </Form.Select>
@@ -522,12 +463,20 @@ const AddSuspect = ({ editId, setActiveTab, setEditId }) => {
               value={form.leadOccupation}
               onChange={handleChange}
             >
-              <option value="">Select Occupation</option>
-              {leadOccupations?.map((item) => (
-                <option key={item._id} value={item._id}>
-                  {item.occupationName}
-                </option>
-              ))}
+              <option value="">Select Lead Occupation</option>
+              {leadOccupations.map(
+                (occupation) => (
+                  console.log(occupation, "occupation"),
+                  (
+                    <option
+                      key={occupation._id}
+                      value={occupation.occupationName}
+                    >
+                      {occupation.occupationName}
+                    </option>
+                  )
+                )
+              )}
             </Form.Select>
           </Col>
 

@@ -17,6 +17,7 @@ const TaskRoute = require("./Routes/TaskRoute");
 const FinancialProductRoute = require("./Routes/FinancialProductRoute");
 const CompanyNameRoute = require("./Routes/CompanyNameRoute");
 const SuspectLeadRoute = require("./Routes/SuspectLeadRoute");
+const ProspectLeadRoute = require("./Routes/ProspectLeadRoute");
 const RegistrarRoute = require("./Routes/RegistrarRoute");
 const AMCRoute = require("./Routes/AMCRoute");
 const LeadTypeRoute = require("./Routes/LeadTypeRoute");
@@ -24,6 +25,7 @@ const OccupationTypeRoute = require("./Routes/OccupationTypeRoute");
 const OfficeDiaryRoute = require("./Routes/OfficeDiaryRoute");
 const OfficePurchaseRoute = require("./Routes/OfficePurchaseRoute");
 const ImpDocumentRoute = require("./Routes/ImpDocumentRoute");
+const CLientRoute = require("./Routes/ClientRoute");
 
 // ---------------------------------------------------------------------
 app.use(bodyParser.json());
@@ -49,6 +51,7 @@ app.use("/api/Task", TaskRoute);
 app.use("/api/FinancialProduct", FinancialProductRoute);
 app.use("/api/CompanyName", CompanyNameRoute);
 app.use("/api/SuspectLead", SuspectLeadRoute);
+app.use("/api/ProspectLead", ProspectLeadRoute);
 app.use("/api/registrar", RegistrarRoute);
 app.use("/api/AMC", AMCRoute);
 app.use("/api/leadType", LeadTypeRoute);
@@ -56,6 +59,7 @@ app.use("/api/occupation-types", OccupationTypeRoute);
 app.use("/api/office-diary", OfficeDiaryRoute);
 app.use("/api/office-purchase", OfficePurchaseRoute);
 app.use("/api/important-documents", ImpDocumentRoute);
+app.use("/api/client", CLientRoute);
 
 const port = process.env.PORT;
 app.listen(port, () => {

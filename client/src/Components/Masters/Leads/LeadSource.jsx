@@ -26,7 +26,7 @@ const LeadSource = () => {
   const dispatch = useDispatch();
 
   // Lead sources slice from Redux
-  const { details: leadSources, loading } = useSelector(
+  const { leadsourceDetail: leadSources, loading } = useSelector(
     (state) => state.leadsource
   );
 

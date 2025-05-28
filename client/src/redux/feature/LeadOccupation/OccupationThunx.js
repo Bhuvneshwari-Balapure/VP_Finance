@@ -5,7 +5,7 @@ import axios from "../../../config/axios";
 const API_URL = "/leadOccupation";
 
 export const fetchLeadOccupationDetails = createAsyncThunk(
-  "/leadSource/fetch",
+  "/leadOccupation/fetch",
   async () => {
     const response = await axios.get(`${API_URL}`);
     // console.log(response.data, "all Data of lead Occupations");
@@ -14,7 +14,7 @@ export const fetchLeadOccupationDetails = createAsyncThunk(
 );
 
 export const fetchDetailsById = createAsyncThunk(
-  "/leadSource/fetchDetailsById",
+  "/leadOccupation/fetchDetailsById",
   async (id) => {
     const response = await axios.get(`${API_URL}/${id}`);
     return response.data;
@@ -22,7 +22,7 @@ export const fetchDetailsById = createAsyncThunk(
 );
 
 export const createDetails = createAsyncThunk(
-  "/leadSource/create",
+  "/leadOccupation/create",
   async (data) => {
     const response = await axios.post(API_URL, data);
     console.log(response, "Create Data of lead Occupations");
@@ -31,7 +31,7 @@ export const createDetails = createAsyncThunk(
 );
 
 export const updateDetails = createAsyncThunk(
-  "/leadSource/update",
+  "/leadOccupation/update",
   async ({ id, data }) => {
     const response = await axios.put(`${API_URL}/${id}`, data);
 
@@ -40,7 +40,7 @@ export const updateDetails = createAsyncThunk(
 );
 
 export const deleteDetails = createAsyncThunk(
-  "/leadSource/delete",
+  "/leadOccupation/delete",
   async (id) => {
     await axios.delete(`${API_URL}/delete/${id}`);
     return id;
