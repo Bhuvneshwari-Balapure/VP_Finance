@@ -26,10 +26,13 @@ const OfficeDiaryRoute = require("./Routes/OfficeDiaryRoute");
 const OfficePurchaseRoute = require("./Routes/OfficePurchaseRoute");
 const ImpDocumentRoute = require("./Routes/ImpDocumentRoute");
 const CLientRoute = require("./Routes/ClientRoute");
+const ClientFirstFormRoute = require("./Routes/ClientFirstFormRoute");
+const morgan = require("morgan");
 
 // ---------------------------------------------------------------------
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
 mongoose
   .connect(process.env.dbUrl)
@@ -60,6 +63,7 @@ app.use("/api/office-diary", OfficeDiaryRoute);
 app.use("/api/office-purchase", OfficePurchaseRoute);
 app.use("/api/important-documents", ImpDocumentRoute);
 app.use("/api/client", CLientRoute);
+app.use("/api/client-first-form", ClientFirstFormRoute);
 
 const port = process.env.PORT;
 app.listen(port, () => {

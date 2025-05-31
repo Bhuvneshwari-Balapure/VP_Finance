@@ -20,7 +20,7 @@ import OccupationTypeReducer from "./feature/OccupationType/OccupationSlice";
 import officeDiaryReducer from "./feature/OfficeDiary/OfficeDiarySlice";
 import officePurchaseReducer from "./feature/OfficePurchase/PurchaseSlice";
 import importantDocumentsReducer from "./feature/ImpDocument/DocumentSlice";
-import clientReducer from "./feature/Client/ClientSlice";
+import clientReducer from "./feature/ClientRedux/ClientSlice";
 export const store = configureStore({
   reducer: {
     leadsource: leadSourceReducer,

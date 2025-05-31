@@ -210,6 +210,9 @@ const Navbarfristn = () => {
                       <Dropdown.Item as={Link} to="/client">
                         Client
                       </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/client-form">
+                        first client form
+                      </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/kyc">
                         KYC
                       </Dropdown.Item>

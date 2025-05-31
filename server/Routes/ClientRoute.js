@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const customerController = require("../Controller/ClientCtrl");
+const ClientCtrl = require("../Controller/ClientCtrl");
 
-router.post("/", customerController.createCustomer);
-router.get("/", customerController.getAllCustomers);
-router.get("/:id", customerController.getCustomerById);
-router.put("/:id", customerController.updateCustomer);
-router.delete("/:id", customerController.deleteCustomer);
-
+router.post("/client-first-form", ClientCtrl.createClientFirstForm);
+router.post("/add-client", ClientCtrl.completeClientForm);
+router.get("/:id", ClientCtrl.fetchByidClientFirstForm);
+router.get("/add-client/:id", ClientCtrl.getAddClientFormById);
+router.get("/full-client/:id", ClientCtrl.getFullClientDetails);
+router.put("/add-client/:id", ClientCtrl.updateAddClientForm);
+router.put("/client-first-form/:id", ClientCtrl.updateClientFirstForm);
+router.delete("/add-client/:id", ClientCtrl.deleteAddClientForm);
 module.exports = router;

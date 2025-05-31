@@ -7,6 +7,7 @@ import {
   deleteSuspectLead,
   // updateSuspectLead,
 } from "../../redux/feature/SuspectLead/SuspectLeadThunx";
+import { createProspectLead } from "../../redux/feature/ProspectLead/ProspectThunx";
 
 const SuspectLeadsTable = ({ setActiveTab, setEditId }) => {
   const dispatch = useDispatch();
@@ -34,6 +35,24 @@ const SuspectLeadsTable = ({ setActiveTab, setEditId }) => {
     setActiveTab("add");
   };
 
+  const handleConvertToProspect = (lead) => {
+    if (window.confirm("Convert this suspect to a prospect?")) {
+      const cleanedLead = {
+        ...lead,
+        preferredAddressType:
+          lead.preferredAddressType === "resi" ||
+          lead.preferredAddressType === "office"
+            ? lead.preferredAddressType
+            : "resi", // fallback default
+      };
+
+      dispatch(createProspectLead(cleanedLead))
+        .unwrap()
+        .then(() => dispatch(deleteSuspectLead(lead._id)))
+        .catch((err) => alert("Error: " + err.message));
+    }
+  };
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (loading)
@@ -58,6 +77,7 @@ const SuspectLeadsTable = ({ setActiveTab, setEditId }) => {
             <th>Address</th>
             <th>City</th>
             <th>Actions</th>
+            <th>Convert</th>
           </tr>
         </thead>
         <tbody>
@@ -92,6 +112,15 @@ const SuspectLeadsTable = ({ setActiveTab, setEditId }) => {
                   title="Delete"
                 >
                   <Trash />
+                </Button>
+              </td>
+              <td>
+                <Button
+                  variant="success"
+                  size="sm"
+                  onClick={() => handleConvertToProspect(lead)}
+                >
+                  To Prospect
                 </Button>
               </td>
             </tr>

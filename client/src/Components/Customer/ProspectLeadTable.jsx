@@ -6,13 +6,13 @@ import {
   deleteProspectLead,
   fetchProspectLeads,
 } from "../../redux/feature/ProspectLead/ProspectThunx";
-// import {
-//   fetchSuspectLeads,
-//   deleteSuspectLead,
-//   // updateSuspectLead,
-// } from "../../redux/feature/SuspectLead/SuspectLeadThunx";
 
-const ProspectLeadTable = ({ setActiveTab, setEditId }) => {
+// const ProspectLeadTable = ({ setActiveTab, setEditId }) => {
+const ProspectLeadTable = ({
+  setActiveTab,
+  setEditId,
+  setEditClientFormData,
+}) => {
   const dispatch = useDispatch();
   const { leads, loading, error } = useSelector((state) => state.prospectLead);
 
@@ -36,6 +36,84 @@ const ProspectLeadTable = ({ setActiveTab, setEditId }) => {
   const handleEdit = (id) => {
     setEditId(id);
     setActiveTab("add");
+  };
+
+  const handleConvertToClient = (prospect) => {
+    const mappedClientData = {
+      personalDetails: {
+        grade: prospect.grade || "",
+        salutation: prospect.salutation || "",
+        groupName: "",
+        groupCode: "",
+        residenceAddress: prospect.resiAddr || "",
+        officeAddress: prospect.officeAddr || "",
+        landMark: prospect.resiLandmark || "",
+        meetingAddress: prospect.preferredMeetingAddr || "",
+        bestTime: "",
+        occupation: prospect.occupationType || "",
+        organisation: prospect.organisation || "",
+        designation: prospect.designation || "",
+      },
+      contactInfo: {
+        mobileNo: prospect.mobile || "",
+        whatsappNo: prospect.whatsapp || "",
+        emailId: prospect.email || "",
+        paName: "",
+        paMobileNo: "",
+      },
+      leadInfo: {
+        leadOccupation: prospect.leadOccupation || "",
+        leadOccupationType: prospect.occupationType || "",
+        leadSource: prospect.leadSource || "",
+        leadPerson: prospect.leadName || "",
+        adharNumber: "",
+        panCardNumber: "",
+        allocatedCRE: "",
+      },
+      preferences: {
+        hobbies: "",
+        nativePlace: "",
+        socialLink: "",
+        habits: "",
+      },
+      education: {
+        type: "",
+        schoolName: "",
+        schoolSubjects: "",
+        collegeName: "",
+        collegeCourse: "",
+        instituteName: "",
+        professionalDegree: "",
+      },
+      newFamilyMember: {
+        title: "",
+        name: "",
+        relation: "",
+        dobActual: "",
+        dobRecord: "",
+        marriageDate: "",
+        occupation: "",
+        annualIncome: "",
+        includeHealth: false,
+        healthHistory: {
+          submissionDate: "",
+          diseaseName: "",
+          since: "",
+          height: "",
+          weight: "",
+          remark: "",
+        },
+      },
+      familyMembers: [],
+      financialInfo: {
+        insuranceInvestment: [],
+        loans: [],
+        futurePriorities: [],
+      },
+    };
+
+    setEditClientFormData(mappedClientData); // 👈 Pass data to parent
+    setActiveTab("clientForm"); // 👈 Navigate to form
   };
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -62,6 +140,7 @@ const ProspectLeadTable = ({ setActiveTab, setEditId }) => {
             <th>Address</th>
             <th>City</th>
             <th>Actions</th>
+            <th>Convert</th>
           </tr>
         </thead>
         <tbody>
@@ -96,6 +175,15 @@ const ProspectLeadTable = ({ setActiveTab, setEditId }) => {
                   title="Delete"
                 >
                   <Trash />
+                </Button>
+              </td>
+              <td>
+                <Button
+                  variant="success"
+                  size="sm"
+                  onClick={() => handleConvertToClient(lead)}
+                >
+                  To Client
                 </Button>
               </td>
             </tr>

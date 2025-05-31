@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import AddClient from "./AddClient";
 import DisplayClient from "./DisplayClient";
+import AddClient from "./AddClient";
 
 const ClientLeadTabs = () => {
   const [activeTab, setActiveTab] = useState("add");

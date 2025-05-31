@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-// import {
-//   createSuspectLead,
-//   fetchSuspectLeadById,
-//   updateSuspectLead,
-// } from "../../redux/feature/SuspectLead/SuspectLeadThunx";
+
 import { fetchLeadOccupationDetails } from "../../redux/feature/LeadOccupation/OccupationThunx";
 import { fetchDetails } from "../../redux/feature/LeadSource/LeadThunx";
 import {
