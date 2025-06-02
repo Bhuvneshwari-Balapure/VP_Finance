@@ -73,10 +73,23 @@ function ClientSecondForm({ isEdit = {}, onDataChange }) {
       <h2 className="mb-4">Client Registration Form</h2>
       <Form>
         <Row className="mb-3">
+          <h5 className="mt-4">Have You Any Need</h5>
           <Col>
-            <h5 className="mt-4">Have You Any Need</h5>
+            {/* ------------------------- */}
+            <Form.Control
+              placeholder="Financial Products"
+              type="text"
+              name="financialInfo.needs.financialProducts"
+              value={formData.financialInfo.needs.financialProducts}
+              onChange={handleChange}
+            />
+          </Col>
+
+          {/* ------------------------- */}
+          <Col>
             <Form.Control
               placeholder="Any Correction"
+              type="text"
               name="financialInfo.needs.anyCorrection"
               value={formData.financialInfo.needs.anyCorrection}
               onChange={handleChange}
@@ -186,8 +199,8 @@ function ClientSecondForm({ isEdit = {}, onDataChange }) {
         </Row>
 
         {/* Customer Documents */}
-        <h5 className="mt-4">Customer Documents</h5>
-        <Row className="mb-3">
+        {/* <Row className="mb-3">
+          <h5 className="mt-4">Customer Documents</h5>
           <Col>
             <Form.Group
               controlId="submissionDate"
@@ -221,8 +234,83 @@ function ClientSecondForm({ isEdit = {}, onDataChange }) {
               onChange={handleChange}
             />
           </Col>
+        </Row> */}
+        <Row className="mb-3">
+          <h5 className="mt-4">Customer Documents</h5>
+
+          <Col>
+            <Form.Group controlId="submissionDate">
+              <Form.Label>Submission Date</Form.Label>
+              <Form.Control
+                type="date"
+                name="customerDoc.submissionDate"
+                value={formData.customerDoc.submissionDate}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+
+          <Col>
+            <Form.Group controlId="memberName">
+              <Form.Label>Member Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Member Name"
+                name="customerDoc.memberName"
+                value={formData.customerDoc.memberName}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+
+          <Col>
+            <Form.Group controlId="documentNo">
+              <Form.Label>Document No</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Document No"
+                name="customerDoc.documentNo"
+                value={formData.customerDoc.documentNo}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+
+          <Col>
+            <Form.Group controlId="documentName">
+              <Form.Label>Document Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Document Name"
+                name="customerDoc.documentName"
+                value={formData.customerDoc.documentName}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+
+          <Col>
+            <Form.Group controlId="documentUpload">
+              <Form.Label>Upload</Form.Label>
+              <Form.Control
+                type="file"
+                name="customerDoc.uploadFile"
+                onChange={handleChange} // Ensure you define this function
+              />
+            </Form.Group>
+          </Col>
+
+          {/* <Col className="d-flex align-items-end">
+            <Button
+              variant="primary"
+              onClick={handleChange} // Ensure you define this function
+            >
+              Download
+            </Button>
+          </Col> */}
         </Row>
-        <Row className="mb-2">
+
+        {/* <Row className="mb-2">
           <Col>
             <Form.Control
               placeholder="Document No"
@@ -248,7 +336,7 @@ function ClientSecondForm({ isEdit = {}, onDataChange }) {
               onChange={handleChange}
             />
           </Col>
-        </Row>
+        </Row> */}
 
         {/* Task Details */}
         <h5 className="mt-4">Task Details</h5>

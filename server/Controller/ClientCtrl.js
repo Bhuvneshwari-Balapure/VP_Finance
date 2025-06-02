@@ -2,18 +2,73 @@ const ClientFirstForm = require("../Models/ClientFirstFormModel");
 const AddClientForm = require("../Models/ClientModel");
 
 // Step 1: Create ClientFirstForm
-exports.createClientFirstForm = async (req, res) => {
+// exports.createClientFirstForm = async (req, res) => {
+//   try {
+//     const clientData = req.body;
+//     const newClient = await ClientFirstForm.create(clientData);
+//     await newClient.save();
+//     res.status(201).json(newClient);
+//   } catch (err) {
+//     res
+//       .status(500)
+//       .json({ error: "Failed to create client first form", details: err });
+//   }
+// };
+exports.createOrUpdateClientFirstForm = async (req, res) => {
   try {
-    const clientData = req.body;
-    const newClient = await ClientFirstForm.create(clientData);
-    await newClient.save();
-    res.status(201).json(newClient);
-  } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to create client first form", details: err });
+    console.log("Client First Form Data:", req.body);
+    const {
+      personalDetails,
+      leadInfo,
+      preferences,
+      education,
+      financialInfo,
+      familyMembers,
+      contactInfo,
+    } = req.body;
+    let clientForm = await ClientFirstForm.findOne({
+      "leadInfo.adharNumber": leadInfo.adharNumber, // assuming this is unique
+    });
+
+    if (clientForm) {
+      clientForm.set(req.body);
+      await clientForm.save();
+    } else {
+      clientForm = new ClientFirstForm(req.body);
+      await clientForm.save();
+    }
+    let addClient = await AddClientForm.findOne({
+      clientFirstFormId: clientForm._id,
+    });
+    if (addClient) {
+      const docs = generateCustomerDocs(clientForm);
+      addClient.customerDoc = docs;
+      addClient.clientFirstFormId = clientForm._id;
+      await addClient.save();
+    }
+    res.status(201).json(clientForm);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error creating/updating form" });
   }
 };
+function generateCustomerDocs(financialInfo) {
+  const {
+    insuranceInvestment = [],
+    loans = [],
+    futurePriorities = [],
+  } = financialInfo;
+  const allSelections = [...insuranceInvestment, ...loans, ...futurePriorities];
+
+  return allSelections.map((item) => ({
+    memberName: "Client", // default or dynamic
+    documentName: item,
+    submissionDate: new Date().toISOString(),
+    documentNo: Math.floor(Math.random() * 10000).toString(), // dummy
+    financialProducts: item,
+    upload: "",
+  }));
+}
 
 // Step 2: Add extended client form
 exports.completeClientForm = async (req, res) => {
@@ -23,8 +78,10 @@ exports.completeClientForm = async (req, res) => {
   try {
     const data = req.body;
     // const newClientForm = await AddClientForm.create(data);
-    const newClientForm = await AddClientForm.create(data);
-    await newClientForm.save();
+    // const newClientForm = await AddClientForm.create(data);
+    // await newClientForm.save();
+    const newClientForm = await AddClientForm.create(data); // remove .save()
+
     res.status(201).json(newClientForm);
   } catch (err) {
     res

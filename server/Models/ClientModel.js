@@ -142,6 +142,8 @@
 
 // module.exports = mongoose.model("AddClientForm", addClientFormSchema);
 const mongoose = require("mongoose");
+
+// Personal Details Schema
 const personalDetailsSchema = new mongoose.Schema({
   grade: String,
   salutation: String,
@@ -156,6 +158,8 @@ const personalDetailsSchema = new mongoose.Schema({
   organisation: String,
   designation: String,
 });
+
+// Proposed Financial Plan Schema
 const proposedPlanSchema = new mongoose.Schema({
   date: String,
   memberName: String,
@@ -164,6 +168,7 @@ const proposedPlanSchema = new mongoose.Schema({
   upload: String, // file path or URL
 });
 
+// Customer Document Schema
 const customerDocSchema = new mongoose.Schema({
   submissionDate: String,
   memberName: String,
@@ -173,6 +178,7 @@ const customerDocSchema = new mongoose.Schema({
   upload: String,
 });
 
+// Contact Info Schema
 const contactInfoSchema = new mongoose.Schema({
   mobileNo: String,
   whatsappNo: String,
@@ -180,6 +186,7 @@ const contactInfoSchema = new mongoose.Schema({
   paName: String,
   paMobileNo: String,
 });
+// Needs Schema
 const needsSchema = new mongoose.Schema({
   anyCorrection: String,
   anyUpdation: String,
@@ -190,6 +197,7 @@ const needsSchema = new mongoose.Schema({
   purchaseNewProducts: Boolean,
 });
 
+// Lead Info Schema
 const leadInfoSchema = new mongoose.Schema({
   leadOccupation: String,
   leadOccupationType: String,
@@ -200,13 +208,14 @@ const leadInfoSchema = new mongoose.Schema({
   allocatedCRE: String,
 });
 
+// Preferences Schema
 const preferencesSchema = new mongoose.Schema({
   hobbies: String,
   nativePlace: String,
   socialLink: String,
   habits: String,
 });
-
+// Education Schema
 const educationSchema = new mongoose.Schema({
   type: String,
   schoolName: String,
@@ -217,6 +226,7 @@ const educationSchema = new mongoose.Schema({
   professionalDegree: String,
 });
 
+// Health History Schema
 const healthHistorySchema = new mongoose.Schema({
   submissionDate: String,
   diseaseName: String,
@@ -226,6 +236,7 @@ const healthHistorySchema = new mongoose.Schema({
   remark: String,
 });
 
+// Family Member Schema
 const familyMemberSchema = new mongoose.Schema({
   title: String,
   name: String,
@@ -239,11 +250,11 @@ const familyMemberSchema = new mongoose.Schema({
   healthHistory: healthHistorySchema,
 });
 
+// Main AddClientForm Schema
 const addClientFormSchema = new mongoose.Schema({
   clientFirstFormId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "ClientfirstForm",
-    // required: true,
   },
   personalDetails: personalDetailsSchema,
   contactInfo: contactInfoSchema,
@@ -261,7 +272,10 @@ const addClientFormSchema = new mongoose.Schema({
   proposedPlan: proposedPlanSchema,
   customerDoc: customerDocSchema,
   taskDetails: String,
-  createdAt: { type: Date, default: Date.now },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model("AddClientForm", addClientFormSchema);
