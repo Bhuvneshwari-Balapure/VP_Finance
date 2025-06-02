@@ -90,16 +90,50 @@ exports.completeClientForm = async (req, res) => {
   }
 };
 
-// Get full client detail (with first form populated)
 exports.getFullClientDetails = async (req, res) => {
   try {
-    const id = req.params.id;
-    const fullData = await AddClientForm.findOne({
-      clientFirstFormId: id,
-    }).populate("clientFirstFormId");
-    res.json(fullData);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to get full client", details: err });
+    const client = await AddClientForm.findById(req.params.id).populate(
+      "ClientfirstForm"
+    );
+    if (!client) {
+      return res.status(404).json({ message: "Client not found" });
+    }
+    res.status(200).json(client);
+  } catch (error) {
+    console.error("Error fetching full client detail:", error);
+    res.status(500).json({
+      error: "Failed to fetch full client detail",
+      details: error.message,
+    });
+  }
+};
+
+// Get all full client details
+// Get all AddClientForm entries with populated ClientFirstForm
+exports.getAllFullClientDetails = async (req, res) => {
+  try {
+    const clients = await AddClientForm.find(); // Use correct ref field name
+    res.status(200).json(clients);
+  } catch (error) {
+    console.error("Error fetching all full client details:", error);
+    res.status(500).json({
+      message: "Failed to fetch all full client details",
+      error: error.message,
+    });
+  }
+};
+
+// Get all ClientFirstForm entries
+exports.getAllClientFirstForms = async (req, res) => {
+  try {
+    const allClients = await ClientFirstForm.find();
+    res.status(200).json(allClients);
+  } catch (error) {
+    console.error("Error fetching all ClientFirstForms:", error);
+    res.status(500).json({
+      error: "Failed to fetch ClientFirstForms",
+      details: error,
+    });
   }
 };
 

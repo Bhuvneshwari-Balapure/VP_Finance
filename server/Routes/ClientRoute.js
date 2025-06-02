@@ -6,6 +6,8 @@ const ClientCtrl = require("../Controller/ClientCtrl");
 router.post("/client-first-form", ClientCtrl.createOrUpdateClientFirstForm);
 
 router.post("/add-client", ClientCtrl.completeClientForm);
+router.get("/full-details", ClientCtrl.getAllFullClientDetails);
+
 router.get("/:id", ClientCtrl.fetchByidClientFirstForm);
 router.get("/add-client/:id", ClientCtrl.getAddClientFormById);
 router.get("/full-client/:id", ClientCtrl.getFullClientDetails);

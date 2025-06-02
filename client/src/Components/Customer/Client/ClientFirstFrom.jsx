@@ -469,8 +469,8 @@ const ClientFirstFrom = ({ onDataChange }) => {
             >
               <option value="">Select Lead Occupation</option>
               {leadOccupation?.map((item, index) => (
-                <option key={index} value={item.occupationName}>
-                  {item.occupationName || "-"}
+                <option key={index} value={item.leadName}>
+                  {item.leadName || "-"}
                 </option>
               ))}
             </Form.Select>
@@ -499,8 +499,8 @@ const ClientFirstFrom = ({ onDataChange }) => {
             >
               <option value="">Select Lead Source</option>
               {leadSource?.map((item, index) => (
-                <option key={index} value={item.sourceName}>
-                  {item.sourceName || "-"}
+                <option key={index} value={item.leadName}>
+                  {item.leadName || "-"}
                 </option>
               ))}
             </Form.Select>
