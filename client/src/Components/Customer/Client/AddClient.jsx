@@ -100,6 +100,8 @@ const AddClient = () => {
   const [showSecondForm, setShowSecondForm] = useState(false);
   const [isEdit, setIsEdit] = useState();
 
+  // console.log(clientFirstData, "clientFirstData");
+
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.client);
 
@@ -134,6 +136,7 @@ const AddClient = () => {
 
       {showSecondForm && (
         <ClientSecondForm
+          firstFormData={clientFirstData}
           isEdit={initialData}
           onDataChange={setClientSecondData}
         />

@@ -2,73 +2,36 @@ const ClientFirstForm = require("../Models/ClientFirstFormModel");
 const AddClientForm = require("../Models/ClientModel");
 
 // Step 1: Create ClientFirstForm
-// exports.createClientFirstForm = async (req, res) => {
-//   try {
-//     const clientData = req.body;
-//     const newClient = await ClientFirstForm.create(clientData);
-//     await newClient.save();
-//     res.status(201).json(newClient);
-//   } catch (err) {
-//     res
-//       .status(500)
-//       .json({ error: "Failed to create client first form", details: err });
-//   }
-// };
-exports.createOrUpdateClientFirstForm = async (req, res) => {
+exports.createClientFirstForm = async (req, res) => {
   try {
-    console.log("Client First Form Data:", req.body);
-    const {
-      personalDetails,
-      leadInfo,
-      preferences,
-      education,
-      financialInfo,
-      familyMembers,
-      contactInfo,
-    } = req.body;
-    let clientForm = await ClientFirstForm.findOne({
-      "leadInfo.adharNumber": leadInfo.adharNumber, // assuming this is unique
-    });
-
-    if (clientForm) {
-      clientForm.set(req.body);
-      await clientForm.save();
-    } else {
-      clientForm = new ClientFirstForm(req.body);
-      await clientForm.save();
-    }
-    let addClient = await AddClientForm.findOne({
-      clientFirstFormId: clientForm._id,
-    });
-    if (addClient) {
-      const docs = generateCustomerDocs(clientForm);
-      addClient.customerDoc = docs;
-      addClient.clientFirstFormId = clientForm._id;
-      await addClient.save();
-    }
-    res.status(201).json(clientForm);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error creating/updating form" });
+    const clientData = req.body;
+    const newClient = await ClientFirstForm.create(clientData);
+    await newClient.save();
+    res.status(201).json(newClient);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: "Failed to create client first form", details: err });
   }
 };
-function generateCustomerDocs(financialInfo) {
-  const {
-    insuranceInvestment = [],
-    loans = [],
-    futurePriorities = [],
-  } = financialInfo;
-  const allSelections = [...insuranceInvestment, ...loans, ...futurePriorities];
+// exports.createOrUpdateClientFirstForm = async (req, res) => {};
+// function generateCustomerDocs(financialInfo) {
+//   const {
+//     insuranceInvestment = [],
+//     loans = [],
+//     futurePriorities = [],
+//   } = financialInfo;
+//   const allSelections = [...insuranceInvestment, ...loans, ...futurePriorities];
 
-  return allSelections.map((item) => ({
-    memberName: "Client", // default or dynamic
-    documentName: item,
-    submissionDate: new Date().toISOString(),
-    documentNo: Math.floor(Math.random() * 10000).toString(), // dummy
-    financialProducts: item,
-    upload: "",
-  }));
-}
+//   return allSelections.map((item) => ({
+//     memberName: "Client", // default or dynamic
+//     documentName: item,
+//     submissionDate: new Date().toISOString(),
+//     documentNo: Math.floor(Math.random() * 10000).toString(), // dummy
+//     financialProducts: item,
+//     upload: "",
+//   }));
+// }
 
 // Step 2: Add extended client form
 exports.completeClientForm = async (req, res) => {
@@ -78,10 +41,8 @@ exports.completeClientForm = async (req, res) => {
   try {
     const data = req.body;
     // const newClientForm = await AddClientForm.create(data);
-    // const newClientForm = await AddClientForm.create(data);
-    // await newClientForm.save();
-    const newClientForm = await AddClientForm.create(data); // remove .save()
-
+    const newClientForm = await AddClientForm.create(data);
+    await newClientForm.save();
     res.status(201).json(newClientForm);
   } catch (err) {
     res
@@ -90,50 +51,16 @@ exports.completeClientForm = async (req, res) => {
   }
 };
 
+// Get full client detail (with first form populated)
 exports.getFullClientDetails = async (req, res) => {
   try {
-    const client = await AddClientForm.findById(req.params.id).populate(
-      "ClientfirstForm"
-    );
-    if (!client) {
-      return res.status(404).json({ message: "Client not found" });
-    }
-    res.status(200).json(client);
-  } catch (error) {
-    console.error("Error fetching full client detail:", error);
-    res.status(500).json({
-      error: "Failed to fetch full client detail",
-      details: error.message,
-    });
-  }
-};
-
-// Get all full client details
-// Get all AddClientForm entries with populated ClientFirstForm
-exports.getAllFullClientDetails = async (req, res) => {
-  try {
-    const clients = await AddClientForm.find(); // Use correct ref field name
-    res.status(200).json(clients);
-  } catch (error) {
-    console.error("Error fetching all full client details:", error);
-    res.status(500).json({
-      message: "Failed to fetch all full client details",
-      error: error.message,
-    });
-  }
-};
-
-// Get all ClientFirstForm entries
-exports.getAllClientFirstForms = async (req, res) => {
-  try {
-    const allClients = await ClientFirstForm.find();
-    res.status(200).json(allClients);
-  } catch (error) {
-    console.error("Error fetching all ClientFirstForms:", error);
-    res.status(500).json({
-      error: "Failed to fetch ClientFirstForms",
-      details: error,
-    });
+    const id = req.params.id;
+    const fullData = await AddClientForm.findOne({
+      clientFirstFormId: id,
+    }).populate("ClientfirstForm");
+    res.json(fullData);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to get full client", details: err });
   }
 };
 

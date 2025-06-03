@@ -270,7 +270,7 @@ const addClientFormSchema = new mongoose.Schema({
     futurePriorities: [String],
   },
   proposedPlan: proposedPlanSchema,
-  customerDoc: customerDocSchema,
+  customerDoc: [customerDocSchema],
   taskDetails: String,
   createdAt: {
     type: Date,

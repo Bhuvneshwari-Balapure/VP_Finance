@@ -93,13 +93,15 @@ const API_URL = "/client";
 
 // 🔹 Step 1: Create Client First Form
 export const createClientFirstForm = createAsyncThunk(
-  "client/createClientFirstForm",
+  "createClientFirstForm/create",
   async (formData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `${API_URL}/client-first-form`,
         formData
       );
+      console.log("first");
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);

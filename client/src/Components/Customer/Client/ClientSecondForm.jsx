@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Col, Container, Form, Row } from "react-bootstrap";
 
-function ClientSecondForm({ isEdit = {}, onDataChange }) {
+function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
   const [formData, setFormData] = useState({
     financialInfo: {
       needs: {
@@ -35,6 +35,32 @@ function ClientSecondForm({ isEdit = {}, onDataChange }) {
     },
     taskDetails: "",
   });
+
+  // --------------------------------------
+
+  useEffect(() => {
+    const insuranceList = firstFormData.financialInfo.insuranceInvestment || [];
+    const docs = insuranceList.map(() => ({
+      submissionDate: "",
+      memberName: "",
+      documentNo: "",
+      documentName: "",
+      uploadFile: null,
+    }));
+    setFormData((prev) => ({ ...prev, customerDoc: docs }));
+  }, [firstFormData.financialInfo.insuranceInvestment]);
+
+  const handleCustomerDocChange = (e, index) => {
+    const { name, value, files } = e.target;
+    const updatedDocs = [...formData.customerDoc];
+    updatedDocs[index] = {
+      ...updatedDocs[index],
+      [name]: files ? files[0] : value,
+    };
+    setFormData({ ...formData, customerDoc: updatedDocs });
+  };
+
+  // --------------------------------------
 
   useEffect(() => {
     if (isEdit?.financialInfo) {
@@ -235,7 +261,9 @@ function ClientSecondForm({ isEdit = {}, onDataChange }) {
             />
           </Col>
         </Row> */}
-        <Row className="mb-3">
+
+        {/* ---------------------------------- */}
+        {/* <Row className="mb-3">
           <h5 className="mt-4">Customer Documents</h5>
 
           <Col>
@@ -295,21 +323,85 @@ function ClientSecondForm({ isEdit = {}, onDataChange }) {
               <Form.Control
                 type="file"
                 name="customerDoc.uploadFile"
-                onChange={handleChange} // Ensure you define this function
+                onChange={handleChange} 
               />
             </Form.Group>
           </Col>
 
-          {/* <Col className="d-flex align-items-end">
-            <Button
-              variant="primary"
-              onClick={handleChange} // Ensure you define this function
-            >
-              Download
-            </Button>
-          </Col> */}
-        </Row>
+  
+        </Row> */}
 
+        {firstFormData.financialInfo.insuranceInvestment?.map(
+          (insurance, index) => (
+            <Row className="mb-3" key={index}>
+              <h5 className="mt-4">Customer Document for: {insurance}</h5>
+
+              <Col>
+                <Form.Group controlId={`submissionDate-${index}`}>
+                  <Form.Label>Submission Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="submissionDate"
+                    value={formData.customerDoc[index]?.submissionDate || ""}
+                    onChange={(e) => handleCustomerDocChange(e, index)}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col>
+                <Form.Group controlId={`memberName-${index}`}>
+                  <Form.Label>Member Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Member Name"
+                    name="memberName"
+                    value={formData.customerDoc[index]?.memberName || ""}
+                    onChange={(e) => handleCustomerDocChange(e, index)}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col>
+                <Form.Group controlId={`documentNo-${index}`}>
+                  <Form.Label>Document No</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Document No"
+                    name="documentNo"
+                    value={formData.customerDoc[index]?.documentNo || ""}
+                    onChange={(e) => handleCustomerDocChange(e, index)}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col>
+                <Form.Group controlId={`documentName-${index}`}>
+                  <Form.Label>Document Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Document Name"
+                    name="documentName"
+                    value={formData.customerDoc[index]?.documentName || ""}
+                    onChange={(e) => handleCustomerDocChange(e, index)}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col>
+                <Form.Group controlId={`uploadFile-${index}`}>
+                  <Form.Label>Upload</Form.Label>
+                  <Form.Control
+                    type="file"
+                    name="uploadFile"
+                    onChange={(e) => handleCustomerDocChange(e, index)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          )
+        )}
+
+        {/* ----------------------------- */}
         {/* <Row className="mb-2">
           <Col>
             <Form.Control

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLeadOccupationDetails } from "../../../redux/feature/LeadOccupation/OccupationThunx";
+// import { fetchLeadOccupationDetails } from "../../../redux/feature/LeadOccupation/OccupationThunx";
 import { fetchDetails } from "../../../redux/feature/LeadSource/LeadThunx";
 import { fetchOccupations } from "../../../redux/feature/OccupationType/OccupationThunx";
+import { fetchLeadOccupationDetails } from "../../../redux/feature/LeadOccupation/OccupationThunx";
 import {
   createClientFirstForm,
   fetchByidClientFirstForm,
@@ -188,6 +189,62 @@ const ClientFirstFrom = ({ onDataChange }) => {
       },
     }));
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (formData._id) {
+        // UPDATE case
+        const updatedRes = await dispatch(
+          updateClientFirstForm({ id: formData._id, formData })
+        ).unwrap();
+        alert("Form updated successfully.");
+        setStoreData(updatedRes);
+        onDataChange(updatedRes);
+      } else {
+        // CREATE case
+        const res = await dispatch(createClientFirstForm(formData)).unwrap();
+        if (res && res._id) {
+          setStoreData(res);
+          onDataChange(res);
+
+          alert("Form saved successfully.");
+        } else {
+          console.error("Form submission failed:", res);
+          alert("Form submission failed. Please try again.");
+        }
+      }
+    } catch (err) {
+      console.error("Form submission/update failed:", err);
+      alert("Something went wrong while saving or updating the form.");
+    }
+  };
+
+  // console.log(StoreData);
+
+  useEffect(() => {
+    if (StoreData) {
+      const init = async () => {
+        try {
+          const res = await dispatch(
+            fetchByidClientFirstForm({ id: StoreData._id })
+          ).unwrap();
+          setFormData(res);
+          setFetchedData(res);
+
+          console.log(res, "asjdhakjshdjkahdkjahdhja");
+          if (res) {
+            setFormData(res);
+          }
+        } catch (error) {
+          alert("Error fetching client data: " + error.message);
+        }
+      };
+      init();
+    }
+  }, [StoreData]);
+
   // const handleSubmit = (e) => {
   //   e.preventDefault();
   //   // console.log("Form Data Submitted:", JSON.stringify(formData, null, 2));
@@ -228,59 +285,6 @@ const ClientFirstFrom = ({ onDataChange }) => {
   //     alert("Something went wrong while submitting the first form.");
   //   }
   // };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      if (formData._id) {
-        // UPDATE case
-        const updatedRes = await dispatch(
-          updateClientFirstForm({ id: formData._id, formData })
-        ).unwrap();
-        alert("Form updated successfully.");
-        setStoreData(updatedRes);
-        onDataChange(updatedRes);
-      } else {
-        // CREATE case
-        const res = await dispatch(createClientFirstForm(formData)).unwrap();
-        if (res && res._id) {
-          setStoreData(res);
-          onDataChange(res);
-          alert("Form saved successfully.");
-        } else {
-          console.error("Form submission failed:", res);
-          alert("Form submission failed. Please try again.");
-        }
-      }
-    } catch (err) {
-      console.error("Form submission/update failed:", err);
-      alert("Something went wrong while saving or updating the form.");
-    }
-  };
-
-  console.log(StoreData);
-
-  useEffect(() => {
-    if (StoreData) {
-      const init = async () => {
-        try {
-          const res = await dispatch(
-            fetchByidClientFirstForm({ id: StoreData._id })
-          ).unwrap();
-          setFormData(res);
-          setFetchedData(res);
-
-          console.log(res, "asjdhakjshdjkahdkjahdhja");
-          if (res) {
-            setFormData(res);
-          }
-        } catch (error) {
-          alert("Error fetching client data: " + error.message);
-        }
-      };
-      init();
-    }
-  }, [StoreData]);
 
   return (
     <div className="container mt-4">
@@ -869,6 +873,82 @@ const ClientFirstFrom = ({ onDataChange }) => {
         )}{" "}
         &nbsp; &nbsp;
         {/* Financial Details */}
+        {/* <h5 className="mt-4">Financial Details</h5>
+        <div className="row"> */}
+        {/* Insurance & Investment */}
+        {/* <div className="col-md-4">
+            <h6 className="text-warning fw-bold">Insurance & Investment</h6>
+            {[
+              "LIC",
+              "Pvt. Life Insurance",
+              "Health Insurance",
+              "Vehicle Insurance",
+              "Other Insurance",
+              "Bank Deposit",
+              "Postal Deposit",
+              "Mutual Fund",
+              "Stock Market",
+              "Property",
+            ].map((item) => (
+              <Form.Check
+                key={item}
+                type="checkbox"
+                label={item}
+                value={item}
+                checked={formData.financialInfo.insuranceInvestment.includes(
+                  item
+                )}
+                onChange={(e) => handleCheckboxChange(e, "insuranceInvestment")}
+              />
+            ))}
+          </div> */}
+        {/* Loan & Liabilities */}
+        {/* <div className="col-md-4">
+            <h6 className="text-warning fw-bold">Loan & Liabilities</h6>
+            {[
+              "Home Loan",
+              "Vehicle Loan",
+              "Business Loan",
+              "Personal Loan",
+              "Monthly Expenses",
+            ].map((item) => (
+              <Form.Check
+                key={item}
+                type="checkbox"
+                label={item}
+                value={item}
+                checked={formData.financialInfo.loans.includes(item)}
+                onChange={(e) => handleCheckboxChange(e, "loans")}
+              />
+            ))}
+          </div> */}
+        {/* Future Priority
+        <div className="col-md-4">
+          <h6 className="text-warning fw-bold">Future Priority</h6>
+          {[
+            "Life Insurance",
+            "Health Insurance",
+            "Child Higher Education",
+            "Child Professional Education",
+            "Child Marriage",
+            "Purchase House",
+            "Purchase Car",
+            "Retirement Fund",
+            "Business Expansion",
+            "World Tour",
+          ].map((item) => (
+            <Form.Check
+              key={item}
+              type="checkbox"
+              label={item}
+              value={item}
+              checked={formData.financialInfo.futurePriorities.includes(item)}
+              onChange={(e) => handleCheckboxChange(e, "futurePriorities")}
+            />
+          ))}
+        </div> */}
+        {/* </div> */}
+        {/* Financial Details */}
         <h5 className="mt-4">Financial Details</h5>
         <div className="row">
           {/* Insurance & Investment */}
@@ -949,21 +1029,8 @@ const ClientFirstFrom = ({ onDataChange }) => {
         &nbsp; &nbsp;
         {/* Submit upper details only */}
         <div className="w-100 d-flex justify-content-center">
-          <Button
-            className="mt-4"
-            type="submit"
-            style={{
-              width: "200px",
-              backgroundColor: "#0d6efd",
-              color: "white",
-              padding: "10px 20px",
-              borderRadius: "5px",
-              fontSize: "16px",
-              cursor: "pointer",
-              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            {formData._id ? "Update" : "Save"}
+          <Button type="submit" className="mt-3">
+            {formData._id ? "Update" : "Submit"}
           </Button>
         </div>
       </Form>

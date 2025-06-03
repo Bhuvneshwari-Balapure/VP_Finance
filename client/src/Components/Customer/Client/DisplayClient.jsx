@@ -39,7 +39,7 @@ function DisplayClient() {
         </thead>
         <tbody>
           {clients.map((client, index) => (
-            <tr key={client._id}>
+            <tr key={client?._id}>
               <td>{index + 1}</td>
               <td>
                 {client.personalDetails?.salutation}{" "}
