@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-// import { fetchLeadOccupationDetails } from "../../../redux/feature/LeadOccupation/OccupationThunx";
 import { fetchDetails } from "../../../redux/feature/LeadSource/LeadThunx";
 import { fetchOccupations } from "../../../redux/feature/OccupationType/OccupationThunx";
 import { fetchLeadOccupationDetails } from "../../../redux/feature/LeadOccupation/OccupationThunx";
@@ -10,6 +9,7 @@ import {
   fetchByidClientFirstForm,
   updateClientFirstForm,
 } from "../../../redux/feature/ClientRedux/ClientThunx";
+import { FaPlus } from "react-icons/fa";
 
 // const ClientFirstFrom = () => {
 const ClientFirstFrom = ({ onDataChange }) => {
@@ -162,6 +162,7 @@ const ClientFirstFrom = ({ onDataChange }) => {
       }));
     }
   };
+  console.log(fetchedData, "fetched data");
 
   // add familyMember
   const addFamilyMember = () => {
@@ -209,6 +210,8 @@ const ClientFirstFrom = ({ onDataChange }) => {
           setStoreData(res);
           onDataChange(res);
 
+          // console.log(res, "Form Data Submitted:");
+
           alert("Form saved successfully.");
         } else {
           console.error("Form submission failed:", res);
@@ -233,7 +236,7 @@ const ClientFirstFrom = ({ onDataChange }) => {
           setFormData(res);
           setFetchedData(res);
 
-          console.log(res, "asjdhakjshdjkahdkjahdhja");
+          // console.log(res, "asjdhakjshdjkahdkjahdhja");
           if (res) {
             setFormData(res);
           }
@@ -244,47 +247,6 @@ const ClientFirstFrom = ({ onDataChange }) => {
       init();
     }
   }, [StoreData]);
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // console.log("Form Data Submitted:", JSON.stringify(formData, null, 2));
-  //   onDataChange(formData); // Notify parent component with the updated data
-  //   dispatch(createClientFirstForm(formData));
-  //   // alert("Form data has been logged to the console.");
-  // };
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const res = await dispatch(createClientFirstForm(formData)).unwrap();
-
-  //     if (res.status === 200) {
-  //       onDataChange(formData); // Pass the form data
-  //     } else {
-  //       console.error("First form submission failed:", res);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error submitting first form:", error);
-  //   }
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const res = await dispatch(createClientFirstForm(formData)).unwrap();
-
-  //     setStoreData(res);
-  //     if (res && res._id) {
-  //       onDataChange(formData);
-  //     } else {
-  //       console.error("Form submission failed:", res);
-  //       alert("Form submission failed. Please try again.");
-  //     }
-  //   } catch (err) {
-  //     console.error("First form submission failed:", err);
-  //     alert("Something went wrong while submitting the first form.");
-  //   }
-  // };
 
   return (
     <div className="container mt-4">
@@ -852,7 +814,7 @@ const ClientFirstFrom = ({ onDataChange }) => {
         )}
         <div className="w-100 d-flex justify-content-end">
           <Button variant="primary" className="mt-3" onClick={addFamilyMember}>
-            Add Family Member
+            <FaPlus />
           </Button>
         </div>
         {/* Display added family members */}

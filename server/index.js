@@ -45,6 +45,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // app.use("/admin", adminRoute);
 
+app.use("/api", require("./Routes/upload"));
+
 app.use("/api/leadSource", LeadSourceRoute);
 app.use("/api/leadOccupation", LeadOccupationRoute);
 app.use("/api/leadarea", LeadAreaRoute);

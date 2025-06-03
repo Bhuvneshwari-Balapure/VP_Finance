@@ -85,6 +85,8 @@ import {
   createClientFirstForm,
   completeClientForm,
   getAllFullClients,
+  updateAddClientForm,
+  deleteAddClientForm,
 } from "./ClientThunx";
 
 const initialState = {
@@ -153,6 +155,44 @@ const clientSlice = createSlice({
         state.clients = action.payload;
       })
       .addCase(getAllFullClients.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(updateAddClientForm.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateAddClientForm.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        const index = state.clients.findIndex(
+          (c) => c._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.clients[index] = action.payload;
+        }
+      })
+      .addCase(updateAddClientForm.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    // 🔹 Delete AddClientForm
+    builder
+      .addCase(deleteAddClientForm.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteAddClientForm.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.clients = state.clients.filter(
+          (client) => client._id !== action.payload.id
+        );
+      })
+      .addCase(deleteAddClientForm.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

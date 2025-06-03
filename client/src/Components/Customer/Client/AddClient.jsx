@@ -88,19 +88,19 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ClientSecondForm from "./ClientSecondForm";
 import ClientFirstFrom from "./ClientFirstFrom";
-import {
-  completeClientForm,
-  updateClientFirstForm,
-} from "../../../redux/feature/ClientRedux/ClientThunx";
+import { completeClientForm } from "../../../redux/feature/ClientRedux/ClientThunx";
+
+// Toastify imports
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddClient = () => {
   const [clientFirstData, setClientFirstData] = useState({});
   const [clientSecondData, setClientSecondData] = useState({});
   const [initialData, setInitialData] = useState({});
   const [showSecondForm, setShowSecondForm] = useState(false);
-  const [isEdit, setIsEdit] = useState();
-
-  // console.log(clientFirstData, "clientFirstData");
+  const [formKey, setFormKey] = useState(Date.now()); // unique key to trigger remount
+  // const [isEdit, setIsEdit] = useState();
 
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.client);
@@ -110,8 +110,26 @@ const AddClient = () => {
       ...clientFirstData,
       ...clientSecondData,
     };
-    console.log("Submitting combined data", combinedData);
-    dispatch(completeClientForm(combinedData));
+
+    try {
+      const resultAction = await dispatch(completeClientForm(combinedData));
+
+      // Redux Toolkit's createAsyncThunk stores status in meta.requestStatus
+      if (resultAction?.meta?.requestStatus === "fulfilled") {
+        toast.success("Client form submitted successfully!");
+        console.log(combinedData, "full data");
+        // Reset form data
+        setClientFirstData({});
+        setClientSecondData({});
+        setShowSecondForm(false);
+        setFormKey(Date.now()); // update key to remount ClientFirstFrom
+      } else {
+        toast.error("Failed to submit client form.");
+      }
+    } catch (error) {
+      toast.error("Something went wrong while submitting the form.");
+      console.error("Error submitting form:", error);
+    }
   };
 
   useEffect(() => {
@@ -123,10 +141,9 @@ const AddClient = () => {
 
   return (
     <div className="max-w-5xl mx-auto mt-6 px-4">
-      {/* <h3 className="text-2xl font-semibold mb-4">Complete Valuation Report</h3> */}
-
       {/* First form always visible */}
       <ClientFirstFrom
+        key={formKey}
         isEdit={clientFirstData}
         onDataChange={(data) => {
           setClientFirstData(data);
@@ -134,17 +151,23 @@ const AddClient = () => {
         }}
       />
 
+      {/* Second form appears after first form is filled */}
       {showSecondForm && (
         <ClientSecondForm
           firstFormData={clientFirstData}
           isEdit={initialData}
-          onDataChange={setClientSecondData}
+          onDataChange={(data) => {
+            console.log("🔥 Data from ClientSecondForm:", data);
+            setClientSecondData(data);
+          }}
         />
       )}
 
+      {/* Loading and error indicators */}
       {loading && <p className="text-blue-600">Submitting...</p>}
       {error && <p className="text-red-600">Error: {error}</p>}
 
+      {/* Submit button */}
       <div className="flex justify-end mt-4 mb-4">
         <button
           onClick={handleSubmitAll}
@@ -163,6 +186,9 @@ const AddClient = () => {
           Submit Report
         </button>
       </div>
+
+      {/* Toast notification container */}
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

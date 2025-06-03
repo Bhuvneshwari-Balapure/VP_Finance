@@ -1,23 +1,29 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { fetchClients } from "../../../redux/feature/ClientRedux/ClientThunx";
 import { Table, Button, Spinner } from "react-bootstrap";
-import { getAllFullClients } from "../../../redux/feature/ClientRedux/ClientThunx";
+// import { useNavigate } from "react-router-dom";
+import {
+  deleteAddClientForm,
+  getAllFullClients,
+} from "../../../redux/feature/ClientRedux/ClientThunx";
 
 function DisplayClient() {
   const dispatch = useDispatch();
+  // const navigate = useNavigate();
   const { clients, loading, error } = useSelector((state) => state.client);
 
   useEffect(() => {
     dispatch(getAllFullClients());
   }, [dispatch]);
 
-  // const handleDelete = (id) => {
-  //   // dispatch delete thunk here (e.g., deleteClientById(id))
-  // };
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this client?")) {
+      dispatch(deleteAddClientForm(id));
+    }
+  };
 
   // const handleEdit = (id) => {
-  //   // navigate to edit form (e.g., /edit-client/:id)
+  //   // navigate(`/edit-client/${id}`);
   // };
 
   if (loading) return <Spinner animation="border" />;
@@ -60,7 +66,7 @@ function DisplayClient() {
                 <Button
                   variant="danger"
                   size="sm"
-                  // onClick={() => handleDelete(client._id)}
+                  onClick={() => handleDelete(client._id)}
                 >
                   Delete
                 </Button>

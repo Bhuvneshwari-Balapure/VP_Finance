@@ -165,7 +165,7 @@ const proposedPlanSchema = new mongoose.Schema({
   memberName: String,
   company: String,
   planName: String,
-  upload: String, // file path or URL
+  upload: [String], // file path or URL
 });
 
 // Customer Document Schema
@@ -175,7 +175,7 @@ const customerDocSchema = new mongoose.Schema({
   documentNo: String,
   documentName: String,
   financialProducts: String,
-  upload: String,
+  upload: [String],
 });
 
 // Contact Info Schema

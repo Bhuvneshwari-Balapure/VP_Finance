@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Col, Container, Form, Row } from "react-bootstrap";
 
+import FileUpload from "../../FileUpload";
+
 function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
   const [formData, setFormData] = useState({
     financialInfo: {
@@ -23,7 +25,7 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
       memberName: "",
       company: "",
       planName: "",
-      upload: null,
+      upload: [],
     },
     customerDoc: {
       submissionDate: "",
@@ -31,25 +33,79 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
       documentNo: "",
       documentName: "",
       financialProducts: "",
-      upload: null,
+      upload: [],
     },
     taskDetails: "",
   });
 
-  // --------------------------------------
+  const handleUpload = (sectionName, urls) => {
+    if (!urls || urls.length === 0) return;
+
+    const updatedFormData = {
+      ...formData,
+      [sectionName]: {
+        ...formData[sectionName],
+        upload: Array.isArray(urls) ? urls : [urls],
+      },
+    };
+
+    setFormData(updatedFormData);
+    onDataChange(updatedFormData); // Notify parent
+  };
+
+  // 🔄 Specific handlers (optional, for readability or external triggers)
+  // const handleCustomerDocUpload = (urls) => handleUpload("customerDoc", urls);
+  const handleCustomerDocUpload = (urls, index) => {
+    const updatedDocs = [...formData.customerDoc];
+    updatedDocs[index] = {
+      ...updatedDocs[index],
+      upload: Array.isArray(urls) ? urls : [urls],
+    };
+
+    const updatedFormData = { ...formData, customerDoc: updatedDocs };
+    setFormData(updatedFormData);
+    onDataChange(updatedFormData);
+  };
+
+  const handleProposedPlanUpload = (urls) => handleUpload("proposedPlan", urls);
 
   useEffect(() => {
+    if (!firstFormData?.financialInfo) return;
+
     const insuranceList = firstFormData.financialInfo.insuranceInvestment || [];
+
     const docs = insuranceList.map(() => ({
       submissionDate: "",
       memberName: "",
       documentNo: "",
       documentName: "",
-      uploadFile: null,
+      upload: [],
     }));
-    setFormData((prev) => ({ ...prev, customerDoc: docs }));
-  }, [firstFormData.financialInfo.insuranceInvestment]);
 
+    const updatedFormData = {
+      ...formData,
+      financialInfo: {
+        ...formData.financialInfo,
+        ...firstFormData.financialInfo, // ✅ merge financialInfo from firstFormData
+      },
+      customerDoc: docs,
+    };
+
+    setFormData(updatedFormData);
+    onDataChange(updatedFormData); // Notify parent
+  }, [firstFormData?.financialInfo?.insuranceInvestment]);
+
+  // const handleCustomerDocChange = (e, index) => {
+  //   const { name, value, files } = e.target;
+  //   const updatedDocs = [...formData.customerDoc];
+  //   updatedDocs[index] = {
+  //     ...updatedDocs[index],
+  //     [name]: files ? files[0] : value,
+  //   };
+  //   setFormData({ ...formData, customerDoc: updatedDocs });
+  // };
+
+  // --------------------------------------
   const handleCustomerDocChange = (e, index) => {
     const { name, value, files } = e.target;
     const updatedDocs = [...formData.customerDoc];
@@ -57,10 +113,11 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
       ...updatedDocs[index],
       [name]: files ? files[0] : value,
     };
-    setFormData({ ...formData, customerDoc: updatedDocs });
-  };
 
-  // --------------------------------------
+    const updatedFormData = { ...formData, customerDoc: updatedDocs };
+    setFormData(updatedFormData);
+    onDataChange(updatedFormData); // Notify parent
+  };
 
   useEffect(() => {
     if (isEdit?.financialInfo) {
@@ -86,8 +143,48 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
     setFormData(updatedData);
     onDataChange(updatedData);
   };
-  // console.log(formData, "jflsdjflksd"); // notify parent on change
+  // --------------------------------------
+  // useEffect(() => {
+  //   const insuranceList = firstFormData.financialInfo.insuranceInvestment || [];
+  //   const docs = insuranceList.map(() => ({
+  //     submissionDate: "",
+  //     memberName: "",
+  //     documentNo: "",
+  //     documentName: "",
+  //     uploadFile: null,
+  //   }));
+  //   setFormData((prev) => ({ ...prev, customerDoc: docs }));
+  // }, [firstFormData.financialInfo.insuranceInvestment]);
 
+  // useEffect(() => {
+  //   const insuranceList = firstFormData.financialInfo.insuranceInvestment || [];
+  //   const docs = insuranceList.map(() => ({
+  //     submissionDate: "",
+  //     memberName: "",
+  //     documentNo: "",
+  //     documentName: "",
+  //     upload: [],
+  //   }));
+  //   const updatedFormData = { ...formData, customerDoc: docs };
+  //   setFormData(updatedFormData);
+  //   onDataChange(updatedFormData); // Notify parent
+  // }, [firstFormData.financialInfo.insuranceInvestment]);
+  // console.log(firstFormData, "First form Data"); // for debugging
+
+  // --------------------------------------
+
+  // 🔄 Handle file uploads for customerDoc
+  // const handleUpload = (sectionName, urls) => {
+  //   if (!urls || urls.length === 0) return; // guard clause
+
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [sectionName]: {
+  //       ...prevData[sectionName],
+  //       upload: Array.isArray(urls) ? urls : [urls],
+  //     },
+  //   }));
+  // };
   // const handleSubmit = (e) => {
   //   e.preventDefault();
   //   console.log("Form Data Submitted:", formData);
@@ -216,120 +313,13 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
             />
           </Col>
           <Col>
-            <Form.Control
-              type="file"
-              name="proposedPlan.upload"
-              onChange={handleChange}
+            <FileUpload
+              name="proposedPlan"
+              onUpload={handleProposedPlanUpload}
             />
+            {/* <FileUpload onUpload={handleImageUpload} /> */}
           </Col>
         </Row>
-
-        {/* Customer Documents */}
-        {/* <Row className="mb-3">
-          <h5 className="mt-4">Customer Documents</h5>
-          <Col>
-            <Form.Group
-              controlId="submissionDate"
-              className="d-flex flex-column"
-            >
-              <Form.Label>Submission Date</Form.Label>
-              <Form.Control
-                name="customerDoc.submissionDate"
-                type="date"
-                value={formData.customerDoc.submissionDate}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-
-          <Col>
-            <Form.Control
-              placeholder="Financial Products"
-              name="customerDoc.financialProducts"
-              type="text"
-              value={formData.customerDoc.financialProducts}
-              onChange={handleChange}
-            />
-          </Col>
-          <Col>
-            <Form.Control
-              placeholder="Member Name"
-              name="customerDoc.memberName"
-              type="text"
-              value={formData.customerDoc.memberName}
-              onChange={handleChange}
-            />
-          </Col>
-        </Row> */}
-
-        {/* ---------------------------------- */}
-        {/* <Row className="mb-3">
-          <h5 className="mt-4">Customer Documents</h5>
-
-          <Col>
-            <Form.Group controlId="submissionDate">
-              <Form.Label>Submission Date</Form.Label>
-              <Form.Control
-                type="date"
-                name="customerDoc.submissionDate"
-                value={formData.customerDoc.submissionDate}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-
-          <Col>
-            <Form.Group controlId="memberName">
-              <Form.Label>Member Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Member Name"
-                name="customerDoc.memberName"
-                value={formData.customerDoc.memberName}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-
-          <Col>
-            <Form.Group controlId="documentNo">
-              <Form.Label>Document No</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Document No"
-                name="customerDoc.documentNo"
-                value={formData.customerDoc.documentNo}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-
-          <Col>
-            <Form.Group controlId="documentName">
-              <Form.Label>Document Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Document Name"
-                name="customerDoc.documentName"
-                value={formData.customerDoc.documentName}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-
-          <Col>
-            <Form.Group controlId="documentUpload">
-              <Form.Label>Upload</Form.Label>
-              <Form.Control
-                type="file"
-                name="customerDoc.uploadFile"
-                onChange={handleChange} 
-              />
-            </Form.Group>
-          </Col>
-
-  
-        </Row> */}
 
         {firstFormData.financialInfo.insuranceInvestment?.map(
           (insurance, index) => (
@@ -339,6 +329,7 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
               <Col>
                 <Form.Group controlId={`submissionDate-${index}`}>
                   <Form.Label>Submission Date</Form.Label>
+
                   <Form.Control
                     type="date"
                     name="submissionDate"
@@ -388,47 +379,14 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
               </Col>
 
               <Col>
-                <Form.Group controlId={`uploadFile-${index}`}>
-                  <Form.Label>Upload</Form.Label>
-                  <Form.Control
-                    type="file"
-                    name="uploadFile"
-                    onChange={(e) => handleCustomerDocChange(e, index)}
-                  />
-                </Form.Group>
+                <FileUpload
+                  name="customerDoc"
+                  onUpload={(urls) => handleCustomerDocUpload(urls, index)}
+                />
               </Col>
             </Row>
           )
         )}
-
-        {/* ----------------------------- */}
-        {/* <Row className="mb-2">
-          <Col>
-            <Form.Control
-              placeholder="Document No"
-              name="customerDoc.documentNo"
-              type="text"
-              value={formData.customerDoc.documentNo}
-              onChange={handleChange}
-            />
-          </Col>
-          <Col>
-            <Form.Control
-              placeholder="Document Name"
-              name="customerDoc.documentName"
-              type="text"
-              value={formData.customerDoc.documentName}
-              onChange={handleChange}
-            />
-          </Col>
-          <Col>
-            <Form.Control
-              type="file"
-              name="customerDoc.upload"
-              onChange={handleChange}
-            />
-          </Col>
-        </Row> */}
 
         {/* Task Details */}
         <h5 className="mt-4">Task Details</h5>
@@ -440,14 +398,6 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
           value={formData.taskDetails}
           onChange={handleChange}
         />
-
-        {/* Navigation Buttons */}
-
-        {/* <div className="text-end mt-4">
-          <Button type="submit" variant="primary">
-            Save
-          </Button>
-        </div> */}
       </Form>
     </Container>
   );
