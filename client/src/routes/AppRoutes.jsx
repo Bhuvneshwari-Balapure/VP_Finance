@@ -33,7 +33,8 @@ import OfficePurchase from "../Components/Offices/Other/OfficePurchase";
 import ImpDocument from "../Components/Offices/Other/ImportantDocument/ImpDocument";
 import Test from "../Components/Test";
 import ProspectLeadTabs from "../Components/Customer/ProspectLeadTabs";
-import ClientLeadTabs from "../Components/Customer/Client/ClientLeadTabs";
+import ClientLeadTabs from "../Components/Customer/ClientPage/ClientLeadTabs";
+
 const AppRoutes = () => {
   return (
     <Routes>
