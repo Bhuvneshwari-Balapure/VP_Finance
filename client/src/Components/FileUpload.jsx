@@ -80,6 +80,7 @@ const FileUpload = ({ onUpload }) => {
     try {
       const res = await axios.post(
         "http://localhost:8080/api/uploads",
+        // "https://dela.systemmanager.in",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

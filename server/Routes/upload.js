@@ -19,7 +19,7 @@ router.post("/uploads", upload.array("files"), (req, res) => {
   }
 
   const fileUrls = req.files.map((file) => {
-    return `${process.env.DOMAIN_URL}/Images/${file.filename}`;
+    return `${process.env.dbUrl}/Images/${file.filename}`;
   });
   console.log(fileUrls);
 
