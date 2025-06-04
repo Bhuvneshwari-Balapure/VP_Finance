@@ -58,7 +58,7 @@ import React, { useState } from "react";
 import AddProspectLead from "./AddProspectLead";
 import ProspectLeadTable from "./ProspectLeadTable";
 // import ClientForm from "../Client/ClientForm"; // 👈 import this
-import ClientFirstFrom from "./ClientPage/ClientFirstFrom";
+import ClientFirstFrom from "./Client/ClientFirstFrom";
 
 const ProspectLeadTabs = () => {
   const [activeTab, setActiveTab] = useState("add");

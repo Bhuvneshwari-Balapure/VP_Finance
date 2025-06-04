@@ -162,7 +162,6 @@ const ClientFirstFrom = ({ onDataChange }) => {
       }));
     }
   };
-  console.log(fetchedData, "fetched data");
 
   // add familyMember
   const addFamilyMember = () => {
