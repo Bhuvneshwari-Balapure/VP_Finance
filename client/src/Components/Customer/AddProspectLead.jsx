@@ -39,6 +39,7 @@ const initialFormState = {
   occupationType: "",
   callingPurpose: "",
   name: "",
+  status: "",
 };
 
 const AddProspectLead = ({ editId, setActiveTab, setEditId }) => {
@@ -67,8 +68,6 @@ const AddProspectLead = ({ editId, setActiveTab, setEditId }) => {
     init();
   }, []);
 
-  // console.log(leadSource);
-
   // --------------------------
   useEffect(() => {
     if (editId) {
@@ -82,7 +81,8 @@ const AddProspectLead = ({ editId, setActiveTab, setEditId }) => {
     if (editId && currentLead && currentLead._id === editId) {
       setForm({
         ...initialFormState,
-        ...currentLead,
+        ...currentLead.personalDetails,
+        status: currentLead.status || "", // Add this line
       });
     }
   }, [editId, currentLead]);
@@ -125,33 +125,89 @@ const AddProspectLead = ({ editId, setActiveTab, setEditId }) => {
     }));
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   const cleanedForm = { ...form };
+
+  //   if (form.preferredAddressType === "resi") {
+  //     cleanedForm.officeAddr = "";
+  //     cleanedForm.officeLandmark = "";
+  //     cleanedForm.officePincode = "";
+  //   } else if (form.preferredAddressType === "office") {
+  //     cleanedForm.resiAddr = "";
+  //     cleanedForm.resiLandmark = "";
+  //     cleanedForm.resiPincode = "";
+  //   }
+
+  //   // Yaha pe status set karein jaise suspect form me karte hain
+  //   if (!editId) {
+  //     cleanedForm.status = "Prospect"; // Naya prospect lead banate waqt status set karo
+  //   }
+
+  //   try {
+  //     let resultAction;
+  //     if (editId) {
+  //       resultAction = await dispatch(
+  //         updateProspectLead({ id: editId, leadData: cleanedForm })
+  //       );
+  //     } else {
+  //       resultAction = await dispatch(createProspectLead(cleanedForm));
+  //     }
+  //     console.log(cleanedForm, "form data");
+
+  //     if (resultAction.payload) {
+  //       alert(`Lead successfully ${editId ? "updated" : "added"}!`);
+  //       if (!editId) {
+  //         setForm(initialFormState);
+  //       } else {
+  //         setActiveTab("display");
+  //         setEditId(null);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error submitting form:", error);
+  //   }
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const cleanedForm = { ...form };
+    const personalDetails = { ...form };
+
+    // Clear unselected address fields
     if (form.preferredAddressType === "resi") {
-      cleanedForm.officeAddr = "";
-      cleanedForm.officeLandmark = "";
-      cleanedForm.officePincode = "";
+      personalDetails.officeAddr = "";
+      personalDetails.officeLandmark = "";
+      personalDetails.officePincode = "";
     } else if (form.preferredAddressType === "office") {
-      cleanedForm.resiAddr = "";
-      cleanedForm.resiLandmark = "";
-      cleanedForm.resiPincode = "";
+      personalDetails.resiAddr = "";
+      personalDetails.resiLandmark = "";
+      personalDetails.resiPincode = "";
     }
+
+    // Main payload
+    const payload = {
+      status: editId ? form.status : "prospect",
+      personalDetails,
+    };
 
     try {
       let resultAction;
       if (editId) {
         resultAction = await dispatch(
-          updateProspectLead({ id: editId, leadData: cleanedForm })
+          updateProspectLead({ id: editId, leadData: payload })
         );
       } else {
-        resultAction = await dispatch(createProspectLead(cleanedForm));
+        resultAction = await dispatch(createProspectLead(payload));
       }
-      console.log(cleanedForm, "form data");
+
+      console.log(payload, "form payload");
 
       if (resultAction.payload) {
         alert(`Lead successfully ${editId ? "updated" : "added"}!`);
+        setForm(initialFormState); // clear form fields
+        setEditId(null); // clear editId
+        setActiveTab("display");
         if (!editId) {
           setForm(initialFormState);
         } else {

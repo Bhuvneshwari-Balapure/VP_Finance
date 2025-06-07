@@ -251,3 +251,16 @@ export const deleteAddClientForm = createAsyncThunk(
     }
   }
 );
+
+// Update status of a lead
+export const updateClientLeadStatus = createAsyncThunk(
+  "ClientLead/updateStatus",
+  async ({ id, status }, thunkAPI) => {
+    try {
+      const response = await axios.put(`${API_URL}/status/${id}`, { status });
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);

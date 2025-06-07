@@ -86,16 +86,20 @@
 //   }
 // };
 
-const ClientFirstForm = require("../Models/ClientFirstFormModel");
-const AddClientForm = require("../Models/ClientModel");
+// const ClientFirstForm = require("../Models/ClientFirstFormModel");
+const ClientFirstForm = require("../Models/TestModel");
+
+// const AddClientForm = require("../Models/ClientModel");
+const AddClientForm = require("../Models/TestModel");
 
 // ------------------- CREATE -------------------
 
 // Step 1: Create Client First Form
 exports.createClientFirstForm = async (req, res) => {
   try {
-    const clientData = req.body;
-    const newClient = await ClientFirstForm.create(clientData);
+    const clientData = { ...req.body, status: "client" };
+    const newClient = new ClientFirstForm(clientData);
+    await newClient.save();
     res.status(201).json(newClient);
   } catch (err) {
     res.status(500).json({
@@ -109,7 +113,7 @@ exports.updateClientFirstForm = async (req, res) => {
   try {
     const updatedForm = await ClientFirstForm.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      { ...req.body, status: "client" },
       { new: true }
     );
     if (!updatedForm)
@@ -121,15 +125,40 @@ exports.updateClientFirstForm = async (req, res) => {
 };
 
 // Step 2: Add Complete Client Form
+// exports.completeClientForm = async (req, res) => {
+//   try {
+//     const data = { ...req.body, status: "client" };
+//     const newClientForm = new AddClientForm(data);
+//     await newClientForm.save();
+
+//     res.status(201).json(newClientForm);
+//   } catch (err) {
+//     res
+//       .status(500)
+//       .json({ error: "Failed to complete client form", details: err.message });
+//   }
+// };
+
 exports.completeClientForm = async (req, res) => {
   try {
-    const data = req.body;
-    const newClientForm = await AddClientForm.create(data);
-    res.status(201).json(newClientForm);
+    const { _id, ...rest } = req.body; // Extract _id
+
+    // Ensure the status is always "client"
+    const updateData = { ...rest, status: "client" };
+
+    // ✅ Find by _id and update
+    const updatedClient = await AddClientForm.findByIdAndUpdate(
+      _id,
+      updateData,
+      { new: true, upsert: true } // upsert: true will insert if not exists
+    );
+
+    res.status(200).json(updatedClient);
   } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to complete client form", details: err.message });
+    res.status(500).json({
+      error: "Failed to complete client form",
+      details: err.message,
+    });
   }
 };
 
@@ -138,7 +167,7 @@ exports.completeClientForm = async (req, res) => {
 // Fetch all complete client forms
 exports.getCompleteClientForms = async (req, res) => {
   try {
-    const clientForms = await AddClientForm.find();
+    const clientForms = await AddClientForm.find({ status: "client" });
     res.status(200).json(clientForms);
   } catch (err) {
     res
@@ -150,7 +179,10 @@ exports.getCompleteClientForms = async (req, res) => {
 // Fetch a single complete client form by ID
 exports.getAddClientFormById = async (req, res) => {
   try {
-    const addClientForm = await AddClientForm.findById(req.params.id);
+    const addClientForm = await AddClientForm.findById(req.params.id, {
+      ...req.body,
+      status: "client",
+    });
     if (!addClientForm) {
       return res.status(404).json({ message: "AddClientForm not found" });
     }
@@ -167,7 +199,7 @@ exports.updateAddClientForm = async (req, res) => {
   try {
     const updatedForm = await AddClientForm.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      { ...req.body, status: "client" },
       { new: true } // Return updated document
     );
     if (!updatedForm) {
@@ -184,12 +216,33 @@ exports.updateAddClientForm = async (req, res) => {
 // Delete complete client form
 exports.deleteAddClientForm = async (req, res) => {
   try {
-    const deletedForm = await AddClientForm.findByIdAndDelete(req.params.id);
+    const deletedForm = await AddClientForm.findByIdAndDelete(req.params.id, {
+      ...req.body,
+      status: "client",
+    });
     if (!deletedForm) {
       return res.status(404).json({ message: "AddClientForm not found" });
     }
     res.status(200).json({ message: "AddClientForm deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+// Update only the status of a lead
+exports.updateClientLeadStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const updatedLead = await AddClientForm.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+    if (!updatedLead) {
+      return res.status(404).json({ message: "Lead not found" });
+    }
+    res.status(200).json(updatedLead);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };

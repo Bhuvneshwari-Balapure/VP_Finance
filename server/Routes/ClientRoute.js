@@ -23,4 +23,6 @@ router.get("/add-client/:id", ClientCtrl.getAddClientFormById);
 router.put("/add-client/:id", ClientCtrl.updateAddClientForm);
 router.put("/client-first-form/:id", ClientCtrl.updateClientFirstForm);
 router.delete("/add-client/:id", ClientCtrl.deleteAddClientForm);
+router.put("/status/:id", ClientCtrl.updateClientLeadStatus);
+
 module.exports = router;

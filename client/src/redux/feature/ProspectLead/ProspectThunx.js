@@ -61,3 +61,16 @@ export const deleteProspectLead = createAsyncThunk(
     }
   }
 );
+
+// Update status of a lead
+export const updateLeadStatus = createAsyncThunk(
+  "prospectLead/updateStatus",
+  async ({ id, status }, thunkAPI) => {
+    try {
+      const response = await axios.put(`${API_URL}/status/${id}`, { status });
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);

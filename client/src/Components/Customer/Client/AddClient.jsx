@@ -88,19 +88,24 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ClientSecondForm from "./ClientSecondForm";
 import ClientFirstFrom from "./ClientFirstFrom";
-import { completeClientForm } from "../../../redux/feature/ClientRedux/ClientThunx";
+import {
+  completeClientForm,
+  getAllFullClients,
+} from "../../../redux/feature/ClientRedux/ClientThunx";
 
 // Toastify imports
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useLocation } from "react-router-dom";
 
-const AddClient = () => {
+const AddClient = ({ editId, setActiveTab }) => {
   const [clientFirstData, setClientFirstData] = useState({});
   const [clientSecondData, setClientSecondData] = useState({});
   const [initialData, setInitialData] = useState({});
   const [showSecondForm, setShowSecondForm] = useState(false);
   const [formKey, setFormKey] = useState(Date.now()); // unique key to trigger remount
   // const [isEdit, setIsEdit] = useState();
+  const location = useLocation();
 
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.client);
@@ -132,12 +137,44 @@ const AddClient = () => {
     }
   };
 
+  // useEffect(() => {
+  //   if (initialData && Object.keys(initialData).length > 0) {
+  //     setClientFirstData(initialData);
+  //     setShowSecondForm(true);
+  //   }
+  // }, [initialData]);
+
   useEffect(() => {
-    if (initialData && Object.keys(initialData).length > 0) {
-      setClientFirstData(initialData);
-      setShowSecondForm(true);
+    if (location.state?.initialData) {
+      setInitialData(location.state.initialData); // this is the mappedClientData
+      setClientFirstData(location.state.initialData); // populate the first form
+      setShowSecondForm(true); // optionally show the second form
     }
-  }, [initialData]);
+  }, [location.state]);
+  useEffect(() => {
+    if (editId) {
+      // Fetch client data by ID for editing
+      dispatch(getAllFullClients(editId))
+        .unwrap()
+        .then((clientData) => {
+          // Assume clientData has structure matching your form parts
+          setClientFirstData(clientData.firstFormPart || {});
+          setClientSecondData(clientData.secondFormPart || {});
+          setShowSecondForm(true);
+          setFormKey(Date.now()); // to remount form components and reset inputs
+        })
+        .catch(() => {
+          toast.error("Failed to load client data for editing");
+          setActiveTab("display"); // fallback to display if error
+        });
+    } else {
+      // If no editId, clear form for add mode
+      setClientFirstData({});
+      setClientSecondData({});
+      setShowSecondForm(false);
+      setFormKey(Date.now());
+    }
+  }, [editId, dispatch, setActiveTab]);
 
   return (
     <div className="max-w-5xl mx-auto mt-6 px-4">
@@ -156,6 +193,7 @@ const AddClient = () => {
         <ClientSecondForm
           firstFormData={clientFirstData}
           isEdit={initialData}
+          //  isEdit={clientSecondData}
           onDataChange={(data) => {
             console.log("🔥 Data from ClientSecondForm:", data);
             setClientSecondData(data);
@@ -168,24 +206,26 @@ const AddClient = () => {
       {error && <p className="text-red-600">Error: {error}</p>}
 
       {/* Submit button */}
-      <div className="flex justify-end mt-4 mb-4">
-        <button
-          onClick={handleSubmitAll}
-          type="submit"
-          style={{
-            width: "200px",
-            backgroundColor: "#0d6efd",
-            color: "white",
-            padding: "10px 20px",
-            borderRadius: "5px",
-            fontSize: "16px",
-            cursor: "pointer",
-            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          Submit Report
-        </button>
-      </div>
+      {showSecondForm && (
+        <div className="w-100 d-flex justify-content-center">
+          <button
+            onClick={handleSubmitAll}
+            type="submit"
+            style={{
+              width: "200px",
+              backgroundColor: "#0d6efd",
+              color: "white",
+              padding: "10px 20px",
+              borderRadius: "5px",
+              fontSize: "16px",
+              cursor: "pointer",
+              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            Submit Report
+          </button>
+        </div>
+      )}
 
       {/* Toast notification container */}
       <ToastContainer position="top-right" autoClose={3000} />

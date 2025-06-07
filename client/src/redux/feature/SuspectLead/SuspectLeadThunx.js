@@ -8,7 +8,7 @@ export const fetchSuspectLeads = createAsyncThunk(
   "suspectLead/fetchAll",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get(API_URL);
+      const response = await axios.get(`${API_URL}?status=suspect`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -22,6 +22,7 @@ export const fetchSuspectLeadById = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/${id}`);
+      console.log("✅ API RESPONSE for fetchById:", response.data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);

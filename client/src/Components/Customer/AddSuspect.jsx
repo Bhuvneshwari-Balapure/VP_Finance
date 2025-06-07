@@ -79,9 +79,10 @@ const AddSuspect = ({ editId, setActiveTab, setEditId }) => {
 
   useEffect(() => {
     if (editId && currentLead && currentLead._id === editId) {
+      console.log("✅ currentLead loaded:", currentLead);
       setForm({
         ...initialFormState,
-        ...currentLead,
+        ...currentLead.personalDetails,
       });
     }
   }, [editId, currentLead]);
@@ -139,18 +140,58 @@ const AddSuspect = ({ editId, setActiveTab, setEditId }) => {
     }
 
     try {
+      const leadDataToSave = {
+        personalDetails: {
+          name: form.name,
+          salutation: form.salutation,
+          familyHead: form.familyHead,
+          gender: form.gender,
+          organisation: form.organisation,
+          designation: form.designation,
+          annualIncome: form.annualIncome,
+          grade: form.grade,
+          mobile: form.mobile,
+          contactNo: form.contactNo,
+          whatsapp: form.whatsapp,
+          email: form.email,
+          dob: form.dob,
+          dom: form.dom,
+          preferredAddressType: form.preferredAddressType,
+          resiAddr: form.resiAddr,
+          resiLandmark: form.resiLandmark,
+          resiPincode: form.resiPincode,
+          officeAddr: form.officeAddr,
+          officeLandmark: form.officeLandmark,
+          officePincode: form.officePincode,
+          preferredMeetingAddr: form.preferredMeetingAddr,
+          preferredMeetingArea: form.preferredMeetingArea,
+          city: form.city,
+
+          leadSource: form.leadSource,
+          leadName: form.leadName,
+          leadOccupation: form.leadOccupation,
+          occupationType: form.occupationType,
+          callingPurpose: form.callingPurpose,
+        },
+      };
+
       let resultAction;
       if (editId) {
         resultAction = await dispatch(
-          updateSuspectLead({ id: editId, leadData: cleanedForm })
+          // updateSuspectLead({ id: editId, leadData: cleanedForm })
+          updateSuspectLead({ id: editId, leadData: leadDataToSave })
         );
       } else {
-        resultAction = await dispatch(createSuspectLead(cleanedForm));
+        // resultAction = await dispatch(createSuspectLead(cleanedForm));
+        resultAction = await dispatch(createSuspectLead(leadDataToSave));
       }
       console.log(cleanedForm, "form data");
 
       if (resultAction.payload) {
         alert(`Lead successfully ${editId ? "updated" : "added"}!`);
+        setForm(initialFormState); // clear form fields
+        setEditId(null); // clear editId
+        setActiveTab("display");
         if (!editId) {
           setForm(initialFormState);
         } else {

@@ -7,15 +7,6 @@ import FileUpload from "../../FileUpload";
 function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
   const [formData, setFormData] = useState({
     financialInfo: {
-      needs: {
-        anyCorrection: "",
-        anyUpdation: "",
-        financialCalculation: false,
-        assesmentOfNeed: false,
-        portfolioManagement: false,
-        doorStepServices: false,
-        purchaseNewProducts: false,
-      },
       insuranceInvestment: [],
       loans: [],
       futurePriorities: [],
@@ -27,14 +18,16 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
       planName: "",
       upload: [],
     },
-    customerDoc: {
-      submissionDate: "",
-      memberName: "",
-      documentNo: "",
-      documentName: "",
-      financialProducts: "",
-      upload: [],
-    },
+    customerDoc: [
+      {
+        submissionDate: "",
+        memberName: "",
+        documentNo: "",
+        documentName: "",
+        financialProducts: "",
+        upload: [],
+      },
+    ],
     taskDetails: "",
   });
 
@@ -70,7 +63,7 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
   const handleProposedPlanUpload = (urls) => handleUpload("proposedPlan", urls);
 
   useEffect(() => {
-    if (!firstFormData?.financialInfo) return;
+    if (!firstFormData.financialInfo.insuranceInvestment) return;
 
     const insuranceList = firstFormData.financialInfo.insuranceInvestment || [];
 
@@ -79,6 +72,7 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
       memberName: "",
       documentNo: "",
       documentName: "",
+      financialProducts: "", // ✅ Add this
       upload: [],
     }));
 
@@ -94,16 +88,6 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
     setFormData(updatedFormData);
     onDataChange(updatedFormData); // Notify parent
   }, [firstFormData?.financialInfo?.insuranceInvestment]);
-
-  // const handleCustomerDocChange = (e, index) => {
-  //   const { name, value, files } = e.target;
-  //   const updatedDocs = [...formData.customerDoc];
-  //   updatedDocs[index] = {
-  //     ...updatedDocs[index],
-  //     [name]: files ? files[0] : value,
-  //   };
-  //   setFormData({ ...formData, customerDoc: updatedDocs });
-  // };
 
   // --------------------------------------
   const handleCustomerDocChange = (e, index) => {
@@ -195,10 +179,10 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
     <Container className="my-4">
       <h2 className="mb-4">Client Registration Form</h2>
       <Form>
-        <Row className="mb-3">
+        {/* <Row className="mb-3">
           <h5 className="mt-4">Have You Any Need</h5>
           <Col>
-            {/* ------------------------- */}
+          
             <Form.Control
               placeholder="Financial Products"
               type="text"
@@ -208,7 +192,6 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
             />
           </Col>
 
-          {/* ------------------------- */}
           <Col>
             <Form.Control
               placeholder="Any Correction"
@@ -226,9 +209,9 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
               onChange={handleChange}
             />
           </Col>
-        </Row>
+        </Row> */}
 
-        <Row className="mb-2">
+        {/* <Row className="mb-2">
           <Col md={12}>
             <Form.Check
               inline
@@ -271,7 +254,7 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
               onChange={handleChange}
             />
           </Col>
-        </Row>
+        </Row> */}
 
         {/* Proposed Financial Plan */}
         <h5 className="mt-4">Proposed Financial Plan</h5>
@@ -281,7 +264,7 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
               placeholder="Date"
               name="proposedPlan.date"
               type="date"
-              value={formData.proposedPlan.date}
+              value={formData.proposedPlan?.date}
               onChange={handleChange}
             />
           </Col>
@@ -290,7 +273,7 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
               placeholder="Member Name"
               name="proposedPlan.memberName"
               type="text"
-              value={formData.proposedPlan.memberName}
+              value={formData.proposedPlan?.memberName}
               onChange={handleChange}
             />
           </Col>
@@ -299,16 +282,17 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
               placeholder="Financial Company"
               name="proposedPlan.company"
               type="text"
-              value={formData.proposedPlan.company}
+              value={formData.proposedPlan?.company}
               onChange={handleChange}
             />
           </Col>
+
           <Col>
             <Form.Control
               placeholder="Plan Name"
               name="proposedPlan.planName"
               type="text"
-              value={formData.proposedPlan.planName}
+              value={formData.proposedPlan?.planName}
               onChange={handleChange}
             />
           </Col>
@@ -381,6 +365,7 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
               <Col>
                 <FileUpload
                   name="customerDoc"
+                  // onUpload={handleProposedPlanUpload}
                   onUpload={(urls) => handleCustomerDocUpload(urls, index)}
                 />
               </Col>

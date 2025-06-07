@@ -5,9 +5,9 @@ import { PencilSquare, Trash } from "react-bootstrap-icons";
 import {
   fetchSuspectLeads,
   deleteSuspectLead,
+  updateSuspectLead,
   // updateSuspectLead,
 } from "../../redux/feature/SuspectLead/SuspectLeadThunx";
-import { createProspectLead } from "../../redux/feature/ProspectLead/ProspectThunx";
 
 const SuspectLeadsTable = ({ setActiveTab, setEditId }) => {
   const dispatch = useDispatch();
@@ -36,20 +36,41 @@ const SuspectLeadsTable = ({ setActiveTab, setEditId }) => {
   };
 
   const handleConvertToProspect = (lead) => {
-    if (window.confirm("Convert this suspect to a prospect?")) {
-      const cleanedLead = {
-        ...lead,
-        preferredAddressType:
-          lead.preferredAddressType === "resi" ||
-          lead.preferredAddressType === "office"
-            ? lead.preferredAddressType
-            : "resi", // fallback default
-      };
-
-      dispatch(createProspectLead(cleanedLead))
+    if (window.confirm("Convert this lead to a Prospect?")) {
+      dispatch(
+        updateSuspectLead({
+          id: lead._id,
+          leadData: { ...lead, status: "prospect" },
+        })
+      )
         .unwrap()
-        .then(() => dispatch(deleteSuspectLead(lead._id)))
-        .catch((err) => alert("Error: " + err.message));
+        .then(() => {
+          alert("Lead successfully converted to Prospect.");
+          dispatch(fetchSuspectLeads()); // Refresh suspect leads
+        })
+        .catch((err) => {
+          console.error("Conversion error:", err);
+          alert("Failed to convert to Prospect.");
+        });
+    }
+  };
+  const handleConvertToClient = (lead) => {
+    if (window.confirm("Convert this lead to a Client?")) {
+      dispatch(
+        updateSuspectLead({
+          id: lead._id,
+          leadData: { ...lead, status: "client" },
+        })
+      )
+        .unwrap()
+        .then(() => {
+          alert("Lead successfully converted to Client.");
+          dispatch(fetchSuspectLeads());
+        })
+        .catch((err) => {
+          console.error("Conversion error:", err);
+          alert("Failed to convert to Client.");
+        });
     }
   };
 
@@ -72,29 +93,30 @@ const SuspectLeadsTable = ({ setActiveTab, setEditId }) => {
       <Table striped bordered hover responsive>
         <thead className="table-light">
           <tr>
+            <th>#</th>
             <th>Name</th>
-            <th>Contact</th>
+            <th>Mobile</th>
+            <th>Email</th>
             <th>Address</th>
             <th>City</th>
+            {/* <th>Group</th> */}
             <th>Actions</th>
             <th>Convert</th>
           </tr>
         </thead>
         <tbody>
-          {currentLeads.map((lead) => (
+          {currentLeads.map((lead, index) => (
             <tr key={lead._id}>
+              <td>{(currentPage - 1) * leadsPerPage + index + 1}</td>
               <td>
-                {lead.salutation} {lead.familyHead}
+                {lead.personalDetails?.salutation}{" "}
+                {lead.personalDetails?.familyHead}
               </td>
-              <td>
-                <span>{lead.mobile}</span>
-              </td>
-              <td>
-                <span>{lead.preferredMeetingAddr}</span>
-              </td>
-              <td>
-                <span>{lead.city}</span>
-              </td>
+              <td>{lead.personalDetails?.mobile}</td>
+              <td>{lead.personalDetails?.email}</td>
+              <td>{lead.personalDetails?.preferredMeetingAddr}</td>
+              <td>{lead.personalDetails?.city}</td>
+              {/* <td>{lead.personalDetails?.group}</td> */}
               <td>
                 <Button
                   variant="warning"
@@ -115,13 +137,23 @@ const SuspectLeadsTable = ({ setActiveTab, setEditId }) => {
                 </Button>
               </td>
               <td>
-                <Button
-                  variant="success"
-                  size="sm"
-                  onClick={() => handleConvertToProspect(lead)}
-                >
-                  To Prospect
-                </Button>
+                <td>
+                  <Button
+                    variant="info"
+                    size="sm"
+                    className="me-2"
+                    onClick={() => handleConvertToProspect(lead)}
+                  >
+                    To Prospect
+                  </Button>
+                  <Button
+                    variant="success"
+                    size="sm"
+                    onClick={() => handleConvertToClient(lead)}
+                  >
+                    To Client
+                  </Button>
+                </td>
               </td>
             </tr>
           ))}

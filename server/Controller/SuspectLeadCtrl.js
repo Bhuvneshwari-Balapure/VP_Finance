@@ -1,9 +1,9 @@
-const SuspectLead = require("../Models/SuspectLeadModel");
+const SuspectLead = require("../Models/TestModel");
 // Create a new suspect lead
 exports.createSuspectLead = async (req, res) => {
   try {
     console.log(req.body, "suspect data");
-    const newLead = new SuspectLead(req.body);
+    const newLead = new SuspectLead({ ...req.body, status: "suspect" });
     await newLead.save();
     res.status(201).json(newLead);
   } catch (error) {
@@ -14,7 +14,7 @@ exports.createSuspectLead = async (req, res) => {
 // Get all suspect leads
 exports.getSuspectLeads = async (req, res) => {
   try {
-    const leads = await SuspectLead.find();
+    const leads = await SuspectLead.find({ status: "suspect" });
     res.status(200).json(leads);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -40,6 +40,7 @@ exports.updateSuspectLead = async (req, res) => {
     const updatedLead = await SuspectLead.findByIdAndUpdate(
       req.params.id,
       req.body,
+      // { ...req.body, status: "suspect" },
       { new: true } // returns the updated document
     );
     if (!updatedLead) {
@@ -54,7 +55,10 @@ exports.updateSuspectLead = async (req, res) => {
 // Delete a suspect lead by ID
 exports.deleteSuspectLead = async (req, res) => {
   try {
-    const deletedLead = await SuspectLead.findByIdAndDelete(req.params.id);
+    const deletedLead = await SuspectLead.findByIdAndDelete(req.params.id, {
+      ...req.body,
+      status: "suspect",
+    });
     if (!deletedLead) {
       return res.status(404).json({ message: "Lead not found" });
     }

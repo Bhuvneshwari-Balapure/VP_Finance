@@ -34,6 +34,7 @@ import ImpDocument from "../Components/Offices/Other/ImportantDocument/ImpDocume
 import Test from "../Components/Test";
 import ProspectLeadTabs from "../Components/Customer/ProspectLeadTabs";
 import ClientLeadTabs from "../Components/Customer/Client/ClientLeadTabs";
+import AddClient from "../Components/Customer/Client/AddClient";
 
 const AppRoutes = () => {
   return (
@@ -57,6 +58,7 @@ const AppRoutes = () => {
         <Route path="/add-suspect-lead" element={<SuspectLeadTabs />} />
         <Route path="/customer-detail" element={<CustomerDetail />} />
         <Route path="/client" element={<ClientLeadTabs />} />
+        <Route path="/add-client" element={<AddClient />} />
         {/* <Route path="/client-form" element={<ClientFirstForm />} /> */}
 
         <Route path="/import-lead" element={<ImportLead />} />

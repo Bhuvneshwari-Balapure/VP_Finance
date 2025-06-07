@@ -5,14 +5,12 @@ import { PencilSquare, Trash } from "react-bootstrap-icons";
 import {
   deleteProspectLead,
   fetchProspectLeads,
+  updateLeadStatus,
 } from "../../redux/feature/ProspectLead/ProspectThunx";
+// import { useNavigate } from "react-router-dom";
 
 // const ProspectLeadTable = ({ setActiveTab, setEditId }) => {
-const ProspectLeadTable = ({
-  setActiveTab,
-  setEditId,
-  setEditClientFormData,
-}) => {
+const ProspectLeadTable = ({ setActiveTab, setEditId }) => {
   const dispatch = useDispatch();
   const { leads, loading, error } = useSelector((state) => state.prospectLead);
 
@@ -27,6 +25,7 @@ const ProspectLeadTable = ({
   const indexOfFirstLead = indexOfLastLead - leadsPerPage;
   const currentLeads = leads.slice(indexOfFirstLead, indexOfLastLead);
   const totalPages = Math.ceil(leads.length / leadsPerPage);
+  // const navigate = useNavigate(); // ✅ use navigate
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this lead?")) {
@@ -38,82 +37,10 @@ const ProspectLeadTable = ({
     setActiveTab("add");
   };
 
-  const handleConvertToClient = (prospect) => {
-    const mappedClientData = {
-      personalDetails: {
-        grade: prospect.grade || "",
-        salutation: prospect.salutation || "",
-        groupName: "",
-        groupCode: "",
-        residenceAddress: prospect.resiAddr || "",
-        officeAddress: prospect.officeAddr || "",
-        landMark: prospect.resiLandmark || "",
-        meetingAddress: prospect.preferredMeetingAddr || "",
-        bestTime: "",
-        occupation: prospect.occupationType || "",
-        organisation: prospect.organisation || "",
-        designation: prospect.designation || "",
-      },
-      contactInfo: {
-        mobileNo: prospect.mobile || "",
-        whatsappNo: prospect.whatsapp || "",
-        emailId: prospect.email || "",
-        paName: "",
-        paMobileNo: "",
-      },
-      leadInfo: {
-        leadOccupation: prospect.leadOccupation || "",
-        leadOccupationType: prospect.occupationType || "",
-        leadSource: prospect.leadSource || "",
-        leadPerson: prospect.leadName || "",
-        adharNumber: "",
-        panCardNumber: "",
-        allocatedCRE: "",
-      },
-      preferences: {
-        hobbies: "",
-        nativePlace: "",
-        socialLink: "",
-        habits: "",
-      },
-      education: {
-        type: "",
-        schoolName: "",
-        schoolSubjects: "",
-        collegeName: "",
-        collegeCourse: "",
-        instituteName: "",
-        professionalDegree: "",
-      },
-      newFamilyMember: {
-        title: "",
-        name: "",
-        relation: "",
-        dobActual: "",
-        dobRecord: "",
-        marriageDate: "",
-        occupation: "",
-        annualIncome: "",
-        includeHealth: false,
-        healthHistory: {
-          submissionDate: "",
-          diseaseName: "",
-          since: "",
-          height: "",
-          weight: "",
-          remark: "",
-        },
-      },
-      familyMembers: [],
-      financialInfo: {
-        insuranceInvestment: [],
-        loans: [],
-        futurePriorities: [],
-      },
-    };
-
-    setEditClientFormData(mappedClientData); // 👈 Pass data to parent
-    setActiveTab("clientForm"); // 👈 Navigate to form
+  const handleConvertStatus = (id, status) => {
+    dispatch(updateLeadStatus({ id, status }))
+      .unwrap()
+      .then(() => dispatch(fetchProspectLeads()));
   };
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -135,29 +62,30 @@ const ProspectLeadTable = ({
       <Table striped bordered hover responsive>
         <thead className="table-light">
           <tr>
+            <th>#</th>
             <th>Name</th>
-            <th>Contact</th>
+            <th>Mobile</th>
+            <th>Email</th>
             <th>Address</th>
             <th>City</th>
+            <th>Group</th>
             <th>Actions</th>
             <th>Convert</th>
           </tr>
         </thead>
         <tbody>
-          {currentLeads.map((lead) => (
+          {currentLeads.map((lead, index) => (
             <tr key={lead._id}>
+              <td>{index + 1}</td>
               <td>
-                {lead.salutation} {lead.familyHead}
+                {lead.personalDetails?.salutation}{" "}
+                {lead.personalDetails?.familyHead}
               </td>
-              <td>
-                <span>{lead.mobile}</span>
-              </td>
-              <td>
-                <span>{lead.preferredMeetingAddr}</span>
-              </td>
-              <td>
-                <span>{lead.city}</span>
-              </td>
+              <td>{lead.personalDetails?.mobile}</td>
+              <td>{lead.personalDetails?.email}</td>
+              <td>{lead.personalDetails?.preferredMeetingAddr}</td>
+              <td>{lead.personalDetails?.city}</td>
+              <td>{lead.personalDetails?.group}</td>
               <td>
                 <Button
                   variant="warning"
@@ -178,12 +106,25 @@ const ProspectLeadTable = ({
                 </Button>
               </td>
               <td>
+                {/* Show "To Client" button only if not already client */}
+                {lead.status !== "client" && (
+                  <Button
+                    variant="success"
+                    size="sm"
+                    className="me-2"
+                    onClick={() => handleConvertStatus(lead._id, "client")}
+                  >
+                    To Client
+                  </Button>
+                )}
+
+                {/* Always show "To Suspect" button */}
                 <Button
-                  variant="success"
+                  variant="secondary"
                   size="sm"
-                  onClick={() => handleConvertToClient(lead)}
+                  onClick={() => handleConvertStatus(lead._id, "suspect")}
                 >
-                  To Client
+                  To Suspect
                 </Button>
               </td>
             </tr>
