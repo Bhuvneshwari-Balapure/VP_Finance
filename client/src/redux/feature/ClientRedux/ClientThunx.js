@@ -136,7 +136,19 @@ export const fetchByidClientFirstForm = createAsyncThunk(
     }
   }
 );
-
+// get by id
+export const fetchByidCompleteForm = createAsyncThunk(
+  "clientcompleteForm/fetchById",
+  async (id, { rejectWithValue }) => {
+    console.log("Fetching Client complete Form by ID:", id);
+    try {
+      const response = await axios.get(`${API_URL}/add-client/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
 // 🔹 Step 2: Complete Client Form
 export const completeClientForm = createAsyncThunk(
   "client/completeClientForm",

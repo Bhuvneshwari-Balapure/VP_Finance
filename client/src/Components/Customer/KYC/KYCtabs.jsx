@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import DisplayClient from "./DisplayClient";
-import AddClient from "./AddClient";
+import AddKYC from "./AddKYC";
+import DisplayKYC from "./DisplayKYC";
 
-const ClientLeadTabs = () => {
+const KYCtabs = () => {
   const [activeTab, setActiveTab] = useState("add");
-  const [editId, setEditId] = useState(""); // 👈 Track which lead is being edited
-  console.log(editId, "id client tab");
+  const [editId, setEditId] = useState(null); // 👈 Track which lead is being edited
+
   return (
     <div className="container mt-4">
       {/* Tab Buttons */}
@@ -19,7 +19,7 @@ const ClientLeadTabs = () => {
             setActiveTab("add");
           }}
         >
-          Add Client Lead
+          Add KYC
         </button>
         <button
           className={`btn btn-${
@@ -27,19 +27,19 @@ const ClientLeadTabs = () => {
           }`}
           onClick={() => setActiveTab("display")}
         >
-          Display Client Leads
+          Display KYC
         </button>
       </div>
 
       {/* Tab Content */}
       <div>
-        {activeTab === "add" && <AddClient editId={editId} />}
+        {activeTab === "add" && <AddKYC editId={editId} />}
         {activeTab === "display" && (
-          <DisplayClient setActiveTab={setActiveTab} setEditId={setEditId} />
+          <DisplayKYC setActiveTab={setActiveTab} setEditId={setEditId} />
         )}
       </div>
     </div>
   );
 };
 
-export default ClientLeadTabs;
+export default KYCtabs;

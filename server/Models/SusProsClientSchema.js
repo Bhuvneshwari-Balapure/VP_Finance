@@ -63,6 +63,9 @@ const personalDetailsSchema = new mongoose.Schema({
   familyHead: String,
   gender: String,
   group: String,
+  groupName: String,
+  groupCode: String,
+  occupation: String,
   organisation: String,
   designation: String,
   annualIncome: String,
@@ -70,6 +73,10 @@ const personalDetailsSchema = new mongoose.Schema({
   mobile: Number,
   contactNo: Number,
   whatsapp: Number,
+  mobileNo: Number,
+  whatsappNo: Number,
+  pincode: Number,
+  bestTime: String,
   email: String,
   dob: Date,
   dom: Date,
@@ -103,11 +110,11 @@ const TestShema = new mongoose.Schema({
   personalDetails: personalDetailsSchema, // 👈 add this
   // CLIENT FIRST FORM FIELDS
   contactInfo: {
-    mobileNo: String,
-    whatsappNo: String,
+    mobileNo: Number,
+    whatsappNo: Number,
     emailId: String,
     paName: String,
-    paMobileNo: String,
+    paMobileNo: Number,
   },
 
   leadInfo: {

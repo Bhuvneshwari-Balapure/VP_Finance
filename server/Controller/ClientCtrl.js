@@ -87,10 +87,10 @@
 // };
 
 // const ClientFirstForm = require("../Models/ClientFirstFormModel");
-const ClientFirstForm = require("../Models/TestModel");
+const ClientFirstForm = require("../Models/SusProsClientSchema");
 
 // const AddClientForm = require("../Models/ClientModel");
-const AddClientForm = require("../Models/TestModel");
+const AddClientForm = require("../Models/SusProsClientSchema");
 
 // ------------------- CREATE -------------------
 
@@ -179,10 +179,7 @@ exports.getCompleteClientForms = async (req, res) => {
 // Fetch a single complete client form by ID
 exports.getAddClientFormById = async (req, res) => {
   try {
-    const addClientForm = await AddClientForm.findById(req.params.id, {
-      ...req.body,
-      status: "client",
-    });
+    const addClientForm = await AddClientForm.findById(req.params.id);
     if (!addClientForm) {
       return res.status(404).json({ message: "AddClientForm not found" });
     }

@@ -35,6 +35,7 @@ import Test from "../Components/Test";
 import ProspectLeadTabs from "../Components/Customer/ProspectLeadTabs";
 import ClientLeadTabs from "../Components/Customer/Client/ClientLeadTabs";
 import AddClient from "../Components/Customer/Client/AddClient";
+import KYCtabs from "../Components/Customer/KYC/KYCtabs";
 
 const AppRoutes = () => {
   return (
@@ -59,6 +60,7 @@ const AppRoutes = () => {
         <Route path="/customer-detail" element={<CustomerDetail />} />
         <Route path="/client" element={<ClientLeadTabs />} />
         <Route path="/add-client" element={<AddClient />} />
+        <Route path="/kyc" element={<KYCtabs />} />
         {/* <Route path="/client-form" element={<ClientFirstForm />} /> */}
 
         <Route path="/import-lead" element={<ImportLead />} />

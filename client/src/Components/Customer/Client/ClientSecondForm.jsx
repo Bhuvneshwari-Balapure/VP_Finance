@@ -4,7 +4,7 @@ import { Col, Container, Form, Row } from "react-bootstrap";
 
 import FileUpload from "../../FileUpload";
 
-function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
+function ClientSecondForm({ isEdit, onDataChange, firstFormData }) {
   const [formData, setFormData] = useState({
     financialInfo: {
       insuranceInvestment: [],
@@ -47,7 +47,6 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
   };
 
   // 🔄 Specific handlers (optional, for readability or external triggers)
-  // const handleCustomerDocUpload = (urls) => handleUpload("customerDoc", urls);
   const handleCustomerDocUpload = (urls, index) => {
     const updatedDocs = [...formData.customerDoc];
     updatedDocs[index] = {
@@ -63,7 +62,7 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
   const handleProposedPlanUpload = (urls) => handleUpload("proposedPlan", urls);
 
   useEffect(() => {
-    if (!firstFormData.financialInfo.insuranceInvestment) return;
+    if (!firstFormData?.financialInfo?.insuranceInvestment) return;
 
     const insuranceList = firstFormData.financialInfo.insuranceInvestment || [];
 
@@ -103,10 +102,21 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
     onDataChange(updatedFormData); // Notify parent
   };
 
+  // useEffect(() => {
+  //   if (isEdit?.financialInfo) {
+  //     setFormData(isEdit);
+  //     onDataChange(isEdit); // notify parent initially
+  //   }
+  // }, [isEdit]);
   useEffect(() => {
-    if (isEdit?.financialInfo) {
-      setFormData(isEdit);
-      onDataChange(isEdit); // notify parent initially
+    if (isEdit) {
+      const merged = {
+        ...formData,
+        ...isEdit,
+        proposedPlan: isEdit.proposedPlan || formData.proposedPlan,
+      };
+      setFormData(merged);
+      onDataChange(merged); // notify parent
     }
   }, [isEdit]);
 
@@ -305,7 +315,7 @@ function ClientSecondForm({ isEdit = {}, onDataChange, firstFormData }) {
           </Col>
         </Row>
 
-        {firstFormData.financialInfo.insuranceInvestment?.map(
+        {firstFormData?.financialInfo?.insuranceInvestment?.map(
           (insurance, index) => (
             <Row className="mb-3" key={index}>
               <h5 className="mt-4">Customer Document for: {insurance}</h5>

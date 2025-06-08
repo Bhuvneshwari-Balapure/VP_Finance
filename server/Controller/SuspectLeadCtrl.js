@@ -1,4 +1,4 @@
-const SuspectLead = require("../Models/TestModel");
+const SuspectLead = require("../Models/SusProsClientSchema");
 // Create a new suspect lead
 exports.createSuspectLead = async (req, res) => {
   try {

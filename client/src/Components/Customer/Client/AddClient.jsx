@@ -90,6 +90,7 @@ import ClientSecondForm from "./ClientSecondForm";
 import ClientFirstFrom from "./ClientFirstFrom";
 import {
   completeClientForm,
+  fetchByidCompleteForm,
   getAllFullClients,
 } from "../../../redux/feature/ClientRedux/ClientThunx";
 
@@ -154,12 +155,13 @@ const AddClient = ({ editId, setActiveTab }) => {
   useEffect(() => {
     if (editId) {
       // Fetch client data by ID for editing
-      dispatch(getAllFullClients(editId))
+      dispatch(fetchByidCompleteForm(editId))
         .unwrap()
         .then((clientData) => {
+          console.log(clientData, "skldfjldksfjkdslfjsd");
           // Assume clientData has structure matching your form parts
-          setClientFirstData(clientData.firstFormPart || {});
-          setClientSecondData(clientData.secondFormPart || {});
+          setClientFirstData(clientData);
+          // setClientSecondData(clientData.secondFormPart || {});
           setShowSecondForm(true);
           setFormKey(Date.now()); // to remount form components and reset inputs
         })
@@ -192,7 +194,7 @@ const AddClient = ({ editId, setActiveTab }) => {
       {showSecondForm && (
         <ClientSecondForm
           firstFormData={clientFirstData}
-          isEdit={initialData}
+          isEdit={clientFirstData}
           //  isEdit={clientSecondData}
           onDataChange={(data) => {
             console.log("🔥 Data from ClientSecondForm:", data);

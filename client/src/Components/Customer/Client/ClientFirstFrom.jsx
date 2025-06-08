@@ -64,8 +64,8 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
       // designation: "",
     },
     contactInfo: {
-      mobile: "",
-      whatsapp: "",
+      mobileNo: "",
+      whatsappNo: "",
       contactNo: "",
       emailId: "",
       paName: "",
@@ -157,6 +157,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
       purchaseNewProducts: false,
     },
   });
+  console.log(isEdit, "lfkjdslkfd");
   useEffect(() => {
     if (isEdit && Object.keys(isEdit).length) {
       setFormData(isEdit); // set form fields from edit data
@@ -279,14 +280,14 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
     e.preventDefault();
 
     try {
-      if (formData._id) {
+      if (formData?._id) {
         // UPDATE
         const updatedRes = await dispatch(
-          updateClientFirstForm({ id: formData._id, formData })
+          updateClientFirstForm({ id: formData?._id, formData })
         ).unwrap();
         alert("Form updated successfully.");
         setStoreData(updatedRes);
-        setIsUpdated(true); // ✅ hide button after update
+        // setIsUpdated(true); // ✅ hide button after update
         onDataChange(updatedRes);
       } else {
         // CREATE
@@ -377,14 +378,14 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               name="personalDetails.grade"
               placeholder="Grade"
               type="text"
-              value={formData.personalDetails.grade}
+              value={formData?.personalDetails?.grade}
               onChange={handleChange}
             />
           </Col>
           <Col>
             <Form.Select
               name="personalDetails.salutation"
-              value={formData.personalDetails.salutation}
+              value={formData?.personalDetails?.salutation}
               onChange={handleChange}
             >
               <option value="">Select Salutation</option>
@@ -404,7 +405,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               name="personalDetails.groupName"
               type="text"
               placeholder="Group Name"
-              value={formData.personalDetails.groupName}
+              value={formData?.personalDetails?.groupName}
               onChange={handleChange}
             />
           </Col>
@@ -413,7 +414,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               name="personalDetails.groupCode"
               type="text"
               placeholder="Group Code"
-              value={formData.personalDetails.groupCode}
+              value={formData?.personalDetails?.groupCode}
               onChange={handleChange}
             />
           </Col>
@@ -424,14 +425,14 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.familyHead"
               placeholder="Family Head"
-              value={formData.personalDetails.familyHead}
+              value={formData?.personalDetails?.familyHead}
               onChange={handleChange}
             />
           </Col>
           <Col>
             <Form.Select
               name="personalDetails.gender"
-              value={formData.personalDetails.gender}
+              value={formData?.personalDetails?.gender}
               onChange={handleChange}
             >
               <option value="">Select Gender</option>
@@ -444,7 +445,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Occupation"
               name="personalDetails.occupation"
               type="text"
-              value={formData.personalDetails.occupation}
+              value={formData?.personalDetails?.occupation}
               onChange={handleChange}
             />
           </Col>
@@ -452,7 +453,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.organisation"
               placeholder="Organisation"
-              value={formData.personalDetails.organisation}
+              value={formData?.personalDetails?.organisation}
               onChange={handleChange}
             />
           </Col>
@@ -460,7 +461,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.designation"
               placeholder="Designation"
-              value={formData.personalDetails.designation}
+              value={formData?.personalDetails?.designation}
               onChange={handleChange}
             />
           </Col>
@@ -471,23 +472,23 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="contactInfo.mobile"
               placeholder="Mobile No."
-              value={formData.contactInfo.mobile}
+              value={formData?.contactInfo?.mobile}
               onChange={handleChange}
             />
           </Col>
-          <Col>
+          {/* <Col>
             <Form.Control
               name="contactNo"
               placeholder="Contact No."
-              value={formData.contactInfo.contactNo}
+              value={formData?.contactInfo?.contactNo}
               onChange={handleChange}
             />
-          </Col>
+          </Col> */}
           <Col>
             <Form.Control
               name="contactInfo.whatsapp"
               placeholder="whatsapp Number"
-              value={formData.contactInfo.whatsapp}
+              value={formData?.contactInfo?.whatsapp}
               onChange={handleChange}
             />
           </Col>
@@ -496,7 +497,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               name="contactInfo.emailId"
               placeholder="Email"
               type="email"
-              value={formData.contactInfo.emailId}
+              value={formData?.contactInfo?.emailId}
               onChange={handleChange}
             />
           </Col>
@@ -507,7 +508,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               name="contactInfo.paName"
               placeholder="PA Name"
               type="text"
-              value={formData.contactInfo.paName}
+              value={formData?.contactInfo?.paName}
               onChange={handleChange}
             />
           </Col>
@@ -516,7 +517,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               name="contactInfo.paMobileNo"
               placeholder="PA Mobile Number"
               type="number"
-              value={formData.contactInfo.paMobileNo}
+              value={formData?.contactInfo?.paMobileNo}
               onChange={handleChange}
             />
           </Col>
@@ -529,7 +530,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               <Form.Control
                 name="personalDetails.dob"
                 type="date"
-                value={formData.personalDetails.dob}
+                value={formData?.personalDetails?.dob}
                 onChange={handleChange}
                 className="form-control-sm"
               />
@@ -542,7 +543,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               <Form.Control
                 name="personalDetails.dom"
                 type="date"
-                value={formData.personalDetails.dom}
+                value={formData?.personalDetails?.dom}
                 onChange={handleChange}
                 className="form-control-sm"
               />
@@ -555,7 +556,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.resiAddr"
               placeholder="Residence Address"
-              value={formData.personalDetails.resiAddr}
+              value={formData?.personalDetails?.resiAddr}
               onChange={handleChange}
             />
           </Col>
@@ -563,7 +564,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.resiLandmark"
               placeholder="Residence Landmark"
-              value={formData.personalDetails.resiLandmark}
+              value={formData?.personalDetails?.resiLandmark}
               onChange={handleChange}
             />
           </Col>
@@ -571,7 +572,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.resiPincode"
               placeholder="Residence Pincode"
-              value={formData.personalDetails.resiPincode}
+              value={formData?.personalDetails?.resiPincode}
               onChange={handleChange}
             />
           </Col>
@@ -581,7 +582,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.officeAddr"
               placeholder="Office Address"
-              value={formData.personalDetails.officeAddr}
+              value={formData?.personalDetails?.officeAddr}
               onChange={handleChange}
             />
           </Col>
@@ -589,7 +590,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.officeLandmark"
               placeholder="Office Landmark"
-              value={formData.personalDetails.officeLandmark}
+              value={formData?.personalDetails?.officeLandmark}
               onChange={handleChange}
             />
           </Col>
@@ -597,7 +598,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.officePincode"
               placeholder="Office Pincode"
-              value={formData.personalDetails.officePincode}
+              value={formData?.personalDetails?.officePincode}
               onChange={handleChange}
             />
           </Col>
@@ -607,7 +608,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.preferredMeetingAddr"
               placeholder="Preferred Meeting Address"
-              value={formData.personalDetails.preferredMeetingAddr}
+              value={formData?.personalDetails?.preferredMeetingAddr}
               onChange={handleChange}
             />
           </Col>
@@ -615,7 +616,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.preferredMeetingArea"
               placeholder="Meeting Area"
-              value={formData.personalDetails.preferredMeetingArea}
+              value={formData?.personalDetails?.preferredMeetingArea}
               onChange={handleChange}
             />
           </Col>
@@ -623,7 +624,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.city"
               placeholder="City"
-              value={formData.personalDetails.city}
+              value={formData?.personalDetails?.city}
               onChange={handleChange}
             />
           </Col>
@@ -631,7 +632,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="personalDetails.pincode"
               placeholder="Pincode"
-              value={formData.personalDetails.pincode}
+              value={formData?.personalDetails?.pincode}
               onChange={handleChange}
             />
           </Col>
@@ -641,7 +642,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 id="bestTime"
                 name="personalDetails.bestTime"
                 type="time"
-                value={formData.personalDetails.bestTime}
+                value={formData?.personalDetails?.bestTime}
                 onChange={handleChange}
                 placeholder="Best Time"
               />
@@ -654,13 +655,13 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
           <Col>
             <Form.Select
               name="leadInfo.leadSource"
-              value={formData.leadInfo.leadSource}
+              value={formData?.leadInfo?.leadSource}
               onChange={handleChange}
             >
               <option value="">Select Lead Source</option>
               {leadSources.map((source) => (
-                <option key={source._id} value={source.sourceName}>
-                  {source.sourceName}
+                <option key={source._id} value={source.leadName}>
+                  {source.leadName}
                 </option>
               ))}
             </Form.Select>
@@ -669,20 +670,20 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="leadInfo.leadName"
               placeholder="Lead Name"
-              value={formData.leadInfo.leadName}
+              value={formData?.leadInfo?.leadName}
               onChange={handleChange}
             />
           </Col>
           <Col>
             <Form.Select
               name="leadInfo.leadOccupation"
-              value={formData.leadInfo.leadOccupation}
+              value={formData?.leadInfo?.leadOccupation}
               onChange={handleChange}
             >
               <option value="">Select Lead Occupation</option>
               {leadOccupations.map((occupation) => (
-                <option key={occupation._id} value={occupation.occupationName}>
-                  {occupation.occupationName}
+                <option key={occupation._id} value={occupation.leadName}>
+                  {occupation.leadName}
                 </option>
               ))}
             </Form.Select>
@@ -691,7 +692,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               name="leadInfo.leadOccupationType"
               placeholder="Occupation Type"
-              value={formData.leadInfo.leadOccupationType}
+              value={formData?.leadInfo?.leadOccupationType}
               onChange={handleChange}
             />
           </Col>
@@ -701,7 +702,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
           <Col>
             <Form.Select
               name="personalDetails.callingPurpose"
-              value={formData.personalDetails.callingPurpose}
+              value={formData?.personalDetails?.callingPurpose}
               onChange={handleChange}
             >
               <option value="">Select Purpose</option>
@@ -712,7 +713,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
           <Col>
             <Form.Select
               name="personalDetails.name"
-              value={formData.personalDetails.name}
+              value={formData?.personalDetails?.name}
               onChange={handleChange}
             >
               <option value="">Select Name</option>
@@ -728,7 +729,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Adhar Number"
               name="leadInfo.adharNumber"
               type="number"
-              value={formData.leadInfo.adharNumber}
+              value={formData?.leadInfo?.adharNumber}
               onChange={handleChange}
             />
           </Col>
@@ -737,7 +738,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="PAN Card Number"
               name="leadInfo.panCardNumber"
               type="number"
-              value={formData.leadInfo.panCardNumber}
+              value={formData?.leadInfo?.panCardNumber}
               onChange={handleChange}
             />
           </Col>
@@ -746,7 +747,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Allocated CRE"
               name="leadInfo.allocatedCRE"
               type="text"
-              value={formData.leadInfo.allocatedCRE}
+              value={formData?.leadInfo?.allocatedCRE}
               onChange={handleChange}
             />
           </Col>
@@ -757,14 +758,14 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               name="personalDetails.grade"
               placeholder="Grade"
               type="text"
-              value={formData.personalDetails.grade}
+              value={formData?.personalDetails?.grade}
               onChange={handleChange}
             />
           </Col>
           <Col>
             <Form.Select
               name="personalDetails.salutation"
-              value={formData.personalDetails.salutation}
+              value={formData?.personalDetails?.salutation}
               onChange={handleChange}
             >
               <option value="">Select Salutation</option>
@@ -779,7 +780,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               name="personalDetails.groupName"
               type="text"
               placeholder="Group Name"
-              value={formData.personalDetails.groupName}
+              value={formData?.personalDetails?.groupName}
               onChange={handleChange}
             />
           </Col>
@@ -788,7 +789,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               name="personalDetails.groupCode"
               type="text"
               placeholder="Group Code"
-              value={formData.personalDetails.groupCode}
+              value={formData?.personalDetails?.groupCode}
               onChange={handleChange}
             />
           </Col>
@@ -799,7 +800,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Residence Address"
               type="text"
               name="personalDetails.residenceAddress"
-              value={formData.personalDetails.residenceAddress}
+              value={formData?.personalDetails?.residenceAddress}
               onChange={handleChange}
             />
           </Col>
@@ -808,7 +809,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               name="personalDetails.officeAddress"
               type="text"
               placeholder="Office Address"
-              value={formData.personalDetails.officeAddress}
+              value={formData?.personalDetails?.officeAddress}
               onChange={handleChange}
             />
           </Col>
@@ -819,7 +820,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               type="text"
               placeholder="Land Mark"
               name="personalDetails.landMark"
-              value={formData.personalDetails.landMark}
+              value={formData?.personalDetails?.landMark}
               onChange={handleChange}
             />
           </Col>
@@ -828,7 +829,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Meeting Address"
               name="personalDetails.meetingAddress"
               type="text"
-              value={formData.personalDetails.meetingAddress}
+              value={formData?.personalDetails?.meetingAddress}
               onChange={handleChange}
             />
           </Col>
@@ -840,7 +841,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 id="bestTime"
                 name="personalDetails.bestTime"
                 type="time"
-                value={formData.personalDetails.bestTime}
+                value={formData?.personalDetails?.bestTime}
                 onChange={handleChange}
                 placeholder="Best Time"
               />
@@ -853,7 +854,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Occupation"
               name="personalDetails.occupation"
               type="text"
-              value={formData.personalDetails.occupation}
+              value={formData?.personalDetails?.occupation}
               onChange={handleChange}
             />
           </Col>
@@ -862,7 +863,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Organisation"
               name="personalDetails.organisation"
               type="text"
-              value={formData.personalDetails.organisation}
+              value={formData?.personalDetails?.organisation}
               onChange={handleChange}
             />
           </Col>
@@ -873,7 +874,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Designation"
               name="personalDetails.designation"
               type="text"
-              value={formData.personalDetails.designation}
+              value={formData?.personalDetails?.designation}
               onChange={handleChange}
             />
           </Col>
@@ -882,7 +883,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Mobile No"
               name="contactInfo.mobileNo"
               type="number"
-              value={formData.contactInfo.mobileNo}
+              value={formData?.contactInfo?.mobileNo}
               onChange={handleChange}
             />
           </Col>
@@ -891,7 +892,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Whatsapp No"
               name="contactInfo.whatsappNo"
               type="number"
-              value={formData.contactInfo.whatsappNo}
+              value={formData?.contactInfo?.whatsappNo}
               onChange={handleChange}
             />
           </Col>
@@ -902,7 +903,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Email ID"
               type="email"
               name="contactInfo.emailId"
-              value={formData.contactInfo.emailId}
+              value={formData?.contactInfo?.emailId}
               onChange={handleChange}
             />
           </Col>
@@ -910,7 +911,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               placeholder="PA Name"
               name="contactInfo.paName"
-              value={formData.contactInfo.paName}
+              value={formData?.contactInfo?.paName}
               onChange={handleChange}
             />
           </Col>
@@ -919,7 +920,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="PA Mobile No"
               name="contactInfo.paMobileNo"
               type="number"
-              value={formData.contactInfo.paMobileNo}
+              value={formData?.contactInfo?.paMobileNo}
               onChange={handleChange}
             />
           </Col>
@@ -929,7 +930,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Select
               name="leadInfo.leadOccupation"
               onChange={handleChange}
-              value={formData.leadInfo.leadOccupation}
+              value={formData?.leadInfo?.leadOccupation}
             >
               <option value="">Select Lead Occupation</option>
               {leadOccupation?.map((item, index) => (
@@ -944,7 +945,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Select
               name="leadInfo.leadOccupationType"
               onChange={handleChange}
-              value={formData.leadInfo.leadOccupationType}
+              value={formData?.leadInfo?.leadOccupationType}
             >
               <option value="">Select Occupation Type</option>
               {occupationType?.map((item, index) => (
@@ -959,7 +960,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Select
               name="leadInfo.leadSource"
               onChange={handleChange}
-              value={formData.leadInfo.leadSource}
+              value={formData?.leadInfo?.leadSource}
             >
               <option value="">Select Lead Source</option>
               {leadSource?.map((item, index) => (
@@ -976,7 +977,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Lead Person"
               name="leadInfo.leadPerson"
               type="text"
-              value={formData.leadInfo.leadPerson}
+              value={formData?.leadInfo?.leadPerson}
               onChange={handleChange}
             />
           </Col>
@@ -985,7 +986,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Adhar Number"
               name="leadInfo.adharNumber"
               type="Number"
-              value={formData.leadInfo.adharNumber}
+              value={formData?.leadInfo?.adharNumber}
               onChange={handleChange}
             />
           </Col>
@@ -994,7 +995,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="PAN Card Number"
               name="leadInfo.panCardNumber"
               type="Number"
-              value={formData.leadInfo.panCardNumber}
+              value={formData?.leadInfo?.panCardNumber}
               onChange={handleChange}
             />
           </Col>
@@ -1003,7 +1004,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Allocated CRE"
               name="leadInfo.allocatedCRE"
               type="text"
-              value={formData.leadInfo.allocatedCRE}
+              value={formData?.leadInfo?.allocatedCRE}
               onChange={handleChange}
             />
           </Col>
@@ -1013,7 +1014,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 placeholder="Hobbies"
                 name="preferences.hobbies"
                 type="text"
-                value={formData.preferences.hobbies}
+                value={formData?.preferences?.hobbies}
                 onChange={handleChange}
               />
             </Col>
@@ -1022,7 +1023,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 placeholder="Native Place"
                 name="preferences.nativePlace"
                 type="text"
-                value={formData.preferences.nativePlace}
+                value={formData?.preferences?.nativePlace}
                 onChange={handleChange}
               />
             </Col>
@@ -1031,7 +1032,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 placeholder="Social Link"
                 name="preferences.socialLink"
                 type="text"
-                value={formData.preferences.socialLink}
+                value={formData?.preferences?.socialLink}
                 onChange={handleChange}
               />
             </Col>
@@ -1040,7 +1041,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 placeholder="Habits"
                 name="preferences.habits"
                 type="text"
-                value={formData.preferences.habits}
+                value={formData?.preferences?.habits}
                 onChange={handleChange}
               />
             </Col>
@@ -1053,7 +1054,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
           <Col md={4}>
             <Form.Select
               name="education.types"
-              value={formData.education.types}
+              value={formData?.education?.types}
               onChange={handleChange}
             >
               <option value="">Select Education Type</option>
@@ -1064,14 +1065,14 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
           </Col>
         </Row>
         &nbsp; &nbsp;
-        {formData.education.types === "school" && (
+        {formData?.education?.types === "school" && (
           <Row className="mb-2">
             <Col>
               <Form.Control
                 name="education.schoolName"
                 type="text"
                 placeholder="School Name"
-                value={formData.education.schoolName}
+                value={formData?.education?.schoolName}
                 onChange={handleChange}
               />
             </Col>
@@ -1080,20 +1081,20 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 name="education.schoolSubjects"
                 type="text"
                 placeholder="Subjects Pursuing in School"
-                value={formData.education.schoolSubjects}
+                value={formData?.education?.schoolSubjects}
                 onChange={handleChange}
               />
             </Col>
           </Row>
         )}
-        {formData.education.types === "college" && (
+        {formData?.education?.types === "college" && (
           <Row className="mb-2">
             <Col>
               <Form.Control
                 name="education.collegeName"
                 type="text"
                 placeholder="College Name"
-                value={formData.education.collegeName}
+                value={formData?.education?.collegeName}
                 onChange={handleChange}
               />
             </Col>
@@ -1102,20 +1103,20 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 name="education.collegeCourse"
                 type="text"
                 placeholder="Course or Degree Name"
-                value={formData.education.collegeCourse}
+                value={formData?.education?.collegeCourse}
                 onChange={handleChange}
               />
             </Col>
           </Row>
         )}
-        {formData.education.types === "professional" && (
+        {formData?.education?.types === "professional" && (
           <Row className="mb-2">
             <Col>
               <Form.Control
                 name="education.instituteName"
                 type="text"
                 placeholder="Institute Name"
-                value={formData.education.instituteName}
+                value={formData?.education?.instituteName}
                 onChange={handleChange}
               />
             </Col>
@@ -1124,7 +1125,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 name="education.professionalDegree"
                 type="text"
                 placeholder="Degree Name"
-                value={formData.education.professionalDegree}
+                value={formData?.education?.professionalDegree}
                 onChange={handleChange}
               />
             </Col>
@@ -1140,7 +1141,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Hobbies"
               name="preferences.hobbies"
               type="text"
-              value={formData.preferences.hobbies}
+              value={formData?.preferences?.hobbies}
               onChange={handleChange}
             />
           </Col>
@@ -1149,7 +1150,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Native Place"
               name="preferences.nativePlace"
               type="text"
-              value={formData.preferences.nativePlace}
+              value={formData?.preferences?.nativePlace}
               onChange={handleChange}
             />
           </Col>
@@ -1158,7 +1159,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Social Link"
               name="preferences.socialLink"
               type="text"
-              value={formData.preferences.socialLink}
+              value={formData?.preferences?.socialLink}
               onChange={handleChange}
             />
           </Col>
@@ -1167,7 +1168,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Habits"
               name="preferences.habits"
               type="text"
-              value={formData.preferences.habits}
+              value={formData?.preferences?.habits}
               onChange={handleChange}
             />
           </Col>
@@ -1180,7 +1181,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               placeholder="Mr/Mrs"
               name="newFamilyMember.title"
-              value={formData.newFamilyMember?.title}
+              value={formData?.newFamilyMember??.title}
               onChange={handleFamilyMemberChange}
             />
           </Col>
@@ -1188,14 +1189,14 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               placeholder="Name"
               name="newFamilyMember.name"
-              value={formData.newFamilyMember?.name}
+              value={formData?.newFamilyMember??.name}
               onChange={handleFamilyMemberChange}
             />
           </Col>
           <Col>
             <Form.Select
               name="newFamilyMember.relation"
-              value={formData.newFamilyMember?.relation}
+              value={formData?.newFamilyMember??.relation}
               onChange={handleFamilyMemberChange}
             >
               <option value="">Select Relation</option>
@@ -1224,7 +1225,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               <Form.Control
                 name="newFamilyMember.dobActual"
                 type="date"
-                value={formData.newFamilyMember?.dobActual}
+                value={formData?.newFamilyMember??.dobActual}
                 onChange={handleFamilyMemberChange}
               />
             </Form.Group>
@@ -1237,7 +1238,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               <Form.Control
                 name="newFamilyMember.dobRecord"
                 type="date"
-                value={formData.newFamilyMember?.dobRecord}
+                value={formData?.newFamilyMember??.dobRecord}
                 onChange={handleFamilyMemberChange}
               />
             </Form.Group>
@@ -1248,7 +1249,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               <Form.Control
                 name="newFamilyMember.marriageDate"
                 type="date"
-                value={formData.newFamilyMember?.marriageDate}
+                value={formData?.newFamilyMember??.marriageDate}
                 onChange={handleFamilyMemberChange}
               />
             </Form.Group>
@@ -1258,7 +1259,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               placeholder="Occupation"
               name="newFamilyMember.occupation"
-              value={formData.newFamilyMember?.occupation}
+              value={formData?.newFamilyMember??.occupation}
               onChange={handleFamilyMemberChange}
             />
           </Col>
@@ -1267,7 +1268,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Annual Income"
               name="newFamilyMember.annualIncome"
               type="number"
-              value={formData.newFamilyMember?.annualIncome}
+              value={formData?.newFamilyMember??.annualIncome}
               onChange={handleFamilyMemberChange}
             />
           </Col>
@@ -1276,10 +1277,10 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
           label="Add Health Details"
           type="checkbox"
           name="newFamilyMember.includeHealth"
-          checked={formData.newFamilyMember?.includeHealth}
+          checked={formData?.newFamilyMember??.includeHealth}
           onChange={handleFamilyMemberChange}
         />
-        {formData.newFamilyMember?.includeHealth && (
+        {formData?.newFamilyMember??.includeHealth && (
           <>
             <h5 className="mt-3">Health History</h5>
             <Row className="mb-2">
@@ -1294,7 +1295,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                     name="newFamilyMember.healthHistory.submissionDate"
                     type="date"
                     value={
-                      formData.newFamilyMember?.healthHistory.submissionDate
+                      formData?.newFamilyMember??.healthHistory.submissionDate
                     }
                     onChange={handleFamilyMemberChange}
                   />
@@ -1304,7 +1305,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 <Form.Control
                   placeholder="Disease Name"
                   name="newFamilyMember.healthHistory.diseaseName"
-                  value={formData.newFamilyMember?.healthHistory.diseaseName}
+                  value={formData?.newFamilyMember??.healthHistory.diseaseName}
                   onChange={handleFamilyMemberChange}
                 />
               </Col>
@@ -1314,7 +1315,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                   <Form.Control
                     name="newFamilyMember.healthHistory.since"
                     type="date"
-                    value={formData.newFamilyMember?.healthHistory.since}
+                    value={formData?.newFamilyMember??.healthHistory.since}
                     onChange={handleFamilyMemberChange}
                   />
                 </Form.Group>
@@ -1325,7 +1326,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 <Form.Control
                   placeholder="Height"
                   name="newFamilyMember.healthHistory.height"
-                  value={formData.newFamilyMember?.healthHistory.height}
+                  value={formData?.newFamilyMember??.healthHistory.height}
                   onChange={handleFamilyMemberChange}
                 />
               </Col>
@@ -1333,7 +1334,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 <Form.Control
                   placeholder="Weight"
                   name="newFamilyMember.healthHistory.weight"
-                  value={formData.newFamilyMember?.healthHistory.weight}
+                  value={formData?.newFamilyMember??.healthHistory.weight}
                   onChange={handleFamilyMemberChange}
                 />
               </Col>
@@ -1341,7 +1342,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 <Form.Control
                   placeholder="Remark"
                   name="newFamilyMember.healthHistory.remark"
-                  value={formData.newFamilyMember?.healthHistory.remark}
+                  value={formData?.newFamilyMember??.healthHistory.remark}
                   onChange={handleFamilyMemberChange}
                 />
               </Col>
@@ -1389,7 +1390,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <FaPlus /> Add More Family Member
           </Button>
         </div>
-        {formData.familyMembers.map((member, index) => (
+        {formData?.familyMembers?.map((member, index) => (
           <div key={index} className="border rounded p-3 mb-3">
             <Row className="mb-2">
               <Col>
@@ -1573,11 +1574,11 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
           </div>
         ))}
         {/* Display added family members
-        {formData.familyMembers.length > 0 && (
+        {formData?.familyMembers?.length > 0 && (
           <div className="mt-4">
             <h5>Added Family Members</h5>
             <ul>
-              {formData.familyMembers.map((member, index) => (
+              {formData?.familyMembers?.map((member, index) => (
                 <li key={index}>
                   {member.title} {member.name} ({member.relation})
                   {member.includeHealth && (
@@ -1612,7 +1613,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 type="checkbox"
                 label={item}
                 value={item}
-                checked={formData.financialInfo.insuranceInvestment.includes(
+                checked={formData?.financialInfo?.insuranceInvestment.includes(
                   item
                 )}
                 onChange={(e) => handleCheckboxChange(e, "insuranceInvestment")}
@@ -1634,7 +1635,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 type="checkbox"
                 label={item}
                 value={item}
-                checked={formData.financialInfo.loans.includes(item)}
+                checked={formData?.financialInfo?.loans.includes(item)}
                 onChange={(e) => handleCheckboxChange(e, "loans")}
               />
             ))}
@@ -1659,7 +1660,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               type="checkbox"
               label={item}
               value={item}
-              checked={formData.financialInfo.futurePriorities.includes(item)}
+              checked={formData?.financialInfo?.futurePriorities.includes(item)}
               onChange={(e) => handleCheckboxChange(e, "futurePriorities")}
             />
           ))}
@@ -1684,7 +1685,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 type="checkbox"
                 label={item}
                 value={item}
-                checked={formData.financialInfo.insuranceInvestment.includes(
+                checked={formData?.financialInfo?.insuranceInvestment.includes(
                   item
                 )}
                 onChange={(e) => handleCheckboxChange(e, "insuranceInvestment")}
@@ -1707,7 +1708,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 type="checkbox"
                 label={item}
                 value={item}
-                checked={formData.financialInfo.insuranceInvestment.includes(
+                checked={formData?.financialInfo?.insuranceInvestment.includes(
                   item
                 )}
                 onChange={(e) => handleCheckboxChange(e, "insuranceInvestment")}
@@ -1730,7 +1731,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 type="checkbox"
                 label={item}
                 value={item}
-                checked={formData.financialInfo.loans.includes(item)}
+                checked={formData?.financialInfo?.loans.includes(item)}
                 onChange={(e) => handleCheckboxChange(e, "loans")}
               />
             ))}
@@ -1759,7 +1760,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                       type="checkbox"
                       label={item}
                       value={item}
-                      checked={formData.financialInfo.futurePriorities.includes(
+                      checked={formData?.financialInfo?.futurePriorities.includes(
                         item
                       )}
                       onChange={(e) =>
@@ -1782,7 +1783,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                       type="checkbox"
                       label={item}
                       value={item}
-                      checked={formData.financialInfo.futurePriorities.includes(
+                      checked={formData?.financialInfo?.futurePriorities.includes(
                         item
                       )}
                       onChange={(e) =>
@@ -1805,7 +1806,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                       type="checkbox"
                       label={item}
                       value={item}
-                      checked={formData.financialInfo.futurePriorities.includes(
+                      checked={formData?.financialInfo?.futurePriorities.includes(
                         item
                       )}
                       onChange={(e) =>
@@ -1827,7 +1828,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Financial Products"
               type="text"
               name="needs.financialProducts"
-              value={formData.needs.financialProducts}
+              value={formData?.needs?.financialProducts}
               onChange={handleChange}
             />
           </Col>
@@ -1838,7 +1839,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               placeholder="Any Correction"
               type="text"
               name="needs.anyCorrection"
-              value={formData.needs.anyCorrection}
+              value={formData?.needs?.anyCorrection}
               onChange={handleChange}
             />
           </Col>
@@ -1846,7 +1847,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             <Form.Control
               placeholder="Any Updation"
               name="needs.anyUpdation"
-              value={formData.needs.anyUpdation}
+              value={formData?.needs?.anyUpdation}
               onChange={handleChange}
             />
           </Col>
@@ -1858,7 +1859,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               type="checkbox"
               label="Financial Calculation"
               name="needs.financialCalculation"
-              checked={formData.needs.financialCalculation}
+              checked={formData?.needs?.financialCalculation}
               onChange={handleChange}
             />
             <Form.Check
@@ -1866,7 +1867,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               type="checkbox"
               label="Assessment of Need"
               name="needs.assesmentOfNeed"
-              checked={formData.needs.assesmentOfNeed}
+              checked={formData?.needs?.assesmentOfNeed}
               onChange={handleChange}
             />
             <Form.Check
@@ -1874,7 +1875,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               type="checkbox"
               label="Portfolio Management"
               name="needs.portfolioManagement"
-              checked={formData.needs.portfolioManagement}
+              checked={formData?.needs?.portfolioManagement}
               onChange={handleChange}
             />
             <Form.Check
@@ -1882,7 +1883,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               type="checkbox"
               label="Door Step Services"
               name="needs.doorStepServices"
-              checked={formData.needs.doorStepServices}
+              checked={formData?.needs?.doorStepServices}
               onChange={handleChange}
             />
             <Form.Check
@@ -1890,7 +1891,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               type="checkbox"
               label="Purchase New Products"
               name="needs.purchaseNewProducts"
-              checked={formData.needs.purchaseNewProducts}
+              checked={formData?.needs?.purchaseNewProducts}
               onChange={handleChange}
             />
           </Col>
@@ -1912,7 +1913,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
                 boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
               }}
             >
-              {formData._id ? "Update" : "Submit"}
+              {formData?._id ? "Update" : "Submit"}
             </Button>
           )}
         </div>

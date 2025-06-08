@@ -1,4 +1,4 @@
-const ProspectLead = require("../Models/TestModel");
+const ProspectLead = require("../Models/SusProsClientSchema");
 // Create a new prospect lead
 exports.createProspectLead = async (req, res) => {
   try {

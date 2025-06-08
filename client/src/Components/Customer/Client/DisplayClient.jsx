@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Table, Button, Spinner } from "react-bootstrap";
 import {
@@ -10,7 +10,6 @@ import {
 function DisplayClient({ setActiveTab, setEditId }) {
   const dispatch = useDispatch();
   const { clients, loading, error } = useSelector((state) => state.client);
-
   useEffect(() => {
     dispatch(getAllFullClients());
   }, [dispatch]);
@@ -21,9 +20,8 @@ function DisplayClient({ setActiveTab, setEditId }) {
     }
   };
   const handleEdit = (id) => {
-    // setEditId(id);
-    // setActiveTab("add");
-    console.log(id);
+    setEditId(id);
+    setActiveTab("add");
   };
 
   // const handleConvert = (id) => {

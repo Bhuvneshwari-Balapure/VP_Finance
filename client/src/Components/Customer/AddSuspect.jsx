@@ -476,8 +476,8 @@ const AddSuspect = ({ editId, setActiveTab, setEditId }) => {
             >
               <option value="">Select Lead Source</option>
               {leadSources.map((source) => (
-                <option key={source._id} value={source.sourceName}>
-                  {source.sourceName}
+                <option key={source._id} value={source.leadName}>
+                  {source.leadName}
                 </option>
               ))}
             </Form.Select>
@@ -509,11 +509,8 @@ const AddSuspect = ({ editId, setActiveTab, setEditId }) => {
                 (occupation) => (
                   console.log(occupation, "occupation"),
                   (
-                    <option
-                      key={occupation._id}
-                      value={occupation.occupationName}
-                    >
-                      {occupation.occupationName}
+                    <option key={occupation._id} value={occupation.leadName}>
+                      {occupation.leadName}
                     </option>
                   )
                 )

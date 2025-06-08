@@ -87,6 +87,7 @@ import {
   getAllFullClients,
   updateAddClientForm,
   deleteAddClientForm,
+  fetchByidCompleteForm,
 } from "./ClientThunx";
 
 const initialState = {
@@ -155,6 +156,20 @@ const clientSlice = createSlice({
         state.clients = action.payload;
       })
       .addCase(getAllFullClients.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // get complete form
+
+      .addCase(fetchByidCompleteForm.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchByidCompleteForm.fulfilled, (state, action) => {
+        state.loading = false;
+        state.client = action.payload;
+      })
+      .addCase(fetchByidCompleteForm.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
