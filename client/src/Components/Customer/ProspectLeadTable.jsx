@@ -64,7 +64,7 @@ const ProspectLeadTable = ({ setActiveTab, setEditId }) => {
           <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Mobile</th>
+            <th>Contact Number</th>
             <th>Email</th>
             <th>Address</th>
             <th>City</th>
@@ -81,7 +81,7 @@ const ProspectLeadTable = ({ setActiveTab, setEditId }) => {
                 {lead.personalDetails?.salutation}{" "}
                 {lead.personalDetails?.familyHead}
               </td>
-              <td>{lead.personalDetails?.mobile}</td>
+              <td>{lead.personalDetails?.contactNo}</td>
               <td>{lead.personalDetails?.email}</td>
               <td>{lead.personalDetails?.preferredMeetingAddr}</td>
               <td>{lead.personalDetails?.city}</td>

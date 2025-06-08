@@ -14,10 +14,6 @@ import { FaPlus } from "react-icons/fa";
 // const ClientFirstFrom = () => {
 const ClientFirstFrom = ({ isEdit, onDataChange }) => {
   const dispatch = useDispatch();
-  // const leadOccupation = useSelector((state) => state.leadOccupation.details);
-  // const occupationType = useSelector((state) => state.OccupationType.details);
-  // const leadSource = useSelector((state) => state.leadsource.leadsourceDetail);
-
   const [StoreData, setStoreData] = useState(null);
   const [fetchedData, setFetchedData] = useState(null);
   const [isUpdated, setIsUpdated] = useState(false);
@@ -31,6 +27,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
       familyHead: "",
       gender: "",
       occupation: "",
+      contactNo: "",
       organisation: "",
       designation: "",
       dob: "",
@@ -66,7 +63,6 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
     contactInfo: {
       mobileNo: "",
       whatsappNo: "",
-      contactNo: "",
       emailId: "",
       paName: "",
       paMobileNo: "",
@@ -226,33 +222,6 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
     });
   };
 
-  // add familyMember
-  // const addFamilyMember = () => {
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     familyMembers: [...prev.familyMembers, prev.newFamilyMember],
-  //     newFamilyMember: {
-  //       title: "",
-  //       name: "",
-  //       relation: "",
-  //       dobActual: "",
-  //       dobRecord: "",
-  //       marriageDate: "",
-  //       occupation: "",
-  //       annualIncome: "",
-  //       includeHealth: false,
-  //       healthHistory: {
-  //         submissionDate: "",
-  //         diseaseName: "",
-  //         since: "",
-  //         height: "",
-  //         weight: "",
-  //         remark: "",
-  //       },
-  //     },
-  //   }));
-  // };
-
   useEffect(() => {
     if (StoreData) {
       const init = async () => {
@@ -314,6 +283,24 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
     });
   };
 
+  // --------------------------lead cource and lead occupation -----------------------------
+  const leadOccupations = useSelector((state) => state.leadOccupation.details);
+
+  const leadSources = useSelector((state) => state.leadsource.leadsourceDetail);
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await dispatch(fetchLeadOccupationDetails()).unwrap();
+        await dispatch(fetchDetails()).unwrap();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    init();
+  }, []);
+
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
 
@@ -348,24 +335,6 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
   // };
 
   // console.log(StoreData);
-
-  // --------------------------lead cource and lead occupation -----------------------------
-  const leadOccupations = useSelector((state) => state.leadOccupation.details);
-
-  const leadSources = useSelector((state) => state.leadsource.leadsourceDetail);
-
-  useEffect(() => {
-    const init = async () => {
-      try {
-        await dispatch(fetchLeadOccupationDetails()).unwrap();
-        await dispatch(fetchDetails()).unwrap();
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    init();
-  }, []);
 
   return (
     <div className="container mt-4">
@@ -465,30 +434,31 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               onChange={handleChange}
             />
           </Col>
+          <Col>
+            <Form.Control
+              name="personalDetails.contactNo"
+              placeholder="Contact No."
+              value={formData?.personalDetails?.contactNo}
+              onChange={handleChange}
+            />
+          </Col>
         </Row>
         {/* Mobile, Contact No, Whatsapp, Email */}
         <Row className="mb-2">
           <Col>
             <Form.Control
-              name="contactInfo.mobile"
+              name="contactInfo.mobileNo"
               placeholder="Mobile No."
-              value={formData?.contactInfo?.mobile}
+              value={formData?.contactInfo?.mobileNo}
               onChange={handleChange}
             />
           </Col>
-          {/* <Col>
-            <Form.Control
-              name="contactNo"
-              placeholder="Contact No."
-              value={formData?.contactInfo?.contactNo}
-              onChange={handleChange}
-            />
-          </Col> */}
+
           <Col>
             <Form.Control
-              name="contactInfo.whatsapp"
+              name="contactInfo.whatsappNo"
               placeholder="whatsapp Number"
-              value={formData?.contactInfo?.whatsapp}
+              value={formData?.contactInfo?.whatsappNo}
               onChange={handleChange}
             />
           </Col>
@@ -1505,58 +1475,81 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
 
             {member.includeHealth && (
               <>
-                <h6>Health History</h6>
-                <Row className="mb-2">
-                  <Col>
-                    <Form.Control
-                      name="healthHistory.submissionDate"
-                      type="date"
-                      value={member.healthHistory.submissionDate}
-                      onChange={(e) => handleFamilyMemberChange(e, index)}
-                    />
+                <h6 className="mb-3">Health History</h6>
+
+                <Row className="mb-3">
+                  <Col md={6}>
+                    <Form.Group controlId={`submissionDate-${index}`}>
+                      <Form.Label>Submission Date</Form.Label>
+                      <Form.Control
+                        name="healthHistory.submissionDate"
+                        type="date"
+                        value={member.healthHistory.submissionDate}
+                        onChange={(e) => handleFamilyMemberChange(e, index)}
+                      />
+                    </Form.Group>
                   </Col>
-                  <Col>
-                    <Form.Control
-                      placeholder="Disease Name"
-                      name="healthHistory.diseaseName"
-                      value={member.healthHistory.diseaseName}
-                      onChange={(e) => handleFamilyMemberChange(e, index)}
-                    />
+
+                  <Col md={6}>
+                    <Form.Group controlId={`diseaseName-${index}`}>
+                      <Form.Label>Disease Name</Form.Label>
+                      <Form.Control
+                        name="healthHistory.diseaseName"
+                        value={member.healthHistory.diseaseName}
+                        onChange={(e) => handleFamilyMemberChange(e, index)}
+                        placeholder="Disease Name"
+                      />
+                    </Form.Group>
                   </Col>
                 </Row>
-                <Row className="mb-2">
-                  <Col>
-                    <Form.Control
-                      placeholder="Since"
-                      name="healthHistory.since"
-                      type="date"
-                      value={member.healthHistory.since}
-                      onChange={(e) => handleFamilyMemberChange(e, index)}
-                    />
+
+                <Row className="mb-3">
+                  <Col md={3}>
+                    <Form.Group controlId={`since-${index}`}>
+                      <Form.Label>Since</Form.Label>
+                      <Form.Control
+                        name="healthHistory.since"
+                        type="date"
+                        value={member.healthHistory.since}
+                        onChange={(e) => handleFamilyMemberChange(e, index)}
+                      />
+                    </Form.Group>
                   </Col>
-                  <Col>
-                    <Form.Control
-                      placeholder="Height"
-                      name="healthHistory.height"
-                      value={member.healthHistory.height}
-                      onChange={(e) => handleFamilyMemberChange(e, index)}
-                    />
+
+                  <Col md={3}>
+                    <Form.Group controlId={`height-${index}`}>
+                      <Form.Label>Height</Form.Label>
+                      <Form.Control
+                        name="healthHistory.height"
+                        value={member.healthHistory.height}
+                        onChange={(e) => handleFamilyMemberChange(e, index)}
+                        placeholder="Height"
+                      />
+                    </Form.Group>
                   </Col>
-                  <Col>
-                    <Form.Control
-                      placeholder="Weight"
-                      name="healthHistory.weight"
-                      value={member.healthHistory.weight}
-                      onChange={(e) => handleFamilyMemberChange(e, index)}
-                    />
+
+                  <Col md={3}>
+                    <Form.Group controlId={`weight-${index}`}>
+                      <Form.Label>Weight</Form.Label>
+                      <Form.Control
+                        name="healthHistory.weight"
+                        value={member.healthHistory.weight}
+                        onChange={(e) => handleFamilyMemberChange(e, index)}
+                        placeholder="Weight"
+                      />
+                    </Form.Group>
                   </Col>
-                  <Col>
-                    <Form.Control
-                      placeholder="Remark"
-                      name="healthHistory.remark"
-                      value={member.healthHistory.remark}
-                      onChange={(e) => handleFamilyMemberChange(e, index)}
-                    />
+
+                  <Col md={3}>
+                    <Form.Group controlId={`remark-${index}`}>
+                      <Form.Label>Remark</Form.Label>
+                      <Form.Control
+                        name="healthHistory.remark"
+                        value={member.healthHistory.remark}
+                        onChange={(e) => handleFamilyMemberChange(e, index)}
+                        placeholder="Remark"
+                      />
+                    </Form.Group>
                   </Col>
                 </Row>
               </>

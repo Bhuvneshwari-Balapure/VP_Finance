@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Table, Button, Spinner } from "react-bootstrap";
 import {
@@ -50,7 +50,7 @@ function DisplayClient({ setActiveTab, setEditId }) {
           <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Mobile</th>
+            <th>Contact No</th>
             <th>Email</th>
             <th>Address</th>
             <th>City</th>
@@ -67,7 +67,7 @@ function DisplayClient({ setActiveTab, setEditId }) {
             const name = `${personal.salutation || ""} ${
               personal.familyHead || personal.name || ""
             }`.trim();
-            const mobile = contact.mobileNo || personal.mobile || "";
+            const mobile = personal.contactNo || contact.mobileNo || "";
             const email = contact.emailId || personal.email || "";
             const address =
               personal.preferredMeetingAddr ||
