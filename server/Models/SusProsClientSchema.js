@@ -60,24 +60,24 @@ const customerDocSchema = new mongoose.Schema({
 });
 
 const personalDetailsSchema = new mongoose.Schema({
-  salutation: String,
-  familyHead: String,
-  gender: String,
-  group: String,
-  groupName: String,
   groupCode: String,
-  occupation: String,
+  salutation: String,
+  groupName: String,
+  gender: String,
   organisation: String,
   designation: String,
+  mobileNo: Number,
+  contactNo: Number,
+  whatsappNo: Number,
+  emailId: String,
+  paName: String,
+  paMobileNo: Number,
   annualIncome: String,
   grade: Number,
+  group: String,
   mobile: Number,
-  contactNo: Number,
   whatsapp: Number,
-  // mobileNo: Number,
-  // whatsappNo: Number,
   pincode: Number,
-  bestTime: String,
   email: String,
   dob: Date,
   dom: Date,
@@ -88,17 +88,32 @@ const personalDetailsSchema = new mongoose.Schema({
   officeAddr: String,
   officeLandmark: String,
   officePincode: String,
+  //
   preferredMeetingAddr: String,
   preferredMeetingArea: String,
   city: String,
-
+  bestTime: String,
+  adharNumber: String,
+  panCardNumber: String,
+  hobbies: String,
+  nativePlace: String,
+  socialLink: String,
+  habits: String,
   leadSource: String,
   leadName: String,
   leadOccupation: String,
-  occupationType: String,
+  leadOccupationType: String,
+  leadPerson: String,
   callingPurpose: String,
   name: String,
   allocatedCRE: String,
+  remark: String,
+
+  // -----changes remove Fields----------
+  familyHead: String,
+  occupation: String,
+
+  // ------------------
 });
 
 // Main Lead Schema
@@ -112,37 +127,28 @@ const TestShema = new mongoose.Schema({
   // COMMON FIELDS (used in all 3 stages)
   personalDetails: personalDetailsSchema, // 👈 add this
   // CLIENT FIRST FORM FIELDS
-  contactInfo: {
-    mobileNo: Number,
-    whatsappNo: Number,
-    emailId: String,
-    paName: String,
-    paMobileNo: Number,
-  },
 
   education: {
-    types: String, // e.g., "MBA", "12th", etc.
-    instituteName: String, // e.g., "XYZ Institute"
+    types: {
+      type: String,
+      enum: ["school", "college", "professional"],
+    },
+    // school-specific
+    schoolName: String,
+    schoolSubjects: String,
+    // college-specific
+    collegeName: String,
+    collegeCourse: String,
+    // professional-specific
+    instituteName: String,
+    professionalDegree: String,
   },
 
   leadInfo: {
-    leadSource: String,
-    leadName: String,
-    leadOccupation: String,
-    leadOccupationType: String,
-    leadPerson: String,
-
-    adharNumber: String,
-    panCardNumber: String,
     remark: String,
   },
 
-  preferences: {
-    hobbies: String,
-    nativePlace: String,
-    socialLink: String,
-    habits: String,
-  },
+  preferences: {},
 
   familyMembers: [familyMemberSchema],
   newFamilyMember: familyMemberSchema,

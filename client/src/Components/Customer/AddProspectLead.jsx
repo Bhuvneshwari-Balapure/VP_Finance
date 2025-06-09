@@ -10,6 +10,7 @@ import {
   updateProspectLead,
 } from "../../redux/feature/ProspectLead/ProspectThunx";
 const initialFormState = {
+  groupCode: "",
   salutation: "",
   familyHead: "",
   gender: "",
@@ -236,6 +237,16 @@ const AddProspectLead = ({ editId, setActiveTab, setEditId }) => {
       {error && <div className="text-danger mb-3">Error: {error}</div>}
       <Form onSubmit={handleSubmit}>
         <Row className="mb-3">
+          <Col md={4}>
+            <Form.Label>Group Code</Form.Label>
+            <Form.Control
+              name="groupCode"
+              type="text"
+              placeholder="Group Code"
+              value={form.groupCode}
+              onChange={handleChange}
+            />
+          </Col>
           <Col md={4}>
             <Form.Label>Salutation</Form.Label>
             <Form.Select
