@@ -20,19 +20,21 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
 
   const [formData, setFormData] = useState({
     personalDetails: {
-      grade: "",
-      salutation: "",
-      groupName: "",
       groupCode: "",
+      salutation: "",
       familyHead: "",
       gender: "",
+      grade: "",
+      groupName: "",
       occupation: "",
-      contactNo: "",
       organisation: "",
       designation: "",
+      annualIncome: 0,
+      contactNo: "",
       dob: "",
       dom: "",
       // Address Info
+      preferredAddressType: "",
       resiAddr: "",
       resiLandmark: "",
       resiPincode: "",
@@ -46,6 +48,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
       pincode: "",
       callingPurpose: "",
       name: "",
+      allocatedCRE: "",
 
       // grade: "",
       // salutation: "",
@@ -72,15 +75,20 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
       // paName: "",
       // paMobileNo: "",
     },
+    education: {
+      types: "", // now used as generic education (e.g., "MBA", "12th", "B.Com")
+      instituteName: "",
+    },
     leadInfo: {
       leadSource: "",
       leadName: "",
       leadOccupation: "",
       leadOccupationType: "",
       leadPerson: "",
+
       adharNumber: "",
       panCardNumber: "",
-      allocatedCRE: "",
+      remark: "",
     },
     preferences: {
       hobbies: "",
@@ -88,15 +96,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
       socialLink: "",
       habits: "",
     },
-    education: {
-      types: "",
-      schoolName: "",
-      schoolSubjects: "",
-      collegeName: "",
-      collegeCourse: "",
-      instituteName: "",
-      professionalDegree: "",
-    },
+
     newFamilyMember: {
       title: "",
       name: "",
@@ -181,20 +181,73 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
       };
     });
   };
+  const handleRadioChange = (e) => {
+    const value = e.target.value; // "resi" or "office"
 
+    setFormData((prev) => {
+      // clone personalDetails so we can edit safely
+      const pd = { ...prev.personalDetails, preferredAddressType: value };
+
+      // copy the corresponding address / pincode into the “preferred meeting” fields
+      pd.preferredMeetingAddr = value === "resi" ? pd.resiAddr : pd.officeAddr;
+
+      const pin = value === "resi" ? pd.resiPincode : pd.officePincode;
+
+      pd.preferredMeetingArea = pin ? `Area for ${pin}` : "";
+
+      return { ...prev, personalDetails: pd };
+    });
+  };
+
+  // const handleChange = (e) => {
+  //   const { name, value, type, checked, files } = e.target;
+  //   if (name.includes(".")) {
+  //     const [section, field] = name.split(".");
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       [section]: {
+  //         ...prev[section],
+  //         [field]:
+  //           type === "checkbox" ? checked : type === "file" ? files[0] : value,
+  //       },
+  //     }));
+  //   } else {
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       [name]: type === "file" ? files[0] : value,
+  //     }));
+  //   }
+  // };
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
+
     if (name.includes(".")) {
       const [section, field] = name.split(".");
-      setFormData((prev) => ({
-        ...prev,
-        [section]: {
+
+      setFormData((prev) => {
+        const updatedSection = {
           ...prev[section],
           [field]:
             type === "checkbox" ? checked : type === "file" ? files[0] : value,
-        },
-      }));
+        };
+
+        // Auto-set grade when annualIncome is changed
+        if (section === "personalDetails" && field === "annualIncome") {
+          let grade = "";
+          if (value === "25 lakh to 1 Cr.") grade = 1;
+          else if (value === "5 to 25 lakh") grade = 2;
+          else if (value === "2.5 to 5 lakh") grade = 3;
+
+          updatedSection.grade = grade; // Set grade in the same section
+        }
+
+        return {
+          ...prev,
+          [section]: updatedSection,
+        };
+      });
     } else {
+      // Non-nested field
       setFormData((prev) => ({
         ...prev,
         [name]: type === "file" ? files[0] : value,
@@ -301,41 +354,6 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
     init();
   }, []);
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     if (formData._id) {
-  //       // UPDATE case
-  //       const updatedRes = await dispatch(
-  //         updateClientFirstForm({ id: formData._id, formData })
-  //       ).unwrap();
-  //       alert("Form updated successfully.");
-  //       setStoreData(updatedRes);
-  //       onDataChange(updatedRes);
-  //     } else {
-  //       // CREATE case
-  //       const res = await dispatch(createClientFirstForm(formData)).unwrap();
-  //       if (res && res._id) {
-  //         setStoreData(res);
-  //         onDataChange(res);
-
-  //         // console.log(res, "Form Data Submitted:");
-
-  //         alert("Form saved successfully.");
-  //       } else {
-  //         console.error("Form submission failed:", res);
-  //         alert("Form submission failed. Please try again.");
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.error("Form submission/update failed:", err);
-  //     alert("Something went wrong while saving or updating the form.");
-  //   }
-  // };
-
-  // console.log(StoreData);
-
   return (
     <div className="container mt-4">
       <Form onSubmit={handleSubmit}>
@@ -344,10 +362,10 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
         <Row className="mb-2">
           <Col>
             <Form.Control
-              name="personalDetails.grade"
-              placeholder="Grade"
+              name="personalDetails.groupCode"
               type="text"
-              value={formData?.personalDetails?.grade}
+              placeholder="Group Code"
+              value={formData?.personalDetails?.groupCode}
               onChange={handleChange}
             />
           </Col>
@@ -371,27 +389,6 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
           </Col>
           <Col>
             <Form.Control
-              name="personalDetails.groupName"
-              type="text"
-              placeholder="Group Name"
-              value={formData?.personalDetails?.groupName}
-              onChange={handleChange}
-            />
-          </Col>
-          <Col>
-            <Form.Control
-              name="personalDetails.groupCode"
-              type="text"
-              placeholder="Group Code"
-              value={formData?.personalDetails?.groupCode}
-              onChange={handleChange}
-            />
-          </Col>
-        </Row>
-        {/* Family Head, Gender, Organisation, Designation */}
-        <Row className="mb-2">
-          <Col>
-            <Form.Control
               name="personalDetails.familyHead"
               placeholder="Family Head"
               value={formData?.personalDetails?.familyHead}
@@ -409,6 +406,28 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               <option>Female</option>
             </Form.Select>
           </Col>
+        </Row>
+        {/* Family Head, Gender, Organisation, Designation */}
+        <Row className="mb-2">
+          <Col>
+            <Form.Control
+              name="personalDetails.groupName"
+              type="text"
+              placeholder="Group Name"
+              value={formData?.personalDetails?.groupName}
+              onChange={handleChange}
+            />
+          </Col>
+
+          {/* <Col>
+            <Form.Control
+              name="personalDetails.grade"
+              placeholder="Grade"
+              type="text"
+              value={formData?.personalDetails?.grade}
+              onChange={handleChange}
+            />
+          </Col> */}
           <Col>
             <Form.Control
               placeholder="Occupation"
@@ -434,12 +453,25 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               onChange={handleChange}
             />
           </Col>
-          <Col>
-            <Form.Control
-              name="personalDetails.contactNo"
-              placeholder="Contact No."
-              value={formData?.personalDetails?.contactNo}
+          <Col md={3}>
+            <Form.Label>Annual Income</Form.Label>
+            <Form.Select
+              name="personalDetails.annualIncome"
+              value={formData?.personalDetails?.annualIncome}
               onChange={handleChange}
+            >
+              <option value="">Choose</option>
+              <option>25 lakh to 1 Cr.</option>
+              <option>5 to 25 lakh</option>
+              <option>2.5 to 5 lakh</option>
+            </Form.Select>
+          </Col>
+          <Col md={3}>
+            <Form.Label>Grade</Form.Label>
+            <Form.Control
+              name="grade"
+              value={formData?.personalDetails?.grade}
+              readOnly
             />
           </Col>
         </Row>
@@ -453,6 +485,14 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               onChange={handleChange}
             />
           </Col>
+          <Col>
+            <Form.Control
+              name="personalDetails.contactNo"
+              placeholder="Contact No."
+              value={formData?.personalDetails?.contactNo}
+              onChange={handleChange}
+            />
+          </Col>
 
           <Col>
             <Form.Control
@@ -462,6 +502,8 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               onChange={handleChange}
             />
           </Col>
+        </Row>
+        <Row className="mb-2">
           <Col>
             <Form.Control
               name="contactInfo.emailId"
@@ -471,8 +513,6 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               onChange={handleChange}
             />
           </Col>
-        </Row>
-        <Row className="mb-2">
           <Col>
             <Form.Control
               name="contactInfo.paName"
@@ -521,91 +561,118 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
           </Col>
         </Row>
         {/* Address Info */}
-        <Row className="mb-2">
-          <Col>
+        {/* Resi & Office Address */}
+        <Row className="mb-3">
+          <Col md={2} className="pt-4">
+            {/* <Form.Check
+                     type="radio"
+                     value="resi"
+                     checked={sourceRadio === "resi"}
+                     onChange={handleRadioChange}
+                     label="Select"
+                   /> */}
+            <Form.Check
+              type="radio"
+              value="resi"
+              name="personalDetails.preferredAddressType"
+              checked={
+                formData?.personalDetails?.preferredAddressType === "resi"
+              }
+              onChange={handleRadioChange}
+              label="Select"
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>Resi. Address</Form.Label>
             <Form.Control
               name="personalDetails.resiAddr"
-              placeholder="Residence Address"
               value={formData?.personalDetails?.resiAddr}
               onChange={handleChange}
             />
           </Col>
-          <Col>
+          <Col md={3}>
+            <Form.Label>Landmark</Form.Label>
             <Form.Control
               name="personalDetails.resiLandmark"
-              placeholder="Residence Landmark"
               value={formData?.personalDetails?.resiLandmark}
               onChange={handleChange}
             />
           </Col>
-          <Col>
+          <Col md={3}>
+            <Form.Label>Pin Code</Form.Label>
             <Form.Control
               name="personalDetails.resiPincode"
-              placeholder="Residence Pincode"
               value={formData?.personalDetails?.resiPincode}
               onChange={handleChange}
             />
           </Col>
         </Row>
-        <Row className="mb-2">
-          <Col>
+        <Row className="mb-3">
+          <Col md={2} className="pt-4">
+            <Form.Check
+              type="radio"
+              value="office"
+              name="personalDetails.preferredAddressType"
+              checked={
+                formData?.personalDetails?.preferredAddressType === "office"
+              }
+              onChange={handleRadioChange}
+              label="Select"
+            />
+          </Col>
+          <Col md={3}>
+            <Form.Label>Off. Address</Form.Label>
             <Form.Control
               name="personalDetails.officeAddr"
-              placeholder="Office Address"
               value={formData?.personalDetails?.officeAddr}
               onChange={handleChange}
             />
           </Col>
-          <Col>
+          <Col md={3}>
+            <Form.Label>Landmark</Form.Label>
             <Form.Control
               name="personalDetails.officeLandmark"
-              placeholder="Office Landmark"
               value={formData?.personalDetails?.officeLandmark}
               onChange={handleChange}
             />
           </Col>
-          <Col>
+          <Col md={2}>
+            <Form.Label>Pincode</Form.Label>
             <Form.Control
               name="personalDetails.officePincode"
-              placeholder="Office Pincode"
               value={formData?.personalDetails?.officePincode}
               onChange={handleChange}
             />
           </Col>
         </Row>
         <Row className="mb-2">
-          <Col>
+          <Col md={4}>
+            <Form.Label className="text-primary fw-bold">
+              Preferred Meeting Address
+            </Form.Label>
             <Form.Control
               name="personalDetails.preferredMeetingAddr"
-              placeholder="Preferred Meeting Address"
               value={formData?.personalDetails?.preferredMeetingAddr}
               onChange={handleChange}
             />
           </Col>
-          <Col>
+          <Col md={3}>
+            <Form.Label className="text-primary fw-bold">Area</Form.Label>
             <Form.Control
               name="personalDetails.preferredMeetingArea"
-              placeholder="Meeting Area"
               value={formData?.personalDetails?.preferredMeetingArea}
               onChange={handleChange}
             />
           </Col>
-          <Col>
+          <Col md={3}>
+            <Form.Label>City</Form.Label>
             <Form.Control
               name="personalDetails.city"
-              placeholder="City"
               value={formData?.personalDetails?.city}
               onChange={handleChange}
             />
           </Col>
-          <Col>
-            <Form.Control
-              name="personalDetails.pincode"
-              placeholder="Pincode"
-              value={formData?.personalDetails?.pincode}
-              onChange={handleChange}
-            />
-          </Col>
+
           <Col>
             <Form.Floating>
               <Form.Control
@@ -618,6 +685,153 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               />
               <label htmlFor="bestTime">Best Time</label>
             </Form.Floating>
+          </Col>
+        </Row>
+        {/* Education Section */}
+        {/* <h6 className="mt-3">Education</h6>
+        <Row className="mb-3">
+          <Col md={4}>
+            <Form.Select
+              name="education.types"
+              value={formData?.education?.types}
+              onChange={handleChange}
+            >
+              <option value="">Select Education Type</option>
+              <option value="school">School</option>
+              <option value="college">College</option>
+              <option value="professional">Professional Degree</option>
+            </Form.Select>
+          </Col>
+        </Row>
+        {formData?.education?.types === "school" && (
+          <Row className="mb-2">
+            <Col>
+              <Form.Control
+                name="education.schoolName"
+                type="text"
+                placeholder="School Name"
+                value={formData?.education?.schoolName}
+                onChange={handleChange}
+              />
+            </Col>
+            <Col>
+              <Form.Control
+                name="education.schoolSubjects"
+                type="text"
+                placeholder="Subjects Pursuing in School"
+                value={formData?.education?.schoolSubjects}
+                onChange={handleChange}
+              />
+            </Col>
+          </Row>
+        )}
+        {formData?.education?.types === "college" && (
+          <Row className="mb-2">
+            <Col>
+              <Form.Control
+                name="education.collegeName"
+                type="text"
+                placeholder="College Name"
+                value={formData?.education?.collegeName}
+                onChange={handleChange}
+              />
+            </Col>
+            <Col>
+              <Form.Control
+                name="education.collegeCourse"
+                type="text"
+                placeholder="Course or Degree Name"
+                value={formData?.education?.collegeCourse}
+                onChange={handleChange}
+              />
+            </Col>
+          </Row>
+        )}
+        {formData?.education?.types === "professional" && (
+          <Row className="mb-2">
+            <Col>
+              <Form.Control
+                name="education.instituteName"
+                type="text"
+                placeholder="Institute Name"
+                value={formData?.education?.instituteName}
+                onChange={handleChange}
+              />
+            </Col>
+            <Col>
+              <Form.Control
+                name="education.professionalDegree"
+                type="text"
+                placeholder="Degree Name"
+                value={formData?.education?.professionalDegree}
+                onChange={handleChange}
+              />
+            </Col>
+          </Row>
+        )} */}
+        {/* ---------- Education (new design) ---------- */}
+        <h6 className="mt-3">Education</h6>
+        <Row className="mb-3">
+          {/* Education (type / level / degree) */}
+          <Col md={4}>
+            <Form.Control
+              name="education.types" // reuse the same field
+              type="text"
+              placeholder="Education"
+              value={formData?.education?.types || ""}
+              onChange={handleChange}
+            />
+          </Col>
+
+          {/* Institute / School / College name */}
+          <Col md={4}>
+            <Form.Control
+              name="education.instituteName" // always store here
+              type="text"
+              placeholder="Institute Name"
+              value={formData?.education?.instituteName || ""}
+              onChange={handleChange}
+            />
+          </Col>
+        </Row>
+        {/* Preferences: Hobbies, Native Place, Social Link, Habits */}
+        <Row className="mb-2">
+          <Col>
+            <Form.Control
+              placeholder="Native Place"
+              name="preferences.nativePlace"
+              type="text"
+              value={formData?.preferences?.nativePlace}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col>
+            <Form.Control
+              placeholder="Hobbies"
+              name="preferences.hobbies"
+              type="text"
+              value={formData?.preferences?.hobbies}
+              onChange={handleChange}
+            />
+          </Col>
+
+          <Col>
+            <Form.Control
+              placeholder="Social Link"
+              name="preferences.socialLink"
+              type="text"
+              value={formData?.preferences?.socialLink}
+              onChange={handleChange}
+            />
+          </Col>
+          <Col>
+            <Form.Control
+              placeholder="Habits"
+              name="preferences.habits"
+              type="text"
+              value={formData?.preferences?.habits}
+              onChange={handleChange}
+            />
           </Col>
         </Row>
         {/* Lead Info */}
@@ -691,8 +905,17 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               <option value="Portfolio Management">Portfolio Management</option>
             </Form.Select>
           </Col>
+          <Col>
+            <Form.Control
+              placeholder="Allocated CRE"
+              name="leadInfo.allocatedCRE"
+              type="text"
+              value={formData?.personalDetails?.allocatedCRE}
+              onChange={handleChange}
+            />
+          </Col>
         </Row>
-        {/* PAN Card Number, Aadhaar Number, Allocated CRE */}
+        {/* PAN Card Number, Aadhaar Number, Allocated CRE remark */}
         <Row className="mb-2">
           <Col>
             <Form.Control
@@ -712,12 +935,13 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
               onChange={handleChange}
             />
           </Col>
+
           <Col>
             <Form.Control
-              placeholder="Allocated CRE"
-              name="leadInfo.allocatedCRE"
+              placeholder="Remark"
+              name="leadInfo.remark"
               type="text"
-              value={formData?.leadInfo?.allocatedCRE}
+              value={formData?.leadInfo?.remark}
               onChange={handleChange}
             />
           </Col>
@@ -1017,132 +1241,6 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
             </Col>
           </Row>
         </Row> */}
-        &nbsp; &nbsp;
-        {/* Education Section */}
-        <h6 className="mt-3">Education</h6>
-        <Row className="mb-3">
-          <Col md={4}>
-            <Form.Select
-              name="education.types"
-              value={formData?.education?.types}
-              onChange={handleChange}
-            >
-              <option value="">Select Education Type</option>
-              <option value="school">School</option>
-              <option value="college">College</option>
-              <option value="professional">Professional Degree</option>
-            </Form.Select>
-          </Col>
-        </Row>
-        &nbsp; &nbsp;
-        {formData?.education?.types === "school" && (
-          <Row className="mb-2">
-            <Col>
-              <Form.Control
-                name="education.schoolName"
-                type="text"
-                placeholder="School Name"
-                value={formData?.education?.schoolName}
-                onChange={handleChange}
-              />
-            </Col>
-            <Col>
-              <Form.Control
-                name="education.schoolSubjects"
-                type="text"
-                placeholder="Subjects Pursuing in School"
-                value={formData?.education?.schoolSubjects}
-                onChange={handleChange}
-              />
-            </Col>
-          </Row>
-        )}
-        {formData?.education?.types === "college" && (
-          <Row className="mb-2">
-            <Col>
-              <Form.Control
-                name="education.collegeName"
-                type="text"
-                placeholder="College Name"
-                value={formData?.education?.collegeName}
-                onChange={handleChange}
-              />
-            </Col>
-            <Col>
-              <Form.Control
-                name="education.collegeCourse"
-                type="text"
-                placeholder="Course or Degree Name"
-                value={formData?.education?.collegeCourse}
-                onChange={handleChange}
-              />
-            </Col>
-          </Row>
-        )}
-        {formData?.education?.types === "professional" && (
-          <Row className="mb-2">
-            <Col>
-              <Form.Control
-                name="education.instituteName"
-                type="text"
-                placeholder="Institute Name"
-                value={formData?.education?.instituteName}
-                onChange={handleChange}
-              />
-            </Col>
-            <Col>
-              <Form.Control
-                name="education.professionalDegree"
-                type="text"
-                placeholder="Degree Name"
-                value={formData?.education?.professionalDegree}
-                onChange={handleChange}
-              />
-            </Col>
-          </Row>
-        )}
-        &nbsp; &nbsp;
-        {/* Family Head Relationship Data */}
-        <h5 className="mt-4">Family Head Relationship Data</h5>
-        {/* Preferences: Hobbies, Native Place, Social Link, Habits */}
-        <Row className="mb-2">
-          <Col>
-            <Form.Control
-              placeholder="Hobbies"
-              name="preferences.hobbies"
-              type="text"
-              value={formData?.preferences?.hobbies}
-              onChange={handleChange}
-            />
-          </Col>
-          <Col>
-            <Form.Control
-              placeholder="Native Place"
-              name="preferences.nativePlace"
-              type="text"
-              value={formData?.preferences?.nativePlace}
-              onChange={handleChange}
-            />
-          </Col>
-          <Col>
-            <Form.Control
-              placeholder="Social Link"
-              name="preferences.socialLink"
-              type="text"
-              value={formData?.preferences?.socialLink}
-              onChange={handleChange}
-            />
-          </Col>
-          <Col>
-            <Form.Control
-              placeholder="Habits"
-              name="preferences.habits"
-              type="text"
-              value={formData?.preferences?.habits}
-              onChange={handleChange}
-            />
-          </Col>
-        </Row>
         &nbsp; &nbsp;
         {/* Family Members Section */}
         {/* 

@@ -14,17 +14,19 @@ function ClientSecondForm({ isEdit, onDataChange, firstFormData }) {
     proposedPlan: {
       date: "",
       memberName: "",
+      financialProduct: "",
       company: "",
       planName: "",
       upload: [],
     },
     customerDoc: [
       {
-        submissionDate: "",
+        createdDate: "",
         memberName: "",
         documentNo: "",
         documentName: "",
         financialProducts: "",
+        remark: "",
         upload: [],
       },
     ],
@@ -67,7 +69,7 @@ function ClientSecondForm({ isEdit, onDataChange, firstFormData }) {
     const insuranceList = firstFormData.financialInfo.insuranceInvestment || [];
 
     const docs = insuranceList.map(() => ({
-      submissionDate: "",
+      createdDate: "",
       memberName: "",
       documentNo: "",
       documentName: "",
@@ -266,74 +268,99 @@ function ClientSecondForm({ isEdit, onDataChange, firstFormData }) {
           </Col>
         </Row> */}
 
-        {/* Proposed Financial Plan */}
         <h5 className="mt-4">Proposed Financial Plan</h5>
-        <Row>
-          <Col>
-            <Form.Control
-              placeholder="Date"
-              name="proposedPlan.date"
-              type="date"
-              value={formData.proposedPlan?.date}
-              onChange={handleChange}
-            />
+        <Row className="g-3">
+          {" "}
+          {/* Adds spacing between columns */}
+          <Col xs={12} md={4} lg={2}>
+            <Form.Group>
+              <Form.Label>Created Date</Form.Label>
+              <Form.Control
+                placeholder="Date"
+                name="proposedPlan.date"
+                type="date"
+                value={formData.proposedPlan?.date}
+                onChange={handleChange}
+              />
+            </Form.Group>
           </Col>
-          <Col>
-            <Form.Control
-              placeholder="Member Name"
-              name="proposedPlan.memberName"
-              type="text"
-              value={formData.proposedPlan?.memberName}
-              onChange={handleChange}
-            />
+          <Col xs={12} md={4} lg={2}>
+            <Form.Group>
+              <Form.Label>Member Name</Form.Label>
+              <Form.Control
+                placeholder="Member Name"
+                name="proposedPlan.memberName"
+                type="text"
+                value={formData.proposedPlan?.memberName}
+                onChange={handleChange}
+              />
+            </Form.Group>
           </Col>
-          <Col>
-            <Form.Control
-              placeholder="Financial Company"
-              name="proposedPlan.company"
-              type="text"
-              value={formData.proposedPlan?.company}
-              onChange={handleChange}
-            />
+          <Col xs={12} md={4} lg={2}>
+            <Form.Group>
+              <Form.Label>Financial Product</Form.Label>
+              <Form.Control
+                placeholder="Financial Product"
+                name="proposedPlan.financialProduct"
+                type="text"
+                value={formData.proposedPlan?.financialProduct}
+                onChange={handleChange}
+              />
+            </Form.Group>
           </Col>
-
-          <Col>
-            <Form.Control
-              placeholder="Plan Name"
-              name="proposedPlan.planName"
-              type="text"
-              value={formData.proposedPlan?.planName}
-              onChange={handleChange}
-            />
+          <Col xs={12} md={6} lg={2}>
+            <Form.Group>
+              <Form.Label>Financial Company</Form.Label>
+              <Form.Control
+                placeholder="Company"
+                name="proposedPlan.company"
+                type="text"
+                value={formData.proposedPlan?.company}
+                onChange={handleChange}
+              />
+            </Form.Group>
           </Col>
-          <Col>
-            <FileUpload
-              name="proposedPlan"
-              onUpload={handleProposedPlanUpload}
-            />
-            {/* <FileUpload onUpload={handleImageUpload} /> */}
+          <Col xs={12} md={6} lg={2}>
+            <Form.Group>
+              <Form.Label>Plan Name</Form.Label>
+              <Form.Control
+                placeholder="Plan Name"
+                name="proposedPlan.planName"
+                type="text"
+                value={formData.proposedPlan?.planName}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col xs={12} md={6} lg={2}>
+            <Form.Group>
+              <Form.Label>Upload Document</Form.Label>
+              <FileUpload
+                name="proposedPlan"
+                onUpload={handleProposedPlanUpload}
+              />
+            </Form.Group>
           </Col>
         </Row>
 
         {firstFormData?.financialInfo?.insuranceInvestment?.map(
           (insurance, index) => (
-            <Row className="mb-3" key={index}>
-              <h5 className="mt-4">Customer Document for: {insurance}</h5>
+            <Row className="g-3 mb-3" key={index}>
+              <h5 className="mt-4">KYC Document for: {insurance}</h5>
 
-              <Col>
-                <Form.Group controlId={`submissionDate-${index}`}>
-                  <Form.Label>Submission Date</Form.Label>
-
+              <Col xs={12} md={6} lg={2}>
+                <Form.Group controlId={`createdDate-${index}`}>
+                  <Form.Label>Created Date</Form.Label>
                   <Form.Control
                     type="date"
-                    name="submissionDate"
-                    value={formData.customerDoc[index]?.submissionDate || ""}
+                    name="createdDate"
+                    value={formData.customerDoc[index]?.createdDate || ""}
                     onChange={(e) => handleCustomerDocChange(e, index)}
                   />
                 </Form.Group>
               </Col>
 
-              <Col>
+              <Col xs={12} md={6} lg={2}>
                 <Form.Group controlId={`memberName-${index}`}>
                   <Form.Label>Member Name</Form.Label>
                   <Form.Control
@@ -346,20 +373,7 @@ function ClientSecondForm({ isEdit, onDataChange, firstFormData }) {
                 </Form.Group>
               </Col>
 
-              <Col>
-                <Form.Group controlId={`documentNo-${index}`}>
-                  <Form.Label>Document No</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Document No"
-                    name="documentNo"
-                    value={formData.customerDoc[index]?.documentNo || ""}
-                    onChange={(e) => handleCustomerDocChange(e, index)}
-                  />
-                </Form.Group>
-              </Col>
-
-              <Col>
+              <Col xs={12} md={6} lg={2}>
                 <Form.Group controlId={`documentName-${index}`}>
                   <Form.Label>Document Name</Form.Label>
                   <Form.Control
@@ -372,12 +386,40 @@ function ClientSecondForm({ isEdit, onDataChange, firstFormData }) {
                 </Form.Group>
               </Col>
 
-              <Col>
-                <FileUpload
-                  name="customerDoc"
-                  // onUpload={handleProposedPlanUpload}
-                  onUpload={(urls) => handleCustomerDocUpload(urls, index)}
-                />
+              <Col xs={12} md={6} lg={2}>
+                <Form.Group controlId={`documentNo-${index}`}>
+                  <Form.Label>Document No</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Document No"
+                    name="documentNo"
+                    value={formData.customerDoc[index]?.documentNo || ""}
+                    onChange={(e) => handleCustomerDocChange(e, index)}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col xs={12} md={6} lg={2}>
+                <Form.Group controlId={`remark-${index}`}>
+                  <Form.Label>Remark</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Remark"
+                    name="documentNo"
+                    value={formData.customerDoc[index]?.remark || ""}
+                    onChange={(e) => handleCustomerDocChange(e, index)}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col xs={12} md={6} lg={2}>
+                <Form.Group>
+                  <Form.Label>Upload</Form.Label>
+                  <FileUpload
+                    name="customerDoc"
+                    onUpload={(urls) => handleCustomerDocUpload(urls, index)}
+                  />
+                </Form.Group>
               </Col>
             </Row>
           )

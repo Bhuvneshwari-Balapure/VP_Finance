@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 // Reuse sub-documents
 const healthHistorySchema = new mongoose.Schema({
-  submissionDate: String,
+  submissionDate: Date,
   diseaseName: String,
-  since: String,
+  since: Date,
   height: String,
   weight: String,
   remark: String,
@@ -14,9 +14,9 @@ const familyMemberSchema = new mongoose.Schema({
   title: String,
   name: String,
   relation: String,
-  dobActual: String,
-  dobRecord: String,
-  marriageDate: String,
+  dobActual: Date,
+  dobRecord: Date,
+  marriageDate: Date,
   occupation: String,
   annualIncome: String,
   includeHealth: Boolean,
@@ -41,24 +41,25 @@ const financialInfoSchema = new mongoose.Schema({
 });
 
 const proposedPlanSchema = new mongoose.Schema({
-  date: String,
+  date: Date,
   memberName: String,
+  financialProduct: String,
   company: String,
   planName: String,
   upload: [String],
 });
 
 const customerDocSchema = new mongoose.Schema({
-  submissionDate: String,
+  createdDate: Date,
   memberName: String,
   documentNo: String,
   documentName: String,
   financialProducts: String,
+  remark: String,
   upload: [String],
 });
 
 const personalDetailsSchema = new mongoose.Schema({
-  name: String,
   salutation: String,
   familyHead: String,
   gender: String,
@@ -68,7 +69,7 @@ const personalDetailsSchema = new mongoose.Schema({
   occupation: String,
   organisation: String,
   designation: String,
-  annualIncome: String,
+  annualIncome: Number,
   grade: Number,
   mobile: Number,
   contactNo: Number,
@@ -96,6 +97,8 @@ const personalDetailsSchema = new mongoose.Schema({
   leadOccupation: String,
   occupationType: String,
   callingPurpose: String,
+  name: String,
+  allocatedCRE: String,
 });
 
 // Main Lead Schema
@@ -117,15 +120,21 @@ const TestShema = new mongoose.Schema({
     paMobileNo: Number,
   },
 
+  education: {
+    types: String, // e.g., "MBA", "12th", etc.
+    instituteName: String, // e.g., "XYZ Institute"
+  },
+
   leadInfo: {
     leadSource: String,
     leadName: String,
     leadOccupation: String,
     leadOccupationType: String,
     leadPerson: String,
+
     adharNumber: String,
     panCardNumber: String,
-    allocatedCRE: String,
+    remark: String,
   },
 
   preferences: {
@@ -133,16 +142,6 @@ const TestShema = new mongoose.Schema({
     nativePlace: String,
     socialLink: String,
     habits: String,
-  },
-
-  education: {
-    types: String,
-    schoolName: String,
-    schoolSubjects: String,
-    collegeName: String,
-    collegeCourse: String,
-    instituteName: String,
-    professionalDegree: String,
   },
 
   familyMembers: [familyMemberSchema],

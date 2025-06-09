@@ -373,13 +373,6 @@ const AddProspectLead = ({ editId, setActiveTab, setEditId }) => {
         {/* Resi & Office Address */}
         <Row className="mb-3">
           <Col md={2} className="pt-4">
-            {/* <Form.Check
-              type="radio"
-              value="resi"
-              checked={sourceRadio === "resi"}
-              onChange={handleRadioChange}
-              label="Select"
-            /> */}
             <Form.Check
               type="radio"
               value="resi"
