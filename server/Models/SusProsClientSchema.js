@@ -18,7 +18,7 @@ const familyMemberSchema = new mongoose.Schema({
   dobRecord: Date,
   marriageDate: Date,
   occupation: String,
-  annualIncome: String,
+  annualIncome: Number,
   includeHealth: Boolean,
   healthHistory: healthHistorySchema,
 });

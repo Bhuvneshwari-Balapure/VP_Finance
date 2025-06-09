@@ -34,7 +34,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
       dob: "",
       dom: "",
       // Address Info
-      preferredAddressType: "",
+      preferredAddressType: "resi",
       resiAddr: "",
       resiLandmark: "",
       resiPincode: "",
@@ -225,29 +225,33 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
       const [section, field] = name.split(".");
 
       setFormData((prev) => {
-        const updatedSection = {
-          ...prev[section],
-          [field]:
-            type === "checkbox" ? checked : type === "file" ? files[0] : value,
-        };
+        let newVal =
+          type === "checkbox" ? checked : type === "file" ? files[0] : value;
 
-        // Auto-set grade when annualIncome is changed
-        if (section === "personalDetails" && field === "annualIncome") {
-          let grade = "";
-          if (value === "25 lakh to 1 Cr.") grade = 1;
-          else if (value === "5 to 25 lakh") grade = 2;
-          else if (value === "2.5 to 5 lakh") grade = 3;
-
-          updatedSection.grade = grade; // Set grade in the same section
+        // Convert to number if the schema expects a number
+        if (
+          section === "personalDetails" &&
+          field === "annualIncome" &&
+          newVal !== ""
+        ) {
+          newVal = Number(newVal); // ← ensure numeric
         }
 
-        return {
-          ...prev,
-          [section]: updatedSection,
-        };
+        const updatedSection = { ...prev[section], [field]: newVal };
+
+        if (section === "personalDetails" && field === "annualIncome") {
+          // derive grade from numeric value
+          let grade = "";
+          if (newVal >= 1000000) grade = 1;
+          else if (newVal >= 500000) grade = 2;
+          else if (newVal >= 250000) grade = 3;
+          updatedSection.grade = grade;
+        }
+
+        return { ...prev, [section]: updatedSection };
       });
     } else {
-      // Non-nested field
+      // non-nested fields (unchanged)
       setFormData((prev) => ({
         ...prev,
         [name]: type === "file" ? files[0] : value,
@@ -908,7 +912,7 @@ const ClientFirstFrom = ({ isEdit, onDataChange }) => {
           <Col>
             <Form.Control
               placeholder="Allocated CRE"
-              name="leadInfo.allocatedCRE"
+              name="personalDetails.allocatedCRE"
               type="text"
               value={formData?.personalDetails?.allocatedCRE}
               onChange={handleChange}
