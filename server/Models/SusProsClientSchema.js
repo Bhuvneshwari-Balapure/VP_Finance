@@ -69,7 +69,7 @@ const personalDetailsSchema = new mongoose.Schema({
   occupation: String,
   organisation: String,
   designation: String,
-  annualIncome: Number,
+  annualIncome: String,
   grade: Number,
   mobile: Number,
   contactNo: Number,
