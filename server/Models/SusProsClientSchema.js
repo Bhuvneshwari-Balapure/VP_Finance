@@ -18,7 +18,7 @@ const familyMemberSchema = new mongoose.Schema({
   dobRecord: Date,
   marriageDate: Date,
   occupation: String,
-  annualIncome: Number,
+  annualIncome: String,
   includeHealth: Boolean,
   healthHistory: healthHistorySchema,
 });
@@ -131,7 +131,7 @@ const TestShema = new mongoose.Schema({
   education: {
     types: {
       type: String,
-      enum: ["school", "college", "professional"],
+      enum: ["", "school", "college", "professional"],
     },
     // school-specific
     schoolName: String,
@@ -151,14 +151,13 @@ const TestShema = new mongoose.Schema({
   preferences: {},
 
   familyMembers: [familyMemberSchema],
-  newFamilyMember: familyMemberSchema,
+  // newFamilyMember: familyMemberSchema,
 
   financialInfo: financialInfoSchema,
   needs: needsSchema,
   proposedPlan: proposedPlanSchema,
   customerDoc: [customerDocSchema],
-
-  //   taskDetails: String,
+  taskDetails: String,
 
   createdAt: {
     type: Date,
